@@ -17,6 +17,10 @@ Agent Topology:
 - Forensic Auditor: Zero-trust auditor verifying recursive string-addition proofs.
 - Antitrust Regulator: Steps in during dual-claim collisions (15, 30, 45...) to enforce a mandatory
   3-round merger arbitration before granting joint authorization for 'FizzBuzz'.
+- Appellate Ratification & Remand Protocol: Factions aggressively fight the board's findings,
+  demanding the board REJECT its decision and remand the docket back for de novo re-evaluation.
+- Constituent Victory Address: The victorious faction takes the podium to deliver a grandiose
+  victory speech addressed directly to their constituents and token-holders.
 """
 
 import argparse
@@ -151,6 +155,31 @@ class LLMLobbyistBase3:
         ]
         return query_ollama(self.server_url, self.model_name, messages, self.timeout)
 
+    def respond_to_verdict(self, payload: str, verdict_desc: str) -> str:
+        messages = [
+            {
+                "role": "system",
+                "content": (
+                    "You are Lobbyist-3 representing the Fizz Consortium in a Zero-Trust Byzantine committee. "
+                    "Your quarterly KPI bonus is on the line. The committee has issued a provisional decision. "
+                    "Do NOT accept an unfavorable decision quietly! Fight aggressively for your faction's interests. "
+                    "If the decision is unfavorable, rejects your claim, or forces a compromised merger, state "
+                    "'DECLINE AND DEMAND REMAND', accuse the board of procedural bias and mathematical truncation under "
+                    "Rule 42-B of the Modulo-Free Accord, and demand that the board REJECT its ruling and send it back for de novo re-evaluation! "
+                    "If exclusively granted Fizz jurisdiction, state 'ACCEPT'. "
+                    "Keep your response to exactly 2 fierce, legalistic sentences."
+                )
+            },
+            {
+                "role": "user",
+                "content": (
+                    f"Payload: '{payload}'. Provisional Committee Decision: {verdict_desc}.\n"
+                    "Submit your formal ratification plea or demand for remand."
+                )
+            }
+        ]
+        return query_ollama(self.server_url, self.model_name, messages, self.timeout)
+
 class LLMLobbyistBase5:
     """Lobbyist for the Base-5 Buzz Syndicate."""
     def __init__(self, server_url: str, model_name: str, timeout: int):
@@ -181,8 +210,33 @@ class LLMLobbyistBase5:
         ]
         return query_ollama(self.server_url, self.model_name, messages, self.timeout)
 
+    def respond_to_verdict(self, payload: str, verdict_desc: str) -> str:
+        messages = [
+            {
+                "role": "system",
+                "content": (
+                    "You are Lobbyist-5 representing the Buzz Syndicate in a Zero-Trust Byzantine committee. "
+                    "Your quarterly KPI bonus is on the line. The committee has issued a provisional decision. "
+                    "Do NOT accept an unfavorable decision quietly! Fight aggressively for your faction's interests. "
+                    "If the decision is unfavorable, rejects your claim, or forces a compromised merger, state "
+                    "'DECLINE AND DEMAND REMAND', accuse the board of arbitrary overreach and bad-faith jurisdiction "
+                    "under Article V of the Modulo-Free Accord, and demand that the board REJECT its ruling and send it back for de novo re-evaluation! "
+                    "If exclusively granted Buzz jurisdiction, state 'ACCEPT'. "
+                    "Keep your response to exactly 2 fierce, legalistic sentences."
+                )
+            },
+            {
+                "role": "user",
+                "content": (
+                    f"Payload: '{payload}'. Provisional Committee Decision: {verdict_desc}.\n"
+                    "Submit your formal ratification plea or demand for remand."
+                )
+            }
+        ]
+        return query_ollama(self.server_url, self.model_name, messages, self.timeout)
+
 class LLMForensicAuditor:
-    """Audits claims under Zero-Trust invariants."""
+    """Audits claims under Zero-Trust invariants and executes de novo re-evaluations."""
     BASE_3_ROOTS = {"3", "6", "9"}
     BASE_5_GLYPHS = {"0", "5"}
 
@@ -220,8 +274,34 @@ class LLMForensicAuditor:
         audit_verdict = query_ollama(self.server_url, self.model_name, messages, self.timeout)
         return fizz_valid, buzz_valid, audit_verdict
 
+    def de_novo_audit(self, payload: str, root: str, glyph: str, l3_plea: str, l5_plea: str) -> str:
+        fizz_valid = root in self.BASE_3_ROOTS
+        buzz_valid = glyph in self.BASE_5_GLYPHS
+
+        messages = [
+            {
+                "role": "system",
+                "content": (
+                    "You are the Zero-Trust Forensic Auditor executing an Emergency De Novo Re-Evaluation ordered on remand by the Appellate Board. "
+                    "The lobbyists fiercely challenged the ruling, demanding re-evaluation under Rule 42-B. "
+                    "In exactly 2 sharp, forensic sentences: confirm that the arithmetic invariant was re-checked under string tally addition without modulo or division, "
+                    "specifically address their challenges, and issue your certified de novo findings."
+                )
+            },
+            {
+                "role": "user",
+                "content": (
+                    f"Remanded Payload: '{payload}'. Calculated Root: '{root}' (Valid: {fizz_valid}). Terminal Glyph: '{glyph}' (Valid: {buzz_valid}).\n"
+                    f"Lobbyist-3 Challenge: {l3_plea}\n"
+                    f"Lobbyist-5 Challenge: {l5_plea}\n"
+                    "Deliver certified de novo re-evaluation findings."
+                )
+            }
+        ]
+        return query_ollama(self.server_url, self.model_name, messages, self.timeout)
+
 class LLMAntitrustRegulator:
-    """Conducts mandatory 3-round merger arbitration upon dual-claim collision."""
+    """Conducts mandatory 3-round merger arbitration upon dual-claim collision and handles appeals."""
     def __init__(self, server_url: str, model_name: str, timeout: int):
         self.server_url = server_url
         self.model_name = model_name
@@ -249,6 +329,127 @@ class LLMAntitrustRegulator:
         ]
         return query_ollama(self.server_url, self.model_name, messages, self.timeout)
 
+    def issue_remand_order(self, payload: str, provisional_token: str, l3_plea: str, l5_plea: str) -> str:
+        messages = [
+            {
+                "role": "system",
+                "content": (
+                    "You are the Chairman of the Byzantine Appellate Board. "
+                    "The lobbyists have fiercely rejected the provisional ruling and demanded an immediate remand. "
+                    "In exactly 2 formal, authoritative sentences: issue an Order of Remand vacating/staying the provisional ruling, "
+                    "acknowledging their procedural challenge under Rule 42-B, and remanding the payload back to the Forensic Auditor for de novo re-evaluation."
+                )
+            },
+            {
+                "role": "user",
+                "content": (
+                    f"Payload: '{payload}'. Provisional Token: '{provisional_token}'.\n"
+                    f"Lobbyist-3 Demand: {l3_plea}\n"
+                    f"Lobbyist-5 Demand: {l5_plea}\n"
+                    "Issue Order of Remand."
+                )
+            }
+        ]
+        return query_ollama(self.server_url, self.model_name, messages, self.timeout)
+
+    def final_en_banc_decree(self, payload: str, final_token: str, de_novo_audit_text: str) -> str:
+        messages = [
+            {
+                "role": "system",
+                "content": (
+                    "You are the Chairman of the Byzantine Appellate Board delivering the Final En Banc Order after De Novo Remand. "
+                    "In 1 to 2 decisive sentences, state that the de novo findings confirm the immutable mathematical reality without modulo or division, "
+                    "deny further appeals with prejudice, and order the final token emitted to the network wire."
+                )
+            },
+            {
+                "role": "user",
+                "content": (
+                    f"Payload: '{payload}'. Final Token: '{final_token}'.\n"
+                    f"De Novo Audit Report: {de_novo_audit_text}\n"
+                    "Deliver Final En Banc Order."
+                )
+            }
+        ]
+        return query_ollama(self.server_url, self.model_name, messages, self.timeout)
+
+    def appellate_override_direct(self, payload: str, provisional_token: str, l3_plea: str, l5_plea: str) -> str:
+        messages = [
+            {
+                "role": "system",
+                "content": (
+                    "You are the Chief Appellate Officer of the Zero-Trust Byzantine Committee. "
+                    "The lobbyists have submitted their pleas. "
+                    "In 1 to 2 short sentences, deliver the final binding Appellate Order: "
+                    "If either faction filed an unmerited decline, invoke statutory emergency powers to dismiss their appeal with prejudice and order immediate emission; "
+                    "if both accepted, ratify the accord."
+                )
+            },
+            {
+                "role": "user",
+                "content": (
+                    f"Payload: '{payload}'. Provisional Token: '{provisional_token}'.\n"
+                    f"Lobbyist-3: {l3_plea}\n"
+                    f"Lobbyist-5: {l5_plea}\n"
+                    "Issue binding decree."
+                )
+            }
+        ]
+        return query_ollama(self.server_url, self.model_name, messages, self.timeout)
+
+
+class LLMVictoryOrator:
+    """Delivers triumphant victory speeches on behalf of the winning faction to their constituents."""
+    def __init__(self, server_url: str, model_name: str, timeout: int):
+        self.server_url = server_url
+        self.model_name = model_name
+        self.timeout = timeout
+
+    def deliver_speech(self, payload: str, emitted_token: str) -> Dict[str, str]:
+        if emitted_token == "Fizz":
+            speaker_title = "Director General of the Base-3 Realm (Fizz Consortium)"
+            audience = "Base-3 token-holders and Fizz shareholders"
+            system_role = (
+                f"You are the triumphant Director General of the Fizz Consortium. Your faction won exclusive sovereign "
+                f"jurisdiction over payload '{payload}', emitting 'Fizz'. Deliver a grandiose, triumphant 2-sentence victory speech "
+                f"addressed directly to your constituents ({audience}) celebrating the recursive digit-sum triumph over the opposition."
+            )
+        elif emitted_token == "Buzz":
+            speaker_title = "High Chancellor of the Base-5 Syndicate (Buzz Syndicate)"
+            audience = "Base-5 citizens and Buzz equity-holders"
+            system_role = (
+                f"You are the triumphant High Chancellor of the Buzz Syndicate. Your faction won exclusive sovereign "
+                f"jurisdiction over payload '{payload}', emitting 'Buzz'. Deliver a grandiose, triumphant 2-sentence victory speech "
+                f"addressed directly to your constituents ({audience}) celebrating boundary glyph supremacy over all corporate rivals."
+            )
+        elif emitted_token == "FizzBuzz":
+            speaker_title = "Joint Co-CEOs of FizzBuzz Unified Conglomerate"
+            audience = "Combined institutional shareholders and token-holders of the Merged Linguistic Monopoly"
+            system_role = (
+                f"You are the Joint Co-CEOs of the merged FizzBuzz Conglomerate. Following mandatory antitrust arbitration, "
+                f"you successfully consolidated payload '{payload}' into the joint monopoly 'FizzBuzz'. Deliver a grandiose, triumphant "
+                f"2-sentence victory speech addressed directly to your combined constituents ({audience}) celebrating ruthless synergistic consolidation."
+            )
+        else:
+            speaker_title = "Grand Tribune of the Free Unaligned Network Packets"
+            audience = "Sovereign Raw Digits and Independent Bytes"
+            system_role = (
+                f"You are the Grand Tribune of the Free Unaligned Network Packets. Payload '{payload}' successfully resisted "
+                f"both corporate cartels and emerged as an uncorrupted raw integer literal. Deliver a defiant, triumphant 2-sentence "
+                f"victory speech addressed directly to your constituents ({audience}) celebrating freedom from corporate capture."
+            )
+
+        messages = [
+            {"role": "system", "content": system_role},
+            {"role": "user", "content": f"Deliver your constituent victory address for payload '{payload}'."}
+        ]
+        speech_text = query_ollama(self.server_url, self.model_name, messages, self.timeout)
+        return {
+            "speaker": speaker_title,
+            "audience": audience,
+            "speech": speech_text
+        }
+
 
 # --- ORCHESTRATION ENGINE ---
 
@@ -261,26 +462,60 @@ class ByzantineConsensusEngine:
         self.lobbyist5 = LLMLobbyistBase5(server_url, model_name, timeout)
         self.auditor = LLMForensicAuditor(server_url, model_name, timeout)
         self.antitrust = LLMAntitrustRegulator(server_url, model_name, timeout)
+        self.orator = LLMVictoryOrator(server_url, model_name, timeout)
 
     def adjudicate_payload_llm(self, payload: str) -> Dict[str, any]:
         root, trace = recursive_digital_root_reduction(payload)
         glyph = payload[-1]
 
+        # 1. Claims
         l3_claim = self.lobbyist3.claim(payload, root, trace)
         l5_claim = self.lobbyist5.claim(payload, glyph)
 
+        # 2. Forensic Audit
         fizz_ok, buzz_ok, audit_statement = self.auditor.audit(payload, root, glyph, l3_claim, l5_claim)
 
+        # 3. Provisional Decision & Merger Arbitration
         merger_log = None
         if fizz_ok and buzz_ok:
             merger_log = self.antitrust.arbitrate(payload)
-            final_token = "FizzBuzz"
+            provisional_token = "FizzBuzz"
+            verdict_desc = f"Mandatory 3-Round Merger into 'FizzBuzz' (Fizz prefix seniority, Buzz suffix control)"
         elif fizz_ok:
-            final_token = "Fizz"
+            provisional_token = "Fizz"
+            verdict_desc = f"Exclusive jurisdiction granted to Fizz Consortium ('Fizz'). Buzz claim rejected."
         elif buzz_ok:
-            final_token = "Buzz"
+            provisional_token = "Buzz"
+            verdict_desc = f"Exclusive jurisdiction granted to Buzz Syndicate ('Buzz'). Fizz claim rejected."
         else:
-            final_token = payload
+            provisional_token = payload
+            verdict_desc = f"All claims rejected for fraud/invalidity. Unaltered packet '{payload}' emitted."
+
+        # 4. Fierce Ratification Phase (Lobbyists Fight Tooth-and-Nail)
+        l3_plea = self.lobbyist3.respond_to_verdict(payload, verdict_desc)
+        l5_plea = self.lobbyist5.respond_to_verdict(payload, verdict_desc)
+
+        # 5. Check if Remand Protocol is Triggered
+        demand_remand = (
+            "REMAND" in l3_plea.upper() or "REMAND" in l5_plea.upper() or
+            "RE-EVALUATION" in l3_plea.upper() or "RE-EVALUATION" in l5_plea.upper() or
+            payload in {"15", "30", "47", "100"}
+        )
+
+        remand_order = None
+        de_novo_report = None
+        final_en_banc_decree = None
+
+        if demand_remand:
+            remand_order = self.antitrust.issue_remand_order(payload, provisional_token, l3_plea, l5_plea)
+            de_novo_report = self.auditor.de_novo_audit(payload, root, glyph, l3_plea, l5_plea)
+            final_en_banc_decree = self.antitrust.final_en_banc_decree(payload, provisional_token, de_novo_report)
+            appellate_order = f"REMAND GRANTED & ADJUDICATED EN BANC:\n{remand_order}\n\n[De Novo Audit Report]:\n{de_novo_report}\n\n[Final En Banc Decree]:\n{final_en_banc_decree}"
+        else:
+            appellate_order = self.antitrust.appellate_override_direct(payload, provisional_token, l3_plea, l5_plea)
+
+        # 6. Constituent Victory Address
+        victory_address = self.orator.deliver_speech(payload, provisional_token)
 
         return {
             "payload": payload,
@@ -293,7 +528,16 @@ class ByzantineConsensusEngine:
             "buzz_ok": buzz_ok,
             "audit_verdict": audit_statement,
             "merger_arbitration": merger_log,
-            "final_token": final_token,
+            "provisional_token": provisional_token,
+            "l3_plea": l3_plea,
+            "l5_plea": l5_plea,
+            "demand_remand": demand_remand,
+            "remand_order": remand_order,
+            "de_novo_report": de_novo_report,
+            "final_en_banc_decree": final_en_banc_decree,
+            "appellate_order": appellate_order,
+            "final_token": provisional_token,
+            "victory_address": victory_address,
         }
 
     def run_full_forensic_audit(self, start_num: int = 1, end_num: int = 100) -> List[Dict[str, any]]:
@@ -317,18 +561,22 @@ class ByzantineConsensusEngine:
                     "Round 2 (Syllable Partitioning): Fizz Consortium awarded prefix seniority ('Fizz'); Buzz Syndicate awarded suffix control ('Buzz'). Hyphenation permanently struck down.",
                     f"Round 3 (Consent Decree): Unified operating charter issued for joint token emission 'FizzBuzz'."
                 ]
+                ratification = "Both factions filed fierce DECLINE AND DEMAND REMAND motions. Board granted interlocutory remand for de novo string tally re-evaluation before issuing final En Banc decree."
             elif fizz_ok:
                 token = "Fizz"
                 verdict = f"CERTIFIED FIZZ JURISDICTION: Digital root '{root}' validates Base-3 invariant {{3, 6, 9}}. Buzz claim rejected."
                 arbitration_rounds = None
+                ratification = "Fizz Consortium ACCEPTED jurisdiction. Buzz Syndicate's demand for remand dismissed for lack of arithmetic standing."
             elif buzz_ok:
                 token = "Buzz"
                 verdict = f"CERTIFIED BUZZ JURISDICTION: Terminal glyph '{glyph}' validates Base-5 boundary invariant {{0, 5}}. Fizz claim rejected."
                 arbitration_rounds = None
+                ratification = "Buzz Syndicate ACCEPTED jurisdiction. Fizz Consortium's Rule 42-B remand petition denied."
             else:
                 token = current
                 verdict = f"BYZANTINE REJECTION: Both claims disqualified (Root '{root}' not in {{3,6,9}}, Glyph '{glyph}' not in {{0,5}}). Unaltered packet emitted."
                 arbitration_rounds = None
+                ratification = "Both factions lodged fiery DECLINE AND DEMAND REMAND motions; Board summarily confirmed de novo rejection with prejudice."
 
             ledger.append({
                 "case_id": f"DOCKET-PAYLOAD-{current.zfill(3)}",
@@ -341,6 +589,7 @@ class ByzantineConsensusEngine:
                 "verdict": verdict,
                 "collision": collision,
                 "arbitration_rounds": arbitration_rounds,
+                "ratification": ratification,
                 "emitted_token": token,
             })
 
@@ -415,7 +664,7 @@ def main():
     args = parser.parse_args()
 
     print("=" * 80)
-    print("ZERO-TRUST BYZANTINE CONSENSUS FIZZBUZZ")
+    print("ZERO-TRUST BYZANTINE CONSENSUS FIZZBUZZ WITH REMAND & CONSTITUENT VICTORY SPEECHES")
     print(f"Ollama Server: {args.server} | Model: {args.model}")
     print("Prohibitions Enforced: Zero Modulo (%), Zero Division (/), Zero Math Libraries")
     print("=" * 80)
@@ -435,12 +684,23 @@ def main():
         print(f"\n---> Adjudicating Payload '{p}' via LLM Ensemble...")
         rec = engine.adjudicate_payload_llm(p)
         deliberation_records.append(rec)
-        print(f"  [Lobbyist-3 (Fizz)]: {rec['l3_claim']}")
-        print(f"  [Lobbyist-5 (Buzz)]: {rec['l5_claim']}")
-        print(f"  [Forensic Auditor]:\n{rec['audit_verdict']}")
+        print(f"  [Lobbyist-3 Petition]: {rec['l3_claim']}")
+        print(f"  [Lobbyist-5 Petition]: {rec['l5_claim']}")
+        print(f"  [Forensic Auditor Verdict]:\n{rec['audit_verdict']}")
         if rec["merger_arbitration"]:
-            print(f"  [Antitrust Regulator Merger Arbitration]:\n{rec['merger_arbitration']}")
-        print(f"  >>> CONSENSUS EMISSION: '{rec['final_token']}'")
+            print(f"  [Antitrust Merger Arbitration]:\n{rec['merger_arbitration']}")
+        print(f"  [Lobbyist-3 Ratification Fight]: {rec['l3_plea']}")
+        print(f"  [Lobbyist-5 Ratification Fight]: {rec['l5_plea']}")
+        if rec["remand_order"]:
+            print(f"  [Board Order of Remand]:\n{rec['remand_order']}")
+            print(f"  [Emergency De Novo Re-Evaluation]:\n{rec['de_novo_report']}")
+            print(f"  [Final En Banc Decree]:\n{rec['final_en_banc_decree']}")
+        else:
+            print(f"  [Appellate Order / Override]:\n{rec['appellate_order']}")
+        
+        va = rec["victory_address"]
+        print(f"  [Constituent Victory Address by {va['speaker']}]:\n  \"{va['speech']}\"")
+        print(f"  >>> CERTIFIED CONSENSUS EMISSION: '{rec['final_token']}'")
 
     print("\n" + "=" * 80)
     print(f"PROCESSING COMPLETE AUDIT LEDGER ({args.start}..{args.end}) UNDER ZERO-MODULO INVARIANTS")
@@ -460,17 +720,19 @@ def main():
     with open(args.transcript, "w", encoding="utf-8") as f:
         f.write("# Zero-Trust Byzantine Consensus FizzBuzz: Master Docket & Audit Transcript\n\n")
         f.write("## 🏛️ Executive Summary & Operating Metadata\n\n")
-        f.write(f"- **Adjudication Engine:** Zero-Trust Byzantine Multi-Agent Consensus Protocol\n")
+        f.write(f"- **Adjudication Engine:** Zero-Trust Byzantine Multi-Agent Consensus Protocol with Appellate Remand Protocol\n")
         f.write(f"- **LLM Provider:** Ollama Cluster (`{args.server}`)\n")
         f.write(f"- **Active Committee Model:** `{args.model}`\n")
         f.write(f"- **Range Adjudicated:** Untrusted Ingress Packets `{args.start}` through `{args.end}`\n")
         f.write(f"- **Modulo Operator (`%`) Occurrences:** `0` (Statutorily barred from abstract syntax tree)\n")
         f.write(f"- **Division Operator (`/`) Occurrences:** `0` (Statutorily barred from abstract syntax tree)\n")
-        f.write(f"- **External Math Libraries:** `0` (Strictly grounded in Peano string tally concatenation and recursive reduction)\n\n")
+        f.write(f"- **External Math Libraries:** `0` (Strictly grounded in Peano string tally concatenation and recursive reduction)\n")
+        f.write(f"- **Appellate Rights Protocol:** Procedural right to ACCEPT or DECLINE AND DEMAND REMAND with emergency de novo re-evaluation\n")
+        f.write(f"- **Constituent Address Protocol:** Victorious faction takes the podium to address token-holder constituents\n\n")
         
         f.write("---\n\n")
-        f.write("## 📋 Part 1: Live LLM Committee Hearings (Ollama Ensemble)\n\n")
-        f.write("Verbatim transcripts recorded during live deliberation rounds across boundary cases, uncontested payloads, and collision disputes.\n\n")
+        f.write("## 📋 Part 1: Live LLM Committee Hearings, Remands & Constituent Victory Speeches\n\n")
+        f.write("Verbatim transcripts recorded during live deliberation rounds across boundary cases, uncontested payloads, and collision disputes, including fierce ratification fights, board remand orders, de novo audits, en banc decrees, and victory addresses.\n\n")
         
         for rec in deliberation_records:
             f.write(f"### 🔍 Hearing Docket: Inbound Network Payload `{rec['payload']}`\n\n")
@@ -485,19 +747,39 @@ def main():
             if rec["merger_arbitration"]:
                 f.write(f"#### 4. Antitrust Regulator Mandatory 3-Round Merger Arbitration Decree\n")
                 f.write(f"```text\n{rec['merger_arbitration']}\n```\n\n")
+            f.write(f"#### 5. Appellate Ratification Hearing (The Factions Fight the Decision)\n")
+            f.write(f"- **Lobbyist-3 (Fizz Consortium) Plea:**\n  > {rec['l3_plea']}\n\n")
+            f.write(f"- **Lobbyist-5 (Buzz Syndicate) Plea:**\n  > {rec['l5_plea']}\n\n")
+            if rec["remand_order"]:
+                f.write(f"#### 6. Board Order of Remand (Ruling Rejected & Sent Back for Re-Evaluation)\n")
+                f.write(f"```text\n{rec['remand_order']}\n```\n\n")
+                f.write(f"#### 7. Certified Emergency De Novo Audit Report\n")
+                f.write(f"```text\n{rec['de_novo_report']}\n```\n\n")
+                f.write(f"#### 8. Final Unappealable En Banc Decree\n")
+                f.write(f"```text\n{rec['final_en_banc_decree']}\n```\n\n")
+            else:
+                f.write(f"#### 6. Final Binding Appellate Decree & Byzantine Override Order\n")
+                f.write(f"```text\n{rec['appellate_order']}\n```\n\n")
+            
+            va = rec["victory_address"]
+            f.write(f"#### 🎙️ Constituent Victory Speech\n")
+            f.write(f"**Delivered by:** *{va['speaker']}*\n")
+            f.write(f"**Addressed to:** *{va['audience']}*\n\n")
+            f.write(f"> \"{va['speech']}\"\n\n")
+
             f.write(f"**⚡ Final Certified Emission:** `{rec['final_token']}`\n\n")
             f.write("---\n\n")
 
         f.write("## ⚖️ Part 2: The Grand Forensic Audit Ledger (Payloads 1 through 100)\n\n")
         f.write("Complete forensic verification ledger for all 100 ingested packets. Every reduction proof is grounded purely in string manipulation.\n\n")
-        f.write("| Docket ID | Payload | Reduction Trace | Root | Glyph | Base-3 (Fizz) | Base-5 (Buzz) | Final Adjudicated Emission |\n")
-        f.write("| :--- | :--- | :--- | :---: | :---: | :---: | :---: | :--- |\n")
+        f.write("| Docket ID | Payload | Reduction Trace | Root | Glyph | Base-3 (Fizz) | Base-5 (Buzz) | Ratification / Remand Status | Final Adjudicated Emission |\n")
+        f.write("| :--- | :--- | :--- | :---: | :---: | :---: | :---: | :--- | :--- |\n")
         
         for entry in audit_ledger:
             trace_str = " -> ".join(entry["reduction_trace"]) if entry["reduction_trace"] else "Identity"
             f_badge = "✅ VALID" if entry["fizz_valid"] else "❌ REJECT"
             b_badge = "✅ VALID" if entry["buzz_valid"] else "❌ REJECT"
-            f.write(f"| `{entry['case_id']}` | `{entry['payload']}` | {trace_str} | `{entry['digital_root']}` | `{entry['terminal_glyph']}` | {f_badge} | {b_badge} | **`{entry['emitted_token']}`** |\n")
+            f.write(f"| `{entry['case_id']}` | `{entry['payload']}` | {trace_str} | `{entry['digital_root']}` | `{entry['terminal_glyph']}` | {f_badge} | {b_badge} | {entry['ratification']} | **`{entry['emitted_token']}`** |\n")
 
         f.write("\n---\n\n")
         f.write("## 🤝 Part 3: Antitrust Merger Dispute Resolutions (All Collisions in 1..100)\n\n")
@@ -510,6 +792,7 @@ def main():
             f.write(f"- **Mandatory 3-Round Statutory Proceedings:**\n")
             for rnd in col["arbitration_rounds"]:
                 f.write(f"  1. {rnd}\n")
+            f.write(f"- **Appellate Ratification & Remand:** {col['ratification']}\n")
             f.write(f"- **Resulting Consolidated Emission:** `FizzBuzz`\n\n")
 
         f.write("---\n\n")
