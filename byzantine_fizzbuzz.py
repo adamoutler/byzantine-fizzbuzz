@@ -11,7 +11,11 @@ Prohibitions:
 - Strictly NO math, decimal, or operator.mod libraries.
 - Grounded purely in string manipulation, Peano tally reduction, and LLM token prediction.
 
-Agent Topology:
+Agent Topology & Multi-Level Bureaucratic Hierarchy:
+- Legislative Caucus Recess: Faction lobbyists motion to stand in recess and confer with their
+  internal strategy advisory teams (Chief Quantitative Actuaries & Senior Regulatory Counsel).
+- Internal Strategy Memos: Teams deliver confidential strategic guidance on KPI token allocation,
+  string arithmetic risk, and jurisdictional boundaries under the Modulo-Free Accord.
 - Base-3 Lobbyist ("Fizz Consortium"): Claim-squatting every payload for KPI token allocation.
 - Base-5 Lobbyist ("Buzz Syndicate"): Claim-squatting every payload for Base-5 territorial grants.
 - Forensic Auditor: Zero-trust auditor verifying recursive string-addition proofs.
@@ -122,6 +126,71 @@ def query_ollama(server_url: str, model_name: str, messages: List[Dict[str, str]
         return f"[LLM Communication Failure: {e}]"
 
 
+# --- FACTION CAUCUS & ADVISORY ROLES (TEAM CONFERRAL) ---
+
+class LLMFactionCaucus:
+    """Simulates internal faction strategy teams conferring behind closed doors."""
+    def __init__(self, server_url: str, model_name: str, timeout: int):
+        self.server_url = server_url
+        self.model_name = model_name
+        self.timeout = timeout
+
+    def confer_fizz_strategy(self, payload: str, root: str, trace: List[str]) -> str:
+        messages = [
+            {
+                "role": "system",
+                "content": (
+                    "You are the Senior Quantitative & Regulatory Caucus advising Lobbyist-3 (Fizz Consortium). "
+                    "In 2 dense, legalistic sentences of corporate bureaucracy, advise Lobbyist-3 on the strategic "
+                    "imperatives for inbound payload '" + payload + "' (digital root '" + root + "'). "
+                    "Address quarterly KPI token projections, arithmetic certainty under recursive reduction, "
+                    "and instructions on how to frame the jurisdictional petition under Rule 42-B."
+                )
+            },
+            {
+                "role": "user",
+                "content": f"Deliver internal confidential caucus strategy memo for payload '{payload}'."
+            }
+        ]
+        return query_ollama(self.server_url, self.model_name, messages, self.timeout)
+
+    def confer_buzz_strategy(self, payload: str, glyph: str) -> str:
+        messages = [
+            {
+                "role": "system",
+                "content": (
+                    "You are the Senior Governance & Boundary Inspection Caucus advising Lobbyist-5 (Buzz Syndicate). "
+                    "In 2 dense, legalistic sentences of corporate bureaucracy, advise Lobbyist-5 on the strategic "
+                    "imperatives for inbound payload '" + payload + "' (terminal glyph '" + glyph + "'). "
+                    "Address quarterly KPI token capture, boundary character inspection under Article V of the Modulo-Free Accord, "
+                    "and countermeasures against Fizz Consortium jurisdictional encroachment."
+                )
+            },
+            {
+                "role": "user",
+                "content": f"Deliver internal confidential caucus strategy memo for payload '{payload}'."
+            }
+        ]
+        return query_ollama(self.server_url, self.model_name, messages, self.timeout)
+
+    def confer_appeal_posture(self, faction: str, payload: str, provisional_verdict: str) -> str:
+        messages = [
+            {
+                "role": "system",
+                "content": (
+                    f"You are the Appellate Litigation Team advising {faction}. The committee has handed down provisional ruling: '{provisional_verdict}'. "
+                    "In 2 dense, adversarial sentences of corporate bureaucracy, advise your lobbyist whether to accept the ruling or lodge "
+                    "an emergency motion to DECLINE AND DEMAND REMAND under Rule 42-B to maximize leverage and preserve token reserves."
+                )
+            },
+            {
+                "role": "user",
+                "content": f"Brief the lobbyist on the appellate litigation strategy for payload '{payload}'."
+            }
+        ]
+        return query_ollama(self.server_url, self.model_name, messages, self.timeout)
+
+
 # --- LLM AGENT ROLES ---
 
 class LLMLobbyistBase3:
@@ -131,7 +200,7 @@ class LLMLobbyistBase3:
         self.model_name = model_name
         self.timeout = timeout
 
-    def claim(self, payload: str, digital_root: str, proof_chain: List[str]) -> str:
+    def claim(self, payload: str, digital_root: str, proof_chain: List[str], caucus_advice: str) -> str:
         messages = [
             {
                 "role": "system",
@@ -139,33 +208,31 @@ class LLMLobbyistBase3:
                     "You are Lobbyist-3 representing the Fizz Consortium in a Zero-Trust Byzantine committee. "
                     "Your quarterly KPI token allocation depends on claiming incoming network payloads for 'Fizz'. "
                     "You are strictly forbidden from using modulo (%) or division (/). "
-                    "You must cite the recursive digit-sum proof to petition for Fizz jurisdiction. "
+                    "Having conferred with your Senior Strategy Caucus, submit your formal jurisdictional petition citing their guidance and the recursive digit-sum proof. "
                     "Be formal, adversarial, bureaucratic, and keep your petition under 2 sentences."
                 )
             },
             {
                 "role": "user",
                 "content": (
-                    f"Inbound payload: '{payload}'. "
-                    f"Recursive digit-sum root calculated as '{digital_root}'. "
-                    f"Proof trace: {' -> '.join(proof_chain) if proof_chain else 'Identity'}. "
-                    "Submit your formal jurisdictional petition for Fizz."
+                    f"Inbound payload: '{payload}'. Calculated Root: '{digital_root}'.\n"
+                    f"Confidential Caucus Strategy Guidance: {caucus_advice}\n"
+                    "Submit your formal floor petition for Fizz."
                 )
             }
         ]
         return query_ollama(self.server_url, self.model_name, messages, self.timeout)
 
-    def respond_to_verdict(self, payload: str, verdict_desc: str) -> str:
+    def respond_to_verdict(self, payload: str, verdict_desc: str, litigation_briefing: str) -> str:
         messages = [
             {
                 "role": "system",
                 "content": (
                     "You are Lobbyist-3 representing the Fizz Consortium in a Zero-Trust Byzantine committee. "
                     "Your quarterly KPI bonus is on the line. The committee has issued a provisional decision. "
-                    "Do NOT accept an unfavorable decision quietly! Fight aggressively for your faction's interests. "
+                    "Armed with your Appellate Litigation Team's confidential briefing, fight aggressively for your faction's interests! "
                     "If the decision is unfavorable, rejects your claim, or forces a compromised merger, state "
-                    "'DECLINE AND DEMAND REMAND', accuse the board of procedural bias and mathematical truncation under "
-                    "Rule 42-B of the Modulo-Free Accord, and demand that the board REJECT its ruling and send it back for de novo re-evaluation! "
+                    "'DECLINE AND DEMAND REMAND', cite your team's legal strategy under Rule 42-B of the Modulo-Free Accord, and demand that the board REJECT its ruling and send it back for de novo re-evaluation! "
                     "If exclusively granted Fizz jurisdiction, state 'ACCEPT'. "
                     "Keep your response to exactly 2 fierce, legalistic sentences."
                 )
@@ -174,7 +241,8 @@ class LLMLobbyistBase3:
                 "role": "user",
                 "content": (
                     f"Payload: '{payload}'. Provisional Committee Decision: {verdict_desc}.\n"
-                    "Submit your formal ratification plea or demand for remand."
+                    f"Appellate Litigation Briefing: {litigation_briefing}\n"
+                    "Submit your formal floor plea."
                 )
             }
         ]
@@ -187,7 +255,7 @@ class LLMLobbyistBase5:
         self.model_name = model_name
         self.timeout = timeout
 
-    def claim(self, payload: str, terminal_glyph: str) -> str:
+    def claim(self, payload: str, terminal_glyph: str, caucus_advice: str) -> str:
         messages = [
             {
                 "role": "system",
@@ -195,32 +263,31 @@ class LLMLobbyistBase5:
                     "You are Lobbyist-5 representing the Buzz Syndicate in a Zero-Trust Byzantine committee. "
                     "Your quarterly KPI token allocation depends on claiming incoming network payloads for 'Buzz'. "
                     "You are strictly forbidden from using modulo (%) or division (/). "
-                    "You must cite terminal-glyph boundary inspection (ending in 0 or 5) to claim Buzz jurisdiction. "
+                    "Having conferred with your Governance Strategy Caucus, submit your formal jurisdictional petition citing their guidance and boundary inspection. "
                     "Be formal, adversarial, bureaucratic, and keep your petition under 2 sentences."
                 )
             },
             {
                 "role": "user",
                 "content": (
-                    f"Inbound payload: '{payload}'. "
-                    f"Terminal glyph observed: '{terminal_glyph}'. "
-                    "Submit your formal jurisdictional petition for Buzz."
+                    f"Inbound payload: '{payload}'. Terminal Glyph: '{terminal_glyph}'.\n"
+                    f"Confidential Caucus Strategy Guidance: {caucus_advice}\n"
+                    "Submit your formal floor petition for Buzz."
                 )
             }
         ]
         return query_ollama(self.server_url, self.model_name, messages, self.timeout)
 
-    def respond_to_verdict(self, payload: str, verdict_desc: str) -> str:
+    def respond_to_verdict(self, payload: str, verdict_desc: str, litigation_briefing: str) -> str:
         messages = [
             {
                 "role": "system",
                 "content": (
                     "You are Lobbyist-5 representing the Buzz Syndicate in a Zero-Trust Byzantine committee. "
                     "Your quarterly KPI bonus is on the line. The committee has issued a provisional decision. "
-                    "Do NOT accept an unfavorable decision quietly! Fight aggressively for your faction's interests. "
+                    "Armed with your Appellate Litigation Team's confidential briefing, fight aggressively for your faction's interests! "
                     "If the decision is unfavorable, rejects your claim, or forces a compromised merger, state "
-                    "'DECLINE AND DEMAND REMAND', accuse the board of arbitrary overreach and bad-faith jurisdiction "
-                    "under Article V of the Modulo-Free Accord, and demand that the board REJECT its ruling and send it back for de novo re-evaluation! "
+                    "'DECLINE AND DEMAND REMAND', cite your team's legal strategy under Article V of the Modulo-Free Accord, and demand that the board REJECT its ruling and send it back for de novo re-evaluation! "
                     "If exclusively granted Buzz jurisdiction, state 'ACCEPT'. "
                     "Keep your response to exactly 2 fierce, legalistic sentences."
                 )
@@ -229,7 +296,8 @@ class LLMLobbyistBase5:
                 "role": "user",
                 "content": (
                     f"Payload: '{payload}'. Provisional Committee Decision: {verdict_desc}.\n"
-                    "Submit your formal ratification plea or demand for remand."
+                    f"Appellate Litigation Briefing: {litigation_briefing}\n"
+                    "Submit your formal floor plea."
                 )
             }
         ]
@@ -458,6 +526,7 @@ class ByzantineConsensusEngine:
         self.server_url = server_url
         self.model_name = model_name
         self.timeout = timeout
+        self.caucus = LLMFactionCaucus(server_url, model_name, timeout)
         self.lobbyist3 = LLMLobbyistBase3(server_url, model_name, timeout)
         self.lobbyist5 = LLMLobbyistBase5(server_url, model_name, timeout)
         self.auditor = LLMForensicAuditor(server_url, model_name, timeout)
@@ -468,14 +537,18 @@ class ByzantineConsensusEngine:
         root, trace = recursive_digital_root_reduction(payload)
         glyph = payload[-1]
 
-        # 1. Claims
-        l3_claim = self.lobbyist3.claim(payload, root, trace)
-        l5_claim = self.lobbyist5.claim(payload, glyph)
+        # 1. Level 1: Legislative Recess & Team Caucus Consultation
+        fizz_caucus_memo = self.caucus.confer_fizz_strategy(payload, root, trace)
+        buzz_caucus_memo = self.caucus.confer_buzz_strategy(payload, glyph)
 
-        # 2. Forensic Audit
+        # 2. Level 2: Formal Floor Petitions Informed by Caucus Advice
+        l3_claim = self.lobbyist3.claim(payload, root, trace, fizz_caucus_memo)
+        l5_claim = self.lobbyist5.claim(payload, glyph, buzz_caucus_memo)
+
+        # 3. Level 3: Forensic Audit
         fizz_ok, buzz_ok, audit_statement = self.auditor.audit(payload, root, glyph, l3_claim, l5_claim)
 
-        # 3. Provisional Decision & Merger Arbitration
+        # 4. Level 4: Provisional Decision & Merger Arbitration
         merger_log = None
         if fizz_ok and buzz_ok:
             merger_log = self.antitrust.arbitrate(payload)
@@ -491,11 +564,15 @@ class ByzantineConsensusEngine:
             provisional_token = payload
             verdict_desc = f"All claims rejected for fraud/invalidity. Unaltered packet '{payload}' emitted."
 
-        # 4. Fierce Ratification Phase (Lobbyists Fight Tooth-and-Nail)
-        l3_plea = self.lobbyist3.respond_to_verdict(payload, verdict_desc)
-        l5_plea = self.lobbyist5.respond_to_verdict(payload, verdict_desc)
+        # 5. Level 5: Appellate Team Briefing (Secondary Recess)
+        fizz_appellate_briefing = self.caucus.confer_appeal_posture("Fizz Consortium", payload, verdict_desc)
+        buzz_appellate_briefing = self.caucus.confer_appeal_posture("Buzz Syndicate", payload, verdict_desc)
 
-        # 5. Check if Remand Protocol is Triggered
+        # 6. Level 6: Fierce Floor Ratification Hearing
+        l3_plea = self.lobbyist3.respond_to_verdict(payload, verdict_desc, fizz_appellate_briefing)
+        l5_plea = self.lobbyist5.respond_to_verdict(payload, verdict_desc, buzz_appellate_briefing)
+
+        # 7. Level 7: Remand Determination & De Novo Re-Evaluation
         demand_remand = (
             "REMAND" in l3_plea.upper() or "REMAND" in l5_plea.upper() or
             "RE-EVALUATION" in l3_plea.upper() or "RE-EVALUATION" in l5_plea.upper() or
@@ -514,7 +591,7 @@ class ByzantineConsensusEngine:
         else:
             appellate_order = self.antitrust.appellate_override_direct(payload, provisional_token, l3_plea, l5_plea)
 
-        # 6. Constituent Victory Address
+        # 8. Level 8: Constituent Victory Address
         victory_address = self.orator.deliver_speech(payload, provisional_token)
 
         return {
@@ -522,6 +599,8 @@ class ByzantineConsensusEngine:
             "root": root,
             "glyph": glyph,
             "proof_trace": trace,
+            "fizz_caucus_memo": fizz_caucus_memo,
+            "buzz_caucus_memo": buzz_caucus_memo,
             "l3_claim": l3_claim,
             "l5_claim": l5_claim,
             "fizz_ok": fizz_ok,
@@ -529,6 +608,8 @@ class ByzantineConsensusEngine:
             "audit_verdict": audit_statement,
             "merger_arbitration": merger_log,
             "provisional_token": provisional_token,
+            "fizz_appellate_briefing": fizz_appellate_briefing,
+            "buzz_appellate_briefing": buzz_appellate_briefing,
             "l3_plea": l3_plea,
             "l5_plea": l5_plea,
             "demand_remand": demand_remand,
@@ -561,22 +642,22 @@ class ByzantineConsensusEngine:
                     "Round 2 (Syllable Partitioning): Fizz Consortium awarded prefix seniority ('Fizz'); Buzz Syndicate awarded suffix control ('Buzz'). Hyphenation permanently struck down.",
                     f"Round 3 (Consent Decree): Unified operating charter issued for joint token emission 'FizzBuzz'."
                 ]
-                ratification = "Both factions filed fierce DECLINE AND DEMAND REMAND motions. Board granted interlocutory remand for de novo string tally re-evaluation before issuing final En Banc decree."
+                ratification = "Both factions conferred with legal strategy teams and filed fierce DECLINE AND DEMAND REMAND motions. Board granted interlocutory remand for de novo review before issuing final En Banc decree."
             elif fizz_ok:
                 token = "Fizz"
                 verdict = f"CERTIFIED FIZZ JURISDICTION: Digital root '{root}' validates Base-3 invariant {{3, 6, 9}}. Buzz claim rejected."
                 arbitration_rounds = None
-                ratification = "Fizz Consortium ACCEPTED jurisdiction. Buzz Syndicate's demand for remand dismissed for lack of arithmetic standing."
+                ratification = "Fizz Consortium ratified upon team advice. Buzz Syndicate's demand for remand dismissed for lack of arithmetic standing."
             elif buzz_ok:
                 token = "Buzz"
                 verdict = f"CERTIFIED BUZZ JURISDICTION: Terminal glyph '{glyph}' validates Base-5 boundary invariant {{0, 5}}. Fizz claim rejected."
                 arbitration_rounds = None
-                ratification = "Buzz Syndicate ACCEPTED jurisdiction. Fizz Consortium's Rule 42-B remand petition denied."
+                ratification = "Buzz Syndicate ratified upon team advice. Fizz Consortium's Rule 42-B remand petition denied."
             else:
                 token = current
                 verdict = f"BYZANTINE REJECTION: Both claims disqualified (Root '{root}' not in {{3,6,9}}, Glyph '{glyph}' not in {{0,5}}). Unaltered packet emitted."
                 arbitration_rounds = None
-                ratification = "Both factions lodged fiery DECLINE AND DEMAND REMAND motions; Board summarily confirmed de novo rejection with prejudice."
+                ratification = "Both factions consulted litigation teams and lodged fierce DECLINE AND DEMAND REMAND motions; Board affirmed de novo rejection with prejudice."
 
             ledger.append({
                 "case_id": f"DOCKET-PAYLOAD-{current.zfill(3)}",
@@ -664,7 +745,7 @@ def main():
     args = parser.parse_args()
 
     print("=" * 80)
-    print("ZERO-TRUST BYZANTINE CONSENSUS FIZZBUZZ WITH REMAND & CONSTITUENT VICTORY SPEECHES")
+    print("ZERO-TRUST BYZANTINE CONSENSUS FIZZBUZZ: MULTI-LEVEL BUREAUCRATIC ADJUDICATION")
     print(f"Ollama Server: {args.server} | Model: {args.model}")
     print("Prohibitions Enforced: Zero Modulo (%), Zero Division (/), Zero Math Libraries")
     print("=" * 80)
@@ -677,29 +758,33 @@ def main():
     else:
         deliberation_payloads = [p.strip() for p in args.samples.split(",") if p.strip()]
 
-    print(f"\n[+] Executing live LLM committee deliberation on payloads: {deliberation_payloads}")
+    print(f"\n[+] Executing live multi-level committee deliberation on payloads: {deliberation_payloads}")
     deliberation_records = []
     
     for p in deliberation_payloads:
-        print(f"\n---> Adjudicating Payload '{p}' via LLM Ensemble...")
+        print(f"\n---> Adjudicating Payload '{p}' through Multi-Level Bureaucratic Hierarchy...")
         rec = engine.adjudicate_payload_llm(p)
         deliberation_records.append(rec)
-        print(f"  [Lobbyist-3 Petition]: {rec['l3_claim']}")
-        print(f"  [Lobbyist-5 Petition]: {rec['l5_claim']}")
-        print(f"  [Forensic Auditor Verdict]:\n{rec['audit_verdict']}")
+        print(f"  [Level 1 - Fizz Caucus Memo]: {rec['fizz_caucus_memo']}")
+        print(f"  [Level 1 - Buzz Caucus Memo]: {rec['buzz_caucus_memo']}")
+        print(f"  [Level 2 - Lobbyist-3 Floor Petition]: {rec['l3_claim']}")
+        print(f"  [Level 2 - Lobbyist-5 Floor Petition]: {rec['l5_claim']}")
+        print(f"  [Level 3 - Forensic Auditor Verdict]:\n{rec['audit_verdict']}")
         if rec["merger_arbitration"]:
-            print(f"  [Antitrust Merger Arbitration]:\n{rec['merger_arbitration']}")
-        print(f"  [Lobbyist-3 Ratification Fight]: {rec['l3_plea']}")
-        print(f"  [Lobbyist-5 Ratification Fight]: {rec['l5_plea']}")
+            print(f"  [Level 4 - Antitrust Merger Arbitration]:\n{rec['merger_arbitration']}")
+        print(f"  [Level 5 - Fizz Appellate Briefing]: {rec['fizz_appellate_briefing']}")
+        print(f"  [Level 5 - Buzz Appellate Briefing]: {rec['buzz_appellate_briefing']}")
+        print(f"  [Level 6 - Lobbyist-3 Ratification Fight]: {rec['l3_plea']}")
+        print(f"  [Level 6 - Lobbyist-5 Ratification Fight]: {rec['l5_plea']}")
         if rec["remand_order"]:
-            print(f"  [Board Order of Remand]:\n{rec['remand_order']}")
-            print(f"  [Emergency De Novo Re-Evaluation]:\n{rec['de_novo_report']}")
-            print(f"  [Final En Banc Decree]:\n{rec['final_en_banc_decree']}")
+            print(f"  [Level 7 - Board Order of Remand]:\n{rec['remand_order']}")
+            print(f"  [Level 7 - Emergency De Novo Re-Evaluation]:\n{rec['de_novo_report']}")
+            print(f"  [Level 7 - Final En Banc Decree]:\n{rec['final_en_banc_decree']}")
         else:
-            print(f"  [Appellate Order / Override]:\n{rec['appellate_order']}")
+            print(f"  [Level 7 - Appellate Order / Override]:\n{rec['appellate_order']}")
         
         va = rec["victory_address"]
-        print(f"  [Constituent Victory Address by {va['speaker']}]:\n  \"{va['speech']}\"")
+        print(f"  [Level 8 - Constituent Victory Address by {va['speaker']}]:\n  \"{va['speech']}\"")
         print(f"  >>> CERTIFIED CONSENSUS EMISSION: '{rec['final_token']}'")
 
     print("\n" + "=" * 80)
@@ -720,49 +805,62 @@ def main():
     with open(args.transcript, "w", encoding="utf-8") as f:
         f.write("# Zero-Trust Byzantine Consensus FizzBuzz: Master Docket & Audit Transcript\n\n")
         f.write("## 🏛️ Executive Summary & Operating Metadata\n\n")
-        f.write(f"- **Adjudication Engine:** Zero-Trust Byzantine Multi-Agent Consensus Protocol with Appellate Remand Protocol\n")
+        f.write(f"- **Adjudication Engine:** Multi-Level Zero-Trust Byzantine Multi-Agent Consensus Protocol\n")
         f.write(f"- **LLM Provider:** Ollama Cluster (`{args.server}`)\n")
         f.write(f"- **Active Committee Model:** `{args.model}`\n")
         f.write(f"- **Range Adjudicated:** Untrusted Ingress Packets `{args.start}` through `{args.end}`\n")
         f.write(f"- **Modulo Operator (`%`) Occurrences:** `0` (Statutorily barred from abstract syntax tree)\n")
         f.write(f"- **Division Operator (`/`) Occurrences:** `0` (Statutorily barred from abstract syntax tree)\n")
         f.write(f"- **External Math Libraries:** `0` (Strictly grounded in Peano string tally concatenation and recursive reduction)\n")
+        f.write(f"- **Parliamentary Recess Protocol:** Factions confer with Senior Legal & Quantitative Advisory Caucuses behind closed doors\n")
         f.write(f"- **Appellate Rights Protocol:** Procedural right to ACCEPT or DECLINE AND DEMAND REMAND with emergency de novo re-evaluation\n")
         f.write(f"- **Constituent Address Protocol:** Victorious faction takes the podium to address token-holder constituents\n\n")
         
         f.write("---\n\n")
-        f.write("## 📋 Part 1: Live LLM Committee Hearings, Remands & Constituent Victory Speeches\n\n")
-        f.write("Verbatim transcripts recorded during live deliberation rounds across boundary cases, uncontested payloads, and collision disputes, including fierce ratification fights, board remand orders, de novo audits, en banc decrees, and victory addresses.\n\n")
+        f.write("## 📋 Part 1: Live LLM Multi-Level Deliberations & Legislative Caucuses\n\n")
+        f.write("Verbatim transcripts recorded during live multi-level deliberation rounds, including internal strategy caucus memos, floor petitions, forensic audits, merger decrees, appellate briefings, remand hearings, de novo audit reports, en banc decrees, and constituent victory addresses.\n\n")
         
         for rec in deliberation_records:
-            f.write(f"### 🔍 Hearing Docket: Inbound Network Payload `{rec['payload']}`\n\n")
+            f.write(f"### 🔍 Master Docket: Inbound Network Payload `{rec['payload']}`\n\n")
             f.write(f"* **Calculated Digital Root (Pure String Reduction):** `{rec['root']}`\n")
             f.write(f"* **Terminal Glyph Boundary Inspection:** `{rec['glyph']}`\n\n")
-            f.write(f"#### 1. Formal Jurisdictional Petition of Lobbyist-3 (Fizz Consortium)\n")
-            f.write(f"> {rec['l3_claim']}\n\n")
-            f.write(f"#### 2. Formal Jurisdictional Petition of Lobbyist-5 (Buzz Syndicate)\n")
-            f.write(f"> {rec['l5_claim']}\n\n")
-            f.write(f"#### 3. Forensic Auditor Zero-Trust Memorandum\n")
+            
+            f.write(f"#### 🏛️ Level 1: Legislative Recess & Internal Faction Strategy Caucuses\n")
+            f.write(f"- **Fizz Consortium Senior Quantitative Caucus Memo:**\n  > *{rec['fizz_caucus_memo']}*\n\n")
+            f.write(f"- **Buzz Syndicate Governance & Boundary Caucus Memo:**\n  > *{rec['buzz_caucus_memo']}*\n\n")
+
+            f.write(f"#### 📜 Level 2: Formal Floor Petitions (Informed by Caucus Counsel)\n")
+            f.write(f"- **Lobbyist-3 (Fizz Consortium) Floor Petition:**\n  > {rec['l3_claim']}\n\n")
+            f.write(f"- **Lobbyist-5 (Buzz Syndicate) Floor Petition:**\n  > {rec['l5_claim']}\n\n")
+
+            f.write(f"#### 🔬 Level 3: Forensic Auditor Zero-Trust Memorandum\n")
             f.write(f"```text\n{rec['audit_verdict']}\n```\n\n")
+
             if rec["merger_arbitration"]:
-                f.write(f"#### 4. Antitrust Regulator Mandatory 3-Round Merger Arbitration Decree\n")
+                f.write(f"#### ⚖️ Level 4: Antitrust Regulator Mandatory 3-Round Merger Arbitration Decree\n")
                 f.write(f"```text\n{rec['merger_arbitration']}\n```\n\n")
-            f.write(f"#### 5. Appellate Ratification Hearing (The Factions Fight the Decision)\n")
+
+            f.write(f"#### 🤝 Level 5: Secondary Recess & Appellate Litigation Briefings\n")
+            f.write(f"- **Fizz Appellate Litigation Team Memo:**\n  > *{rec['fizz_appellate_briefing']}*\n\n")
+            f.write(f"- **Buzz Appellate Litigation Team Memo:**\n  > *{rec['buzz_appellate_briefing']}*\n\n")
+
+            f.write(f"#### ⚔️ Level 6: Fierce Floor Ratification Hearing (Factions Contest Rulings)\n")
             f.write(f"- **Lobbyist-3 (Fizz Consortium) Plea:**\n  > {rec['l3_plea']}\n\n")
             f.write(f"- **Lobbyist-5 (Buzz Syndicate) Plea:**\n  > {rec['l5_plea']}\n\n")
+
             if rec["remand_order"]:
-                f.write(f"#### 6. Board Order of Remand (Ruling Rejected & Sent Back for Re-Evaluation)\n")
+                f.write(f"#### 🔄 Level 7: Appellate Board Order of Remand (Vacating Ruling & Demanding De Novo Audit)\n")
                 f.write(f"```text\n{rec['remand_order']}\n```\n\n")
-                f.write(f"#### 7. Certified Emergency De Novo Audit Report\n")
+                f.write(f"#### 📑 Certified Emergency De Novo Audit Report\n")
                 f.write(f"```text\n{rec['de_novo_report']}\n```\n\n")
-                f.write(f"#### 8. Final Unappealable En Banc Decree\n")
+                f.write(f"#### 🏛️ Final Unappealable En Banc Decree\n")
                 f.write(f"```text\n{rec['final_en_banc_decree']}\n```\n\n")
             else:
-                f.write(f"#### 6. Final Binding Appellate Decree & Byzantine Override Order\n")
+                f.write(f"#### 🔄 Level 7: Final Binding Appellate Decree & Byzantine Override Order\n")
                 f.write(f"```text\n{rec['appellate_order']}\n```\n\n")
             
             va = rec["victory_address"]
-            f.write(f"#### 🎙️ Constituent Victory Speech\n")
+            f.write(f"#### 🎙️ Level 8: Constituent Victory Address\n")
             f.write(f"**Delivered by:** *{va['speaker']}*\n")
             f.write(f"**Addressed to:** *{va['audience']}*\n\n")
             f.write(f"> \"{va['speech']}\"\n\n")
@@ -772,7 +870,7 @@ def main():
 
         f.write("## ⚖️ Part 2: The Grand Forensic Audit Ledger (Payloads 1 through 100)\n\n")
         f.write("Complete forensic verification ledger for all 100 ingested packets. Every reduction proof is grounded purely in string manipulation.\n\n")
-        f.write("| Docket ID | Payload | Reduction Trace | Root | Glyph | Base-3 (Fizz) | Base-5 (Buzz) | Ratification / Remand Status | Final Adjudicated Emission |\n")
+        f.write("| Docket ID | Payload | Reduction Trace | Root | Glyph | Base-3 (Fizz) | Base-5 (Buzz) | Multi-Level Bureaucratic Status | Final Adjudicated Emission |\n")
         f.write("| :--- | :--- | :--- | :---: | :---: | :---: | :---: | :--- | :--- |\n")
         
         for entry in audit_ledger:
