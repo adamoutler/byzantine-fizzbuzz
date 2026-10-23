@@ -296,29 +296,55 @@ class ByzantineConsensusEngine:
             "final_token": final_token,
         }
 
-    def run_zero_modulo_sequence(self, start_num: int = 1, end_num: int = 100) -> List[Tuple[str, str]]:
-        """Processes number sequence using pure string/Peano increments and string reduction."""
-        out = []
+    def run_full_forensic_audit(self, start_num: int = 1, end_num: int = 100) -> List[Dict[str, any]]:
+        """Processes number sequence generating complete forensic audit ledger for every payload."""
+        ledger = []
         current = str(start_num)
         total_count = end_num - start_num + 1
 
-        for _ in range(total_count):
-            root, _ = recursive_digital_root_reduction(current)
+        for idx_counter in range(total_count):
+            root, trace = recursive_digital_root_reduction(current)
             glyph = current[-1]
-            f_ok = root in {"3", "6", "9"}
-            b_ok = glyph in {"0", "5"}
+            fizz_ok = root in {"3", "6", "9"}
+            buzz_ok = glyph in {"0", "5"}
 
-            if f_ok and b_ok:
-                tok = "FizzBuzz"
-            elif f_ok:
-                tok = "Fizz"
-            elif b_ok:
-                tok = "Buzz"
+            collision = fizz_ok and buzz_ok
+            if collision:
+                token = "FizzBuzz"
+                verdict = "DUAL-CLAIM MONOPOLY COLLISION (Mandatory 3-Round Merger Injunction)"
+                arbitration_rounds = [
+                    f"Round 1 (HSR Injunction): Simultaneous claims on payload '{current}' breach linguistic monopoly thresholds. Stay issued.",
+                    "Round 2 (Syllable Partitioning): Fizz Consortium awarded prefix seniority ('Fizz'); Buzz Syndicate awarded suffix control ('Buzz'). Hyphenation permanently struck down.",
+                    f"Round 3 (Consent Decree): Unified operating charter issued for joint token emission 'FizzBuzz'."
+                ]
+            elif fizz_ok:
+                token = "Fizz"
+                verdict = f"CERTIFIED FIZZ JURISDICTION: Digital root '{root}' validates Base-3 invariant {{3, 6, 9}}. Buzz claim rejected."
+                arbitration_rounds = None
+            elif buzz_ok:
+                token = "Buzz"
+                verdict = f"CERTIFIED BUZZ JURISDICTION: Terminal glyph '{glyph}' validates Base-5 boundary invariant {{0, 5}}. Fizz claim rejected."
+                arbitration_rounds = None
             else:
-                tok = current
-            out.append((current, tok))
+                token = current
+                verdict = f"BYZANTINE REJECTION: Both claims disqualified (Root '{root}' not in {{3,6,9}}, Glyph '{glyph}' not in {{0,5}}). Unaltered packet emitted."
+                arbitration_rounds = None
 
-            # String increment (strictly no math addition or division)
+            ledger.append({
+                "case_id": f"DOCKET-PAYLOAD-{current.zfill(3)}",
+                "payload": current,
+                "digital_root": root,
+                "terminal_glyph": glyph,
+                "reduction_trace": trace,
+                "fizz_valid": fizz_ok,
+                "buzz_valid": buzz_ok,
+                "verdict": verdict,
+                "collision": collision,
+                "arbitration_rounds": arbitration_rounds,
+                "emitted_token": token,
+            })
+
+            # Pure String/Peano increment without math addition
             curr_chars = list(current)
             idx = len(curr_chars) - 1
             carry = True
@@ -335,7 +361,7 @@ class ByzantineConsensusEngine:
                 curr_chars.insert(0, '1')
             current = "".join(curr_chars)
 
-        return out
+        return ledger
 
 
 def main():
@@ -417,43 +443,80 @@ def main():
         print(f"  >>> CONSENSUS EMISSION: '{rec['final_token']}'")
 
     print("\n" + "=" * 80)
-    print(f"PROCESSING FULL SEQUENCE ({args.start}..{args.end}) UNDER ZERO-MODULO INVARIANTS")
+    print(f"PROCESSING COMPLETE AUDIT LEDGER ({args.start}..{args.end}) UNDER ZERO-MODULO INVARIANTS")
     print("=" * 80)
-    full_sequence = engine.run_zero_modulo_sequence(args.start, args.end)
+    audit_ledger = engine.run_full_forensic_audit(args.start, args.end)
 
     row = []
-    for num, tok in full_sequence:
-        row.append(f"{tok}")
+    for entry in audit_ledger:
+        row.append(f"{entry['emitted_token']}")
         if len(row) == 10:
             print(", ".join(row))
             row = []
     if row:
         print(", ".join(row))
 
-    # Write Markdown Transcript
+    # Compile the Master Comprehensive Markdown Transcript
     with open(args.transcript, "w", encoding="utf-8") as f:
-        f.write("# Zero-Trust Byzantine Consensus FizzBuzz: Execution Transcript\n\n")
-        f.write(f"- **Ollama Server:** `{args.server}`\n")
-        f.write(f"- **LLM Model:** `{args.model}`\n")
-        f.write("- **Modulo Operator (`%`) Usages:** `0`\n")
-        f.write("- **Division Operator (`/`) Usages:** `0`\n")
-        f.write("- **External Math Libraries:** `0` (Pure Peano string arithmetic)\n\n")
-        f.write("## 1. Live Committee Deliberations\n\n")
+        f.write("# Zero-Trust Byzantine Consensus FizzBuzz: Master Docket & Audit Transcript\n\n")
+        f.write("## 🏛️ Executive Summary & Operating Metadata\n\n")
+        f.write(f"- **Adjudication Engine:** Zero-Trust Byzantine Multi-Agent Consensus Protocol\n")
+        f.write(f"- **LLM Provider:** Ollama Cluster (`{args.server}`)\n")
+        f.write(f"- **Active Committee Model:** `{args.model}`\n")
+        f.write(f"- **Range Adjudicated:** Untrusted Ingress Packets `{args.start}` through `{args.end}`\n")
+        f.write(f"- **Modulo Operator (`%`) Occurrences:** `0` (Statutorily barred from abstract syntax tree)\n")
+        f.write(f"- **Division Operator (`/`) Occurrences:** `0` (Statutorily barred from abstract syntax tree)\n")
+        f.write(f"- **External Math Libraries:** `0` (Strictly grounded in Peano string tally concatenation and recursive reduction)\n\n")
+        
+        f.write("---\n\n")
+        f.write("## 📋 Part 1: Live LLM Committee Hearings (Ollama Ensemble)\n\n")
+        f.write("Verbatim transcripts recorded during live deliberation rounds across boundary cases, uncontested payloads, and collision disputes.\n\n")
+        
         for rec in deliberation_records:
-            f.write(f"### Payload `{rec['payload']}`\n\n")
-            f.write(f"- **Digital Root (String-Addition Chain):** `{rec['root']}`\n")
-            f.write(f"- **Terminal Glyph:** `{rec['glyph']}`\n")
-            f.write(f"- **Lobbyist-3 (Fizz Consortium) Petition:**\n  > {rec['l3_claim']}\n\n")
-            f.write(f"- **Lobbyist-5 (Buzz Syndicate) Petition:**\n  > {rec['l5_claim']}\n\n")
-            f.write(f"- **Forensic Auditor Ruling:**\n```text\n{rec['audit_verdict']}\n```\n\n")
+            f.write(f"### 🔍 Hearing Docket: Inbound Network Payload `{rec['payload']}`\n\n")
+            f.write(f"* **Calculated Digital Root (Pure String Reduction):** `{rec['root']}`\n")
+            f.write(f"* **Terminal Glyph Boundary Inspection:** `{rec['glyph']}`\n\n")
+            f.write(f"#### 1. Formal Jurisdictional Petition of Lobbyist-3 (Fizz Consortium)\n")
+            f.write(f"> {rec['l3_claim']}\n\n")
+            f.write(f"#### 2. Formal Jurisdictional Petition of Lobbyist-5 (Buzz Syndicate)\n")
+            f.write(f"> {rec['l5_claim']}\n\n")
+            f.write(f"#### 3. Forensic Auditor Zero-Trust Memorandum\n")
+            f.write(f"```text\n{rec['audit_verdict']}\n```\n\n")
             if rec["merger_arbitration"]:
-                f.write(f"- **Antitrust Regulator 3-Round Merger Arbitration:**\n```text\n{rec['merger_arbitration']}\n```\n\n")
-            f.write(f"**Final Consensus Emission:** `{rec['final_token']}`\n\n---\n\n")
+                f.write(f"#### 4. Antitrust Regulator Mandatory 3-Round Merger Arbitration Decree\n")
+                f.write(f"```text\n{rec['merger_arbitration']}\n```\n\n")
+            f.write(f"**⚡ Final Certified Emission:** `{rec['final_token']}`\n\n")
+            f.write("---\n\n")
 
-        f.write("## 2. Complete Adjudicated Sequence (1–100)\n\n```text\n")
+        f.write("## ⚖️ Part 2: The Grand Forensic Audit Ledger (Payloads 1 through 100)\n\n")
+        f.write("Complete forensic verification ledger for all 100 ingested packets. Every reduction proof is grounded purely in string manipulation.\n\n")
+        f.write("| Docket ID | Payload | Reduction Trace | Root | Glyph | Base-3 (Fizz) | Base-5 (Buzz) | Final Adjudicated Emission |\n")
+        f.write("| :--- | :--- | :--- | :---: | :---: | :---: | :---: | :--- |\n")
+        
+        for entry in audit_ledger:
+            trace_str = " -> ".join(entry["reduction_trace"]) if entry["reduction_trace"] else "Identity"
+            f_badge = "✅ VALID" if entry["fizz_valid"] else "❌ REJECT"
+            b_badge = "✅ VALID" if entry["buzz_valid"] else "❌ REJECT"
+            f.write(f"| `{entry['case_id']}` | `{entry['payload']}` | {trace_str} | `{entry['digital_root']}` | `{entry['terminal_glyph']}` | {f_badge} | {b_badge} | **`{entry['emitted_token']}`** |\n")
+
+        f.write("\n---\n\n")
+        f.write("## 🤝 Part 3: Antitrust Merger Dispute Resolutions (All Collisions in 1..100)\n\n")
+        f.write("The Algorithmic Antitrust Regulator intervenes whenever simultaneous valid claims cause an anti-competitive monopoly deadlock.\n\n")
+        
+        collision_entries = [e for e in audit_ledger if e["collision"]]
+        for col in collision_entries:
+            f.write(f"### Arbitrated Merger: Payload `{col['payload']}` (Docket `{col['case_id']}`)\n\n")
+            f.write(f"- **Competing Claims:** Fizz Consortium (Digital Root `{col['digital_root']}` in {{3, 6, 9}}) vs Buzz Syndicate (Terminal Glyph `{col['terminal_glyph']}` in {{0, 5}})\n")
+            f.write(f"- **Mandatory 3-Round Statutory Proceedings:**\n")
+            for rnd in col["arbitration_rounds"]:
+                f.write(f"  1. {rnd}\n")
+            f.write(f"- **Resulting Consolidated Emission:** `FizzBuzz`\n\n")
+
+        f.write("---\n\n")
+        f.write("## 🏁 Part 4: Canonical Zero-Trust Output Stream (1–100)\n\n```text\n")
         row = []
-        for _, tok in full_sequence:
-            row.append(tok)
+        for entry in audit_ledger:
+            row.append(entry["emitted_token"])
             if len(row) == 10:
                 f.write(", ".join(row) + "\n")
                 row = []
@@ -461,7 +524,7 @@ def main():
             f.write(", ".join(row) + "\n")
         f.write("```\n")
 
-    print(f"\n[+] Full Markdown transcript written to: {args.transcript}")
+    print(f"\n[+] Master comprehensive transcript written to: {args.transcript}")
 
 
 if __name__ == "__main__":
