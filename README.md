@@ -11,8 +11,14 @@ An adversarial, multi-agent consensus protocol solving the classic FizzBuzz prob
 3. **Strictly NO Math Libraries:** No imports of `math`, `decimal`, or `operator.mod`.
 4. **Token & String Grounding:** Divisibility proofs must be established through recursive string-addition reduction and terminal glyph inspection grounded in Peano tally primitives.
 5. **Multi-Level Legislative Bureaucracy:** Factions do not speak off-the-cuff; lobbyists must formally motion for parliamentary recesses to confer with their internal Quantitative & Legal Strategy Caucuses.
-6. **The Interlocutory Remand Circuit:** When challenged under Rule 42-B, the Board rejects/vacates its provisional ruling, stays emission, and remands the docket back to the Forensic Auditor for an emergency *de novo* re-evaluation before delivering the final En Banc decree.
-7. **Constituent Victory Address:** The victorious faction takes the podium to deliver a grandiose victory speech addressed directly to their token-holder constituents.
+6. **Dynamic Floor Order & Cross-Testimony:** Faction speaking order is randomized for each docket. Factions no longer exist in a bubble; the opening speaker stakes their claim or plea, and the second speaker directly addresses, rebuts, and counter-attacks the rival party's testimony.
+7. **Rational Game-Theoretic Appeals:** Factions act in rational self-interest regarding quarterly KPI token dividends:
+   * **Clean Wins (100% KPI):** Winning faction MUST formally state `ACCEPT` and ratify the decree immediately without fighting their own victory.
+   * **Split KPI Mergers (50/50 'FizzBuzz'):** Factions fiercely fight token dilution, filing motions to `DECLINE AND DEMAND REMAND` to claim exclusive sovereign domain.
+   * **Losses (0% KPI):** Defeated factions lodge procedural appeals under Rule 42-B / Article V to demand *de novo* re-evaluation.
+8. **The Interlocutory Remand Circuit:** When challenged, the Board vacates its provisional ruling, stays emission, and remands the docket back to the Forensic Auditor for an emergency *de novo* re-evaluation before delivering the final En Banc decree.
+9. **Constituent Victory Address:** The victorious faction takes the podium to deliver a grandiose victory speech addressed directly to their token-holder constituents.
+10. **Clean GitHub Markdown Formatting:** All formal transcripts and audit records are formatted using standard Markdown blockquotes (`>`) rather than rigid horizontal code boxes, ensuring seamless text wrapping and readability on desktop and mobile.
 
 ---
 
@@ -25,7 +31,7 @@ flowchart TD
     Recess1 --> F1["Fizz Quantitative Strategy Memo"]
     Recess1 --> B1["Buzz Governance Strategy Memo"]
     
-    F1 --> Floor["Level 2: Formal Floor Petitions<br>(Citing Internal Caucus Guidance)"]
+    F1 --> Floor["Level 2: Dynamic Floor Petitions<br>(Randomized Order & Cross-Testimony)"]
     B1 --> Floor
     
     Floor --> Audit["Level 3: Forensic Zero-Trust Audit<br>(String Addition & Glyph Verification)"]
@@ -35,7 +41,7 @@ flowchart TD
     Merger --> ProvDecision
     
     ProvDecision --> Recess2["Level 5: Secondary Recess<br>(Appellate Litigation Strategy Briefings)"]
-    Recess2 --> Ratify["Level 6: Fierce Floor Ratification Hearing<br>(ACCEPT vs DECLINE AND DEMAND REMAND)"]
+    Recess2 --> Ratify["Level 6: Rational Floor Ratification<br>(Clean Wins ACCEPT / Splits REMAND)"]
     
     Ratify -- "Fierce Remand Challenge" --> Remand["Level 7A: Board Order of Remand<br>(Provisional Decision Vacated & Sent Back)"]
     Remand --> DeNovo["Level 7B: Emergency De Novo Re-Evaluation<br>(String Tally Re-Verification)"]
