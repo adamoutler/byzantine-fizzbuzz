@@ -1,5 +1,7 @@
 # Zero-Trust Byzantine Consensus FizzBuzz (No Modulo Allowed)
 
+This is created as the least efficient fizz buzz ever created, burning quadrillions of operations before emitting a single fizz or buzz while providing minimally remarkable entertainment of legal proceedings and AI banter before the final decision of fizz, buzz, or a number is emitted. I created this as a form of art, and it solves no problems whatsoever. 
+
 An adversarial, multi-agent consensus protocol solving the classic FizzBuzz problem under strict Zero-Trust network invariants. Integers from 1 to 100 are ingested as untrusted, hostile network payloads adjudicated through an **8-Level Multi-Tier Bureaucratic Hierarchy** featuring internal strategy team caucuses, closed-door legal counsel briefings, mandatory antitrust arbitrations, fierce faction ratification appeals, interlocutory remand circuits, and triumphant constituent victory addresses.
 
 ---
