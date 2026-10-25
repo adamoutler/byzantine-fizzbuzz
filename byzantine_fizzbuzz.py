@@ -11,17 +11,15 @@ Prohibitions:
 - Strictly NO math, decimal, or operator.mod libraries.
 - Grounded purely in string manipulation, Peano tally reduction, and LLM token prediction.
 
-Agent Topology & Multi-Level Bureaucratic Hierarchy:
-- Legislative Caucus Recess: Faction lobbyists motion to stand in recess and confer with their
-  internal strategy advisory teams (Chief Quantitative Actuaries & Senior Regulatory Counsel).
-- Rational Game-Theoretic Appellate Rules:
-  * Clean Wins (100% exclusive KPI awarded to Fizz or Buzz): The winning faction MUST ACCEPT
-    and ratify immediately without arguing against their own total victory.
-  * Split KPI Mergers ('FizzBuzz' 50/50 split): Factions fiercely contest the token dilution
-    and fight for 100% exclusive domain by filing motions to DECLINE AND DEMAND REMAND.
-  * Losses / Rejections (0% KPI): Defeated factions lodge procedural appeals under Rule 42-B / Article V.
-- Constituent Victory Address: The victorious faction takes the podium to deliver a grandiose
-  victory speech addressed directly to their constituents and token-holders.
+Agent Topology & 8-Stage Procedural Adjudication Hierarchy:
+- Stage 1: In-Camera Strategy Caucuses (Legislative Recess & Internal Advisory Counsel)
+- Stage 2: Adversarial Floor Petitions & Cross-Examination (Dynamic Order & Rebuttals)
+- Stage 3: Forensic Zero-Trust Audit (Recursive String Reduction & Glyph Verification)
+- Stage 4: Antitrust Regulatory Assessment & Merger Jurisdiction (Mandatory Merger vs Market Clearance)
+- Stage 5: Secondary Recess & Appellate Litigation Briefings (Game-Theoretic KPI Protection)
+- Stage 6: Floor Ratification Hearing & Interlocutory Exceptions (Clean Wins ACCEPT / Splits REMAND)
+- Stage 7: Appellate Review, Remand Determination, & En Banc Adjudication
+- Stage 8: Official Constituent Victory Address & Certified Consensus Token Emission
 """
 
 import argparse
@@ -515,6 +513,25 @@ class LLMAntitrustRegulator:
         ]
         return query_ollama(self.server_url, self.model_name, messages, self.timeout)
 
+    def assess_market_clearance(self, payload: str, provisional_token: str, winning_faction: str) -> str:
+        messages = [
+            {
+                "role": "system",
+                "content": (
+                    "You are the Algorithmic Antitrust Regulator in a Zero-Trust Byzantine committee. "
+                    f"In the Matter of Inbound Payload '{payload}', review the provisional decree awarding jurisdiction to {winning_faction} (emitting '{provisional_token}'). "
+                    "In exactly 1 to 2 formal administrative sentences, certify that since no concurrent dual claims exist, "
+                    "market concentration thresholds are not breached, Hart-Scott-Rodino pre-merger remedies are waived, "
+                    "and the docket is cleared to proceed without antitrust injunction."
+                )
+            },
+            {
+                "role": "user",
+                "content": f"Issue Antitrust Market Clearance Order in the Matter of Payload '{payload}'."
+            }
+        ]
+        return query_ollama(self.server_url, self.model_name, messages, self.timeout)
+
     def issue_remand_order(self, payload: str, provisional_token: str, l3_plea: str, l5_plea: str) -> str:
         messages = [
             {
@@ -649,11 +666,11 @@ class ByzantineConsensusEngine:
         root, trace = recursive_digital_root_reduction(payload)
         glyph = payload[-1]
 
-        # 1. Level 1: Legislative Recess & Team Caucus Consultation
+        # 1. Stage 1: In-Camera Strategy Caucuses (Closed-Door Recess)
         fizz_caucus_memo = self.caucus.confer_fizz_strategy(payload, root, trace)
         buzz_caucus_memo = self.caucus.confer_buzz_strategy(payload, glyph)
 
-        # 2. Level 2: Formal Floor Petitions (Randomized Speaking Order & Cross-Testimony)
+        # 2. Stage 2: Adversarial Floor Petitions & Cross-Examination (Randomized Speaking Order)
         petition_order = ["Fizz", "Buzz"]
         random.shuffle(petition_order)
 
@@ -664,13 +681,13 @@ class ByzantineConsensusEngine:
             l5_claim = self.lobbyist5.claim(payload, glyph, buzz_caucus_memo, rival_claim=None)
             l3_claim = self.lobbyist3.claim(payload, root, trace, fizz_caucus_memo, rival_claim=l5_claim)
 
-        # 3. Level 3: Forensic Audit
+        # 3. Stage 3: Forensic Zero-Trust Audit
         fizz_ok, buzz_ok, audit_statement = self.auditor.audit(payload, root, glyph, l3_claim, l5_claim)
 
-        # 4. Level 4: Provisional Decision & Merger Arbitration
-        merger_log = None
-        if fizz_ok and buzz_ok:
-            merger_log = self.antitrust.arbitrate(payload)
+        # 4. Stage 4: Antitrust Regulatory Assessment & Merger Jurisdiction (Always Adjudicated)
+        is_collision = fizz_ok and buzz_ok
+        if is_collision:
+            antitrust_ruling = self.antitrust.arbitrate(payload)
             provisional_token = "FizzBuzz"
             verdict_desc = f"Mandatory 3-Round Merger into 'FizzBuzz' with 50/50 KPI token split (Fizz prefix seniority, Buzz suffix control)"
             fizz_win_type = "SPLIT_KPI"
@@ -680,22 +697,25 @@ class ByzantineConsensusEngine:
             verdict_desc = f"100% exclusive jurisdiction and all KPI tokens awarded to Fizz Consortium ('Fizz'). Buzz claim rejected."
             fizz_win_type = "CLEAN_WIN"
             buzz_win_type = "LOSS"
+            antitrust_ruling = self.antitrust.assess_market_clearance(payload, provisional_token, "Fizz Consortium")
         elif buzz_ok:
             provisional_token = "Buzz"
             verdict_desc = f"100% exclusive jurisdiction and all KPI tokens awarded to Buzz Syndicate ('Buzz'). Fizz claim rejected."
             fizz_win_type = "LOSS"
             buzz_win_type = "CLEAN_WIN"
+            antitrust_ruling = self.antitrust.assess_market_clearance(payload, provisional_token, "Buzz Syndicate")
         else:
             provisional_token = payload
             verdict_desc = f"All claims rejected for fraud/invalidity (0% KPI). Unaltered packet '{payload}' emitted."
             fizz_win_type = "LOSS"
             buzz_win_type = "LOSS"
+            antitrust_ruling = self.antitrust.assess_market_clearance(payload, provisional_token, "Unaligned Independent Raw Packets")
 
-        # 5. Level 5: Appellate Team Briefing (Secondary Recess with Game-Theoretic Rules)
+        # 5. Stage 5: Secondary Recess & Appellate Litigation Briefings (Game-Theoretic Rules)
         fizz_appellate_briefing = self.caucus.confer_appeal_posture("Fizz Consortium", payload, provisional_token, fizz_win_type)
         buzz_appellate_briefing = self.caucus.confer_appeal_posture("Buzz Syndicate", payload, provisional_token, buzz_win_type)
 
-        # 6. Level 6: Rational Floor Ratification Hearing (Randomized Speaking Order & Direct Rebuttal)
+        # 6. Stage 6: Floor Ratification Hearing & Interlocutory Exceptions (Direct Rebuttal)
         ratification_order = ["Fizz", "Buzz"]
         random.shuffle(ratification_order)
 
@@ -706,7 +726,7 @@ class ByzantineConsensusEngine:
             l5_plea = self.lobbyist5.respond_to_verdict(payload, verdict_desc, buzz_appellate_briefing, buzz_win_type, rival_plea=None)
             l3_plea = self.lobbyist3.respond_to_verdict(payload, verdict_desc, fizz_appellate_briefing, fizz_win_type, rival_plea=l5_plea)
 
-        # 7. Level 7: Remand Determination & De Novo Re-Evaluation
+        # 7. Stage 7: Appellate Review, Remand Determination, & En Banc Adjudication
         # Remand is triggered on split KPI mergers ('FizzBuzz') or contested close calls
         demand_remand = (
             fizz_win_type == "SPLIT_KPI" or
@@ -728,7 +748,7 @@ class ByzantineConsensusEngine:
             winner_faction = "Fizz Consortium" if fizz_win_type == "CLEAN_WIN" else ("Buzz Syndicate" if buzz_win_type == "CLEAN_WIN" else "Unaligned")
             appellate_order = self.antitrust.appellate_confirmation(payload, provisional_token, winner_faction)
 
-        # 8. Level 8: Constituent Victory Address
+        # 8. Stage 8: Official Constituent Victory Address
         victory_address = self.orator.deliver_speech(payload, provisional_token)
 
         return {
@@ -743,7 +763,8 @@ class ByzantineConsensusEngine:
             "fizz_ok": fizz_ok,
             "buzz_ok": buzz_ok,
             "audit_verdict": audit_statement,
-            "merger_arbitration": merger_log,
+            "antitrust_ruling": antitrust_ruling,
+            "is_collision": is_collision,
             "provisional_token": provisional_token,
             "fizz_win_type": fizz_win_type,
             "buzz_win_type": buzz_win_type,
@@ -907,47 +928,48 @@ def main():
     else:
         deliberation_payloads = [p.strip() for p in args.samples.split(",") if p.strip()]
 
-    print(f"\n[+] Executing live multi-level committee deliberation on payloads: {deliberation_payloads}")
+    print(f"\n[+] Executing live 8-stage committee deliberation on payloads: {deliberation_payloads}")
     deliberation_records = []
     
     for p in deliberation_payloads:
-        print(f"\n---> Adjudicating Payload '{p}' through Multi-Level Bureaucratic Hierarchy...")
+        print(f"\n---> Adjudicating In the Matter of Inbound Payload '{p}' through 8-Stage Procedural Hierarchy...")
         rec = engine.adjudicate_payload_llm(p)
         deliberation_records.append(rec)
         p1, p2 = rec["petition_order"][0], rec["petition_order"][1]
         r1, r2 = rec["ratification_order"][0], rec["ratification_order"][1]
 
-        print(f"  [Level 1 - Fizz Caucus Memo]: {rec['fizz_caucus_memo']}")
-        print(f"  [Level 1 - Buzz Caucus Memo]: {rec['buzz_caucus_memo']}")
-        print(f"  [Level 2 - Floor Petitions (Order: {p1} -> {p2})]:")
+        print(f"  [Stage 1 - In-Camera Strategy Caucuses (In the Matter of Payload '{p}')]:")
+        print(f"    - Fizz Caucus Memo: {rec['fizz_caucus_memo']}")
+        print(f"    - Buzz Caucus Memo: {rec['buzz_caucus_memo']}")
+        print(f"  [Stage 2 - Floor Petitions & Cross-Examination (In the Matter of Payload '{p}', Order: {p1} -> {p2})]:")
         if p1 == "Fizz":
-            print(f"    - Lobbyist-3 (Fizz Opening): {rec['l3_claim']}")
-            print(f"    - Lobbyist-5 (Buzz Answering): {rec['l5_claim']}")
+            print(f"    - Lobbyist-3 (Fizz Opening Testimony in the Matter of '{p}'): {rec['l3_claim']}")
+            print(f"    - Lobbyist-5 (Buzz Responsive Testimony in the Matter of '{p}'): {rec['l5_claim']}")
         else:
-            print(f"    - Lobbyist-5 (Buzz Opening): {rec['l5_claim']}")
-            print(f"    - Lobbyist-3 (Fizz Answering): {rec['l3_claim']}")
-        print(f"  [Level 3 - Forensic Auditor Verdict]:\n{rec['audit_verdict']}")
-        if rec["merger_arbitration"]:
-            print(f"  [Level 4 - Antitrust Merger Arbitration]:\n{rec['merger_arbitration']}")
-        print(f"  [Level 5 - Fizz Appellate Briefing ({rec['fizz_win_type']})]: {rec['fizz_appellate_briefing']}")
-        print(f"  [Level 5 - Buzz Appellate Briefing ({rec['buzz_win_type']})]: {rec['buzz_appellate_briefing']}")
-        print(f"  [Level 6 - Ratification Hearing (Order: {r1} -> {r2})]:")
+            print(f"    - Lobbyist-5 (Buzz Opening Testimony in the Matter of '{p}'): {rec['l5_claim']}")
+            print(f"    - Lobbyist-3 (Fizz Responsive Testimony in the Matter of '{p}'): {rec['l3_claim']}")
+        print(f"  [Stage 3 - Forensic Zero-Trust Audit (In the Matter of Payload '{p}')]:\n{rec['audit_verdict']}")
+        print(f"  [Stage 4 - Antitrust Market Determination (In the Matter of Payload '{p}')]:\n{rec['antitrust_ruling']}")
+        print(f"  [Stage 5 - Appellate Litigation Briefings (In the Matter of Payload '{p}')]:")
+        print(f"    - Fizz Appellate Briefing ({rec['fizz_win_type']}): {rec['fizz_appellate_briefing']}")
+        print(f"    - Buzz Appellate Briefing ({rec['buzz_win_type']}): {rec['buzz_appellate_briefing']}")
+        print(f"  [Stage 6 - Ratification Hearing (In the Matter of Payload '{p}', Order: {r1} -> {r2})]:")
         if r1 == "Fizz":
-            print(f"    - Lobbyist-3 (Fizz Opening): {rec['l3_plea']}")
-            print(f"    - Lobbyist-5 (Buzz Answering): {rec['l5_plea']}")
+            print(f"    - Lobbyist-3 (Fizz Opening Plea in the Matter of '{p}'): {rec['l3_plea']}")
+            print(f"    - Lobbyist-5 (Buzz Responsive Plea in the Matter of '{p}'): {rec['l5_plea']}")
         else:
-            print(f"    - Lobbyist-5 (Buzz Opening): {rec['l5_plea']}")
-            print(f"    - Lobbyist-3 (Fizz Answering): {rec['l3_plea']}")
+            print(f"    - Lobbyist-5 (Buzz Opening Plea in the Matter of '{p}'): {rec['l5_plea']}")
+            print(f"    - Lobbyist-3 (Fizz Responsive Plea in the Matter of '{p}'): {rec['l3_plea']}")
         if rec["remand_order"]:
-            print(f"  [Level 7 - Board Order of Remand (Split KPI Contest)]:\n{rec['remand_order']}")
-            print(f"  [Level 7 - Emergency De Novo Re-Evaluation]:\n{rec['de_novo_report']}")
-            print(f"  [Level 7 - Final En Banc Decree]:\n{rec['final_en_banc_decree']}")
+            print(f"  [Stage 7 - Board Order of Remand & En Banc Review (In the Matter of Payload '{p}')]:\n{rec['remand_order']}")
+            print(f"    [De Novo Re-Evaluation]:\n{rec['de_novo_report']}")
+            print(f"    [Final En Banc Decree]:\n{rec['final_en_banc_decree']}")
         else:
-            print(f"  [Level 7 - Appellate Confirmation Decree]:\n{rec['appellate_order']}")
+            print(f"  [Stage 7 - Appellate Confirmation Decree (In the Matter of Payload '{p}')]:\n{rec['appellate_order']}")
         
         va = rec["victory_address"]
-        print(f"  [Level 8 - Constituent Victory Address by {va['speaker']}]:\n  \"{va['speech']}\"")
-        print(f"  >>> CERTIFIED CONSENSUS EMISSION: '{rec['final_token']}'")
+        print(f"  [Stage 8 - Constituent Victory Address (In the Matter of Payload '{p}', Speaker: {va['speaker']})]:\n  \"{va['speech']}\"")
+        print(f"  >>> CERTIFIED CONSENSUS EMISSION FOR PAYLOAD '{p}': '{rec['final_token']}'")
 
     print("\n" + "=" * 80)
     print(f"PROCESSING COMPLETE AUDIT LEDGER ({args.start}..{args.end}) UNDER ZERO-MODULO INVARIANTS")
@@ -967,7 +989,7 @@ def main():
     with open(args.transcript, "w", encoding="utf-8") as f:
         f.write("# Zero-Trust Byzantine Consensus FizzBuzz: Master Docket & Audit Transcript\n\n")
         f.write("## 🏛️ Executive Summary & Operating Metadata\n\n")
-        f.write(f"- **Adjudication Engine:** Multi-Level Zero-Trust Byzantine Multi-Agent Consensus Protocol\n")
+        f.write(f"- **Adjudication Engine:** 8-Stage Zero-Trust Byzantine Multi-Agent Consensus Protocol\n")
         f.write(f"- **LLM Provider:** Ollama Cluster (`{args.server}`)\n")
         f.write(f"- **Active Committee Model:** `{args.model}`\n")
         f.write(f"- **Range Adjudicated:** Untrusted Ingress Packets `{args.start}` through `{args.end}`\n")
@@ -979,71 +1001,81 @@ def main():
         f.write(f"- **Constituent Address Protocol:** Victorious faction takes the podium to address token-holder constituents\n\n")
         
         f.write("---\n\n")
-        f.write("## 📋 Part 1: Live LLM Multi-Level Deliberations & Rational Ratifications\n\n")
-        f.write("Verbatim transcripts recorded during live multi-level deliberation rounds, including internal strategy caucus memos, adversarial floor petitions, forensic audits, merger decrees, appellate briefings, remand hearings, de novo audit reports, en banc decrees, and constituent victory addresses.\n\n")
+        f.write("## 📋 Part 1: Live LLM 8-Stage Adjudication Proceedings & Rational Ratifications\n\n")
+        f.write("Verbatim transcripts recorded during live multi-stage deliberation rounds, including internal strategy caucus memos, adversarial floor petitions, forensic audits, antitrust market impact rulings, appellate briefings, remand hearings, de novo audit reports, en banc decrees, and constituent victory addresses.\n\n")
         
         for rec in deliberation_records:
+            p = rec["payload"]
             p1, p2 = rec["petition_order"][0], rec["petition_order"][1]
             r1, r2 = rec["ratification_order"][0], rec["ratification_order"][1]
 
-            f.write(f"### 🔍 Master Docket: Inbound Network Payload `{rec['payload']}`\n\n")
+            f.write(f"### 🔍 Master Docket: In the Matter of Inbound Network Payload `{p}`\n\n")
+            f.write(f"* **Case Filing:** Docket No. `BZ-2026-{p.zfill(4)}`\n")
             f.write(f"* **Calculated Digital Root (Pure String Reduction):** `{rec['root']}`\n")
             f.write(f"* **Terminal Glyph Boundary Inspection:** `{rec['glyph']}`\n\n")
             
-            f.write(f"#### 🏛️ Level 1: Legislative Recess & Internal Faction Strategy Caucuses\n")
-            f.write(f"- **Fizz Consortium Senior Quantitative Caucus Memo:**\n{format_blockquote(rec['fizz_caucus_memo'])}\n\n")
-            f.write(f"- **Buzz Syndicate Governance & Boundary Caucus Memo:**\n{format_blockquote(rec['buzz_caucus_memo'])}\n\n")
+            f.write(f"#### 🏛️ Stage 1: In-Camera Strategy Caucuses (In the Matter of Payload `{p}`)\n")
+            f.write(f"In the Matter of Inbound Payload `{p}`, the following confidential strategy memoranda were submitted by internal advisory caucuses during closed-door recess:\n\n")
+            f.write(f"- **Fizz Consortium Senior Quantitative Caucus Memo (In the Matter of Payload `{p}`):**\n{format_blockquote(rec['fizz_caucus_memo'])}\n\n")
+            f.write(f"- **Buzz Syndicate Governance & Boundary Caucus Memo (In the Matter of Payload `{p}`):**\n{format_blockquote(rec['buzz_caucus_memo'])}\n\n")
 
-            f.write(f"#### 📜 Level 2: Formal Floor Petitions (Speaking Order: {p1} → {p2})\n")
+            f.write(f"#### 📜 Stage 2: Adversarial Floor Petitions & Cross-Examination (In the Matter of Payload `{p}`, Speaking Order: {p1} → {p2})\n")
+            f.write(f"In the Matter of Inbound Payload `{p}`, the following formal testimony and cross-examination petitions were entered before the committee:\n\n")
             if p1 == "Fizz":
-                f.write(f"- **Lobbyist-3 (Fizz Consortium Opening Petition):**\n{format_blockquote(rec['l3_claim'])}\n\n")
-                f.write(f"- **Lobbyist-5 (Buzz Syndicate Responsive Petition answering Fizz):**\n{format_blockquote(rec['l5_claim'])}\n\n")
+                f.write(f"- **Lobbyist-3 (Fizz Consortium Opening Petition in the Matter of Payload `{p}`):**\n{format_blockquote(rec['l3_claim'])}\n\n")
+                f.write(f"- **Lobbyist-5 (Buzz Syndicate Responsive Petition in the Matter of Payload `{p}`, answering Fizz):**\n{format_blockquote(rec['l5_claim'])}\n\n")
             else:
-                f.write(f"- **Lobbyist-5 (Buzz Syndicate Opening Petition):**\n{format_blockquote(rec['l5_claim'])}\n\n")
-                f.write(f"- **Lobbyist-3 (Fizz Consortium Responsive Petition answering Buzz):**\n{format_blockquote(rec['l3_claim'])}\n\n")
+                f.write(f"- **Lobbyist-5 (Buzz Syndicate Opening Petition in the Matter of Payload `{p}`):**\n{format_blockquote(rec['l5_claim'])}\n\n")
+                f.write(f"- **Lobbyist-3 (Fizz Consortium Responsive Petition in the Matter of Payload `{p}`, answering Buzz):**\n{format_blockquote(rec['l3_claim'])}\n\n")
 
-            f.write(f"#### 🔬 Level 3: Forensic Auditor Zero-Trust Memorandum\n")
+            f.write(f"#### 🔬 Stage 3: Forensic Zero-Trust Audit (In the Matter of Payload `{p}`)\n")
+            f.write(f"In the Matter of Inbound Payload `{p}`, the Zero-Trust Forensic Auditor entered the following verification memorandum:\n\n")
             f.write(f"{format_blockquote(rec['audit_verdict'])}\n\n")
 
-            if rec["merger_arbitration"]:
-                f.write(f"#### ⚖️ Level 4: Antitrust Regulator Mandatory 3-Round Merger Arbitration Decree (50/50 KPI Split)\n")
-                f.write(f"{format_blockquote(rec['merger_arbitration'])}\n\n")
+            f.write(f"#### ⚖️ Stage 4: Antitrust Regulatory Assessment & Merger Jurisdiction (In the Matter of Payload `{p}`)\n")
+            f.write(f"In the Matter of Inbound Payload `{p}`, the Algorithmic Antitrust Regulator entered the following official determination:\n\n")
+            f.write(f"{format_blockquote(rec['antitrust_ruling'])}\n\n")
 
-            f.write(f"#### 🤝 Level 5: Secondary Recess & Appellate Litigation Briefings\n")
-            f.write(f"- **Fizz Appellate Litigation Team Memo (Status: {rec['fizz_win_type']}):**\n{format_blockquote(rec['fizz_appellate_briefing'])}\n\n")
-            f.write(f"- **Buzz Appellate Litigation Team Memo (Status: {rec['buzz_win_type']}):**\n{format_blockquote(rec['buzz_appellate_briefing'])}\n\n")
+            f.write(f"#### 🤝 Stage 5: Secondary Recess & Appellate Litigation Briefings (In the Matter of Payload `{p}`)\n")
+            f.write(f"In the Matter of Inbound Payload `{p}`, the following strategic appellate briefings were submitted by litigation counsel:\n\n")
+            f.write(f"- **Fizz Appellate Litigation Team Memo (Status in the Matter of Payload `{p}`: {rec['fizz_win_type']}):**\n{format_blockquote(rec['fizz_appellate_briefing'])}\n\n")
+            f.write(f"- **Buzz Appellate Litigation Team Memo (Status in the Matter of Payload `{p}`: {rec['buzz_win_type']}):**\n{format_blockquote(rec['buzz_appellate_briefing'])}\n\n")
 
-            f.write(f"#### ⚔️ Level 6: Rational Floor Ratification Hearing (Speaking Order: {r1} → {r2})\n")
+            f.write(f"#### ⚔️ Stage 6: Floor Ratification Hearing & Interlocutory Exceptions (In the Matter of Payload `{p}`, Speaking Order: {r1} → {r2})\n")
+            f.write(f"In the Matter of Inbound Payload `{p}`, the following formal ratification pleas were presented to the Appellate Board:\n\n")
             if r1 == "Fizz":
-                f.write(f"- **Lobbyist-3 (Fizz Consortium Opening Plea):**\n{format_blockquote(rec['l3_plea'])}\n\n")
-                f.write(f"- **Lobbyist-5 (Buzz Syndicate Responsive Plea answering Fizz):**\n{format_blockquote(rec['l5_plea'])}\n\n")
+                f.write(f"- **Lobbyist-3 (Fizz Consortium Opening Plea in the Matter of Payload `{p}`):**\n{format_blockquote(rec['l3_plea'])}\n\n")
+                f.write(f"- **Lobbyist-5 (Buzz Syndicate Responsive Plea in the Matter of Payload `{p}`, answering Fizz):**\n{format_blockquote(rec['l5_plea'])}\n\n")
             else:
-                f.write(f"- **Lobbyist-5 (Buzz Syndicate Opening Plea):**\n{format_blockquote(rec['l5_plea'])}\n\n")
-                f.write(f"- **Lobbyist-3 (Fizz Consortium Responsive Plea answering Buzz):**\n{format_blockquote(rec['l3_plea'])}\n\n")
+                f.write(f"- **Lobbyist-5 (Buzz Syndicate Opening Plea in the Matter of Payload `{p}`):**\n{format_blockquote(rec['l5_plea'])}\n\n")
+                f.write(f"- **Lobbyist-3 (Fizz Consortium Responsive Plea in the Matter of Payload `{p}`, answering Buzz):**\n{format_blockquote(rec['l3_plea'])}\n\n")
 
             if rec["remand_order"]:
-                f.write(f"#### 🔄 Level 7: Appellate Board Order of Remand (Split KPI Dilution Contest)\n")
+                f.write(f"#### 🔄 Stage 7: Appellate Review, Remand Determination, & En Banc Adjudication (In the Matter of Payload `{p}`)\n")
+                f.write(f"In the Matter of Inbound Payload `{p}`, the Chairman of the Byzantine Appellate Board rendered the following interlocutory remand order:\n\n")
                 f.write(f"{format_blockquote(rec['remand_order'])}\n\n")
-                f.write(f"#### 📑 Certified Emergency De Novo Audit Report\n")
+                f.write(f"##### 📑 Certified Emergency De Novo Audit Report (Payload `{p}`)\n\n")
                 f.write(f"{format_blockquote(rec['de_novo_report'])}\n\n")
-                f.write(f"#### 🏛️ Final Unappealable En Banc Decree\n")
+                f.write(f"##### 🏛️ Final Unappealable En Banc Decree (Payload `{p}`)\n\n")
                 f.write(f"{format_blockquote(rec['final_en_banc_decree'])}\n\n")
             else:
-                f.write(f"#### 🔄 Level 7: Appellate Ratification & Confirmation Order\n")
+                f.write(f"#### 🔄 Stage 7: Appellate Ratification & Confirmation Order (In the Matter of Payload `{p}`)\n")
+                f.write(f"In the Matter of Inbound Payload `{p}`, the Chairman of the Byzantine Appellate Board rendered the following confirmation decree:\n\n")
                 f.write(f"{format_blockquote(rec['appellate_order'])}\n\n")
             
             va = rec["victory_address"]
-            f.write(f"#### 🎙️ Level 8: Constituent Victory Address\n")
+            f.write(f"#### 🎙️ Stage 8: Official Constituent Victory Address & Final Emission (In the Matter of Payload `{p}`)\n")
+            f.write(f"In the Matter of Inbound Payload `{p}`, the victorious authority delivered the following address to constituents:\n\n")
             f.write(f"- **Delivered by:** *{va['speaker']}*\n")
             f.write(f"- **Addressed to:** *{va['audience']}*\n\n")
             f.write(f"{format_blockquote(va['speech'])}\n\n")
 
-            f.write(f"**⚡ Final Certified Emission:** `{rec['final_token']}`\n\n")
+            f.write(f"**⚡ Final Certified Consensus Emission in the Matter of Payload `{p}`:** `{rec['final_token']}`\n\n")
             f.write("---\n\n")
 
         f.write("## ⚖️ Part 2: The Grand Forensic Audit Ledger (Payloads 1 through 100)\n\n")
         f.write("Complete forensic verification ledger for all 100 ingested packets. Every reduction proof is grounded purely in string manipulation.\n\n")
-        f.write("| Docket ID | Payload | Reduction Trace | Root | Glyph | Base-3 (Fizz) | Base-5 (Buzz) | Multi-Level Bureaucratic Status | Final Adjudicated Emission |\n")
+        f.write("| Docket ID | Payload | Reduction Trace | Root | Glyph | Base-3 (Fizz) | Base-5 (Buzz) | 8-Stage Procedural Adjudication Status | Final Adjudicated Emission |\n")
         f.write("| :--- | :--- | :--- | :---: | :---: | :---: | :---: | :--- | :--- |\n")
         
         for entry in audit_ledger:

@@ -2,7 +2,7 @@
 
 This is created as the least efficient fizz buzz ever created, burning quadrillions of operations before emitting a single fizz or buzz while providing minimally remarkable entertainment of legal proceedings and AI banter before the final decision of fizz, buzz, or a number is emitted. I created this as a form of art, and it solves no problems whatsoever. 
 
-An adversarial, multi-agent consensus protocol solving the classic FizzBuzz problem under strict Zero-Trust network invariants. Integers from 1 to 100 are ingested as untrusted, hostile network payloads adjudicated through an **8-Level Multi-Tier Bureaucratic Hierarchy** featuring internal strategy team caucuses, closed-door legal counsel briefings, mandatory antitrust arbitrations, fierce faction ratification appeals, interlocutory remand circuits, and triumphant constituent victory addresses.
+An adversarial, multi-agent consensus protocol solving the classic FizzBuzz problem under strict Zero-Trust network invariants. Integers from 1 to 100 are ingested as untrusted, hostile network payloads adjudicated through an **8-Stage Procedural Adjudication Hierarchy** featuring internal strategy team caucuses, closed-door legal counsel briefings, mandatory antitrust arbitrations, fierce faction ratification appeals, interlocutory remand circuits, and triumphant constituent victory addresses.
 
 ---
 
@@ -12,46 +12,51 @@ An adversarial, multi-agent consensus protocol solving the classic FizzBuzz prob
 2. **Strictly NO Division (`/`):** Division operators are barred from execution.
 3. **Strictly NO Math Libraries:** No imports of `math`, `decimal`, or `operator.mod`.
 4. **Token & String Grounding:** Divisibility proofs must be established through recursive string-addition reduction and terminal glyph inspection grounded in Peano tally primitives.
-5. **Multi-Level Legislative Bureaucracy:** Factions do not speak off-the-cuff; lobbyists must formally motion for parliamentary recesses to confer with their internal Quantitative & Legal Strategy Caucuses.
+5. **Multi-Stage Parliamentary Recess:** Factions do not speak off-the-cuff; lobbyists must formally motion for parliamentary recesses to confer with their internal Quantitative & Legal Strategy Caucuses.
 6. **Dynamic Floor Order & Cross-Testimony:** Faction speaking order is randomized for each docket. Factions no longer exist in a bubble; the opening speaker stakes their claim or plea, and the second speaker directly addresses, rebuts, and counter-attacks the rival party's testimony.
-7. **Rational Game-Theoretic Appeals:** Factions act in rational self-interest regarding quarterly KPI token dividends:
+7. **Universal Stage 4 Antitrust Review:** Every inbound payload undergoes formal Algorithmic Antitrust review: concurrent dual claims trigger a 3-round mandatory merger arbitration decree (50/50 KPI split); single or rejected claims receive a formal Antitrust Market Clearance Order certifying no horizontal monopoly concentration.
+8. **Rational Game-Theoretic Appeals:** Factions act in rational self-interest regarding quarterly KPI token dividends:
    * **Clean Wins (100% KPI):** Winning faction MUST formally state `ACCEPT` and ratify the decree immediately without fighting their own victory.
    * **Split KPI Mergers (50/50 'FizzBuzz'):** Factions fiercely fight token dilution, filing motions to `DECLINE AND DEMAND REMAND` to claim exclusive sovereign domain.
    * **Losses (0% KPI):** Defeated factions lodge procedural appeals under Rule 42-B / Article V to demand *de novo* re-evaluation.
-8. **The Interlocutory Remand Circuit:** When challenged, the Board vacates its provisional ruling, stays emission, and remands the docket back to the Forensic Auditor for an emergency *de novo* re-evaluation before delivering the final En Banc decree.
-9. **Constituent Victory Address:** The victorious faction takes the podium to deliver a grandiose victory speech addressed directly to their token-holder constituents.
-10. **Clean GitHub Markdown Formatting:** All formal transcripts and audit records are formatted using standard Markdown blockquotes (`>`) rather than rigid horizontal code boxes, ensuring seamless text wrapping and readability on desktop and mobile.
+9. **The Interlocutory Remand Circuit:** When challenged, the Board vacates its provisional ruling, stays emission, and remands the docket back to the Forensic Auditor for an emergency *de novo* re-evaluation before delivering the final En Banc decree.
+10. **Constituent Victory Address:** The victorious faction takes the podium to deliver a grandiose victory speech addressed directly to their token-holder constituents.
+11. **Clean GitHub Markdown Formatting:** All formal transcripts and audit records are formatted using standard Markdown blockquotes (`>`) rather than rigid horizontal code boxes, ensuring seamless text wrapping and readability on desktop and mobile.
 
 ---
 
-## 🏛️ The 8-Level Bureaucratic Hierarchy
+## 🏛️ The 8-Stage Procedural Hierarchy
 
 ```mermaid
 flowchart TD
-    Ingest["Untrusted Inbound Packet<br>Payload: 'N' (String)"] --> Recess1["Level 1: Parliamentary Recess<br>(Faction Caucus Strategy Consultations)"]
+    Ingest["Untrusted Inbound Packet<br>In the Matter of Payload 'N'"] --> Recess1["Stage 1: In-Camera Strategy Caucuses<br>(Closed-Door Recess & Faction Advice)"]
     
     Recess1 --> F1["Fizz Quantitative Strategy Memo"]
     Recess1 --> B1["Buzz Governance Strategy Memo"]
     
-    F1 --> Floor["Level 2: Dynamic Floor Petitions<br>(Randomized Order & Cross-Testimony)"]
+    F1 --> Floor["Stage 2: Adversarial Floor Petitions<br>(Randomized Order & Cross-Examination)"]
     B1 --> Floor
     
-    Floor --> Audit["Level 3: Forensic Zero-Trust Audit<br>(String Addition & Glyph Verification)"]
+    Floor --> Audit["Stage 3: Forensic Zero-Trust Audit<br>(String Addition & Glyph Verification)"]
     
-    Audit -- "Dual Claims Validated" --> Merger["Level 4: Antitrust Merger Arbitration<br>(3-Round Injunction & Syllable Partition)"]
-    Audit -- "Unilateral Claims / Fallback" --> ProvDecision["Provisional Decision Issued"]
-    Merger --> ProvDecision
+    Audit --> Antitrust["Stage 4: Antitrust Regulatory Assessment<br>(Collision Injunction OR Market Clearance)"]
     
-    ProvDecision --> Recess2["Level 5: Secondary Recess<br>(Appellate Litigation Strategy Briefings)"]
-    Recess2 --> Ratify["Level 6: Rational Floor Ratification<br>(Clean Wins ACCEPT / Splits REMAND)"]
+    Antitrust -- "Dual Claims Validated" --> Merger["Mandatory 3-Round Merger Arbitration<br>(Prefix Seniority & Suffix Control)"]
+    Antitrust -- "Unilateral / Fallback" --> Clearance["Antitrust Market Clearance Order<br>(HSR Merger Remedies Waived)"]
     
-    Ratify -- "Fierce Remand Challenge" --> Remand["Level 7A: Board Order of Remand<br>(Provisional Decision Vacated & Sent Back)"]
-    Remand --> DeNovo["Level 7B: Emergency De Novo Re-Evaluation<br>(String Tally Re-Verification)"]
-    DeNovo --> EnBanc["Level 7C: Final En Banc Decree<br>(All Stays Dissolved)"]
+    Merger --> ProvDecision["Provisional Adjudication Issued"]
+    Clearance --> ProvDecision
+    
+    ProvDecision --> Recess2["Stage 5: Secondary Recess<br>(Appellate Litigation Strategy Briefings)"]
+    Recess2 --> Ratify["Stage 6: Floor Ratification Hearing<br>(Clean Wins ACCEPT / Splits REMAND)"]
+    
+    Ratify -- "Fierce Remand Challenge" --> Remand["Stage 7A: Board Order of Remand<br>(Provisional Decision Vacated & Sent Back)"]
+    Remand --> DeNovo["Stage 7B: Emergency De Novo Re-Evaluation<br>(String Tally Re-Verification)"]
+    DeNovo --> EnBanc["Stage 7C: Final En Banc Decree<br>(All Stays Dissolved)"]
     
     Ratify -- "Direct Approval" --> EnBanc
     
-    EnBanc --> Podium["Level 8: Constituent Victory Address<br>(The Winner Takes the Podium)"]
+    EnBanc --> Podium["Stage 8: Official Constituent Victory Address<br>(The Winner Takes the Podium)"]
     Podium --> Wire["Final Consensus Token Emitted to Wire"]
 ```
 
@@ -104,37 +109,45 @@ options:
 
 ---
 
-## 📜 Bureaucratic Proceedings: Play-by-Play Case Study
+## 📜 Procedural Proceedings: Play-by-Play Case Study
 
-### Docket No. BZ-2026-0015: In re Inbound Network Payload "15"
+### Docket No. BZ-2026-0015: In the Matter of Inbound Network Payload "15"
 
-#### Level 1: Legislative Recess & Faction Caucus Strategy Memos
+#### Stage 1: In-Camera Strategy Caucuses (In the Matter of Payload "15")
 * **Fizz Consortium Quantitative Strategy Memo:**  
   > *"Given the unquantifiable volatility of projected Q3 KPI token risks, a formal claim is advised under Rule 42-B. Recursive reduction yields root '6', granting unshakeable mathematical entitlement; prepare to filibuster any attempted dilution."*
 * **Buzz Syndicate Governance Strategy Memo:**  
   > *"Pursuant to Article V of the Modulo-Free Accord, immediate assertion of terminal suffix dominion over '5' is mandated to preempt lexical capture. Counteract all perceived Fizz Consortium encroachment with aggressive boundary defense."*
 
-#### Level 2: Formal Floor Petitions
-* **Lobbyist-3 (Fizz Consortium):** Cites caucus guidance and recursive digit-sum trace ($1+5=6 \in \{3,6,9\}$), demanding sovereign jurisdiction.
-* **Lobbyist-5 (Buzz Syndicate):** Cites caucus guidance and boundary inspection ($P[-1] = '5' \in \{0,5\}$), asserting statutory entitlement.
+#### Stage 2: Adversarial Floor Petitions & Cross-Examination (In the Matter of Payload "15")
+* **Lobbyist-3 (Fizz Consortium Opening Petition):** Cites caucus guidance and recursive digit-sum trace ($1+5=6 \in \{3,6,9\}$), demanding sovereign jurisdiction.
+* **Lobbyist-5 (Buzz Syndicate Responsive Petition):** Directly rebuts Fizz's claim as an attempted packet-theft, citing boundary inspection ($P[-1] = '5' \in \{0,5\}$) and asserting statutory entitlement.
 
-#### Level 3 & 4: Forensic Audit & Mandatory Merger Arbitration
-* **Forensic Audit:** Both claims verified under zero-modulo invariants.
-* **Antitrust Regulator:** Halts unilateral claims; enters 3-round mandatory merger decree allocating prefix seniority to `"Fizz"` and suffix control to `"Buzz"`.
+#### Stage 3: Forensic Zero-Trust Audit (In the Matter of Payload "15")
+* **Forensic Audit:** Both claims verified under zero-modulo invariants (Root 6 in $\{3,6,9\}$, Glyph '5' in $\{0,5\}$).
 
-#### Level 5 & 6: Appellate Litigation Briefings & Fierce Ratification Battle
-* **Appellate Teams:** Both internal legal teams advise their lobbyists that the compromise dilutes faction equity.
-* **Lobbyist-3 Floor Plea:**  
-  > `DECLINE AND DEMAND REMAND.` *The mandated consolidation violates established precedent under Rule 42-B. We demand the board REJECT its ruling immediately and send the matter back for de novo re-evaluation!*
-* **Lobbyist-5 Floor Plea:**  
-  > `DECLINE AND DEMAND REMAND.` *The Buzz Syndicate vehemently objects to forced structural dilution and suffix subordination. We move to reject the decree and demand immediate remand!*
+#### Stage 4: Antitrust Regulatory Assessment & Merger Jurisdiction (In the Matter of Payload "15")
+* **Antitrust Regulator:** Identifies concurrent dual valid claims; halts unilateral claims and enters a 3-round mandatory merger decree allocating prefix seniority to `"Fizz"` and suffix control to `"Buzz"` with a 50/50 KPI token split.
 
-#### Level 7: Board Order of Remand, De Novo Audit, and Final En Banc Decree
+#### Stage 5: Secondary Recess & Appellate Litigation Briefings (In the Matter of Payload "15")
+* **Appellate Teams:** Both internal legal teams advise their lobbyists that the 50/50 compromise bisects quarterly revenue and dilutes faction sovereignty.
+
+#### Stage 6: Floor Ratification Hearing & Interlocutory Exceptions (In the Matter of Payload "15")
+* **Lobbyist-5 Floor Plea (Buzz Opening):**  
+  > `DECLINE AND DEMAND REMAND.` *Pursuant to Article V of the Modulo-Free Accord, the proposed 50/50 apportionment constitutes an illegal dilution of the Buzz Syndicate's sovereign domain. We demand immediate remand!*
+* **Lobbyist-3 Floor Plea (Fizz Responsive Rebuttal):**  
+  > `DECLINE AND DEMAND REMAND.` *The Buzz Syndicate's cartel greed in attempting to hijack our packet is rejected under Rule 42-B. The Board must reject this split and remand immediately!*
+
+#### Stage 7: Board Order of Remand, De Novo Audit, and Final En Banc Decree (In the Matter of Payload "15")
 * **Board Order of Remand:** The Appellate Board vacates the provisional merger decree and remands the payload back to the Forensic Auditor.
-* **Emergency De Novo Audit:** Auditor re-checks string arithmetic via Peano tallies without modulo or division, certifying that both claims remain simultaneously valid.
+* **Emergency De Novo Audit:** Auditor re-checks string arithmetic via Peano tallies without modulo or division, certifying that both claims remain mathematically invariant.
 * **Final En Banc Decree:** Board dissolves all stays and issues an unappealable order forcing the joint emission `"FizzBuzz"`.
 
-#### Level 8: 🎙️ Constituent Victory Speech
+#### Stage 8: Official Constituent Victory Address & Certified Emission (In the Matter of Payload "15")
+> **Delivered by:** *Joint Co-CEOs of FizzBuzz Unified Conglomerate*  
+> **Addressed to:** *Combined Institutional Shareholders of the Merged Linguistic Monopoly*  
+>  
+> *"Through ruthless synergy and decisive action, we have successfully forged the invincible behemoth of FizzBuzz, establishing an unassailable dominion over the linguistic market. Let the era of absolute monopoly commence, as our combined holdings secure an unprecedented and eternal future for all our esteemed shareholders!"*
 > **Delivered by:** *Joint Co-CEOs of FizzBuzz Unified Conglomerate*  
 > **Addressed to:** *Combined Institutional Shareholders of the Merged Linguistic Monopoly*  
 >  
