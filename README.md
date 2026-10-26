@@ -1,8 +1,11 @@
-# Zero-Trust Byzantine Consensus FizzBuzz (No Modulo Allowed)
+# FizzBuzz: The Inquisition (Zero-Trust Byzantine Consensus FizzBuzz)
+
+> **🔴 Watch the Tribunal Live:** **[https://fizzbuzz.adamoutler.com/](https://fizzbuzz.adamoutler.com/)**  
+> *17 Agent Swarm - No Modulo - No Division. Submit any integer to the live priority docket and browse all historical transcripts in **The Archives**.*
 
 This is created as the least efficient fizz buzz ever created, burning quadrillions of operations before emitting a single fizz or buzz while providing minimally remarkable entertainment of legal proceedings and AI banter before the final decision of fizz, buzz, or a number is emitted. I created this as a form of art, and it solves no problems whatsoever. 
 
-An adversarial, multi-agent consensus protocol solving the classic FizzBuzz problem under strict Zero-Trust network invariants. Integers from 1 to 100 are ingested as untrusted, hostile network payloads adjudicated through an **8-Stage Procedural Adjudication Hierarchy** featuring internal strategy team caucuses, closed-door legal counsel briefings, mandatory antitrust arbitrations, fierce faction ratification appeals, interlocutory remand circuits, and triumphant constituent victory addresses.
+An adversarial, multi-agent consensus protocol solving the classic FizzBuzz problem under strict Zero-Trust network invariants. Integers are ingested as untrusted, hostile network payloads adjudicated through an **8-Stage Procedural Adjudication Hierarchy** featuring internal strategy team caucuses, closed-door legal counsel briefings, mandatory antitrust arbitrations, fierce faction ratification appeals, interlocutory remand circuits, and triumphant constituent victory addresses.
 
 ---
 
@@ -172,6 +175,7 @@ Fizz, 82, 83, Fizz, Buzz, 86, Fizz, 88, 89, FizzBuzz
 
 ---
 
-## 📜 Full Deliberation Transcript
+## 📜 Full Deliberation Transcripts & Live Web Courtroom
 
-See [transcript.md](transcript.md) for the verbatim multi-level deliberation records, internal team caucus memos, appellate litigation briefs, remand orders, de novo reports, en banc decrees, and constituent victory addresses recorded live against Ollama.
+* **Live Courtroom & Complete Stare Decisis Archives:** **[https://fizzbuzz.adamoutler.com/](https://fizzbuzz.adamoutler.com/)** (FastAPI + WebSocket streaming + SQLite ledger in [`web/`](web/)).
+* **Static CLI Sample Transcript:** See [transcript.md](transcript.md) for the standalone CLI deliberation records.

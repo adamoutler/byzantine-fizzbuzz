@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="mBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b0f19"/>
+      <stop offset="50%" stop-color="#111827"/>
+      <stop offset="100%" stop-color="#1e1b4b"/>
+    </linearGradient>
+    <linearGradient id="mGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="50%" stop-color="#eab308"/>
+      <stop offset="100%" stop-color="#ca8a04"/>
+    </linearGradient>
+    <linearGradient id="mCyan" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+    <linearGradient id="mAmber" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Full Bleed Background for Maskable Icon -->
+  <rect width="512" height="512" fill="url(#mBg)"/>
+
+  <!-- Safe Zone Scale Down (0.75x) centered -->
+  <g transform="translate(256, 256) scale(0.75) translate(-256, -256)">
+    <!-- Tech Ring -->
+    <circle cx="256" cy="256" r="215" fill="none" stroke="#10b981" stroke-width="4" stroke-opacity="0.6" stroke-dasharray="14 7"/>
+
+    <!-- Scales of Justice -->
+    <g transform="translate(256, 235)">
+      <rect x="-6" y="-70" width="12" height="210" fill="url(#mGold)"/>
+      <circle cx="0" cy="-70" r="16" fill="url(#mGold)"/>
+      <rect x="-24" y="145" width="48" height="15" rx="4" fill="url(#mGold)"/>
+
+      <path d="M-140,-62 L140,-62 L130,-52 L-130,-52 Z" fill="url(#mGold)"/>
+
+      <!-- Left Pan -->
+      <line x1="-130" y1="-52" x2="-165" y2="40" stroke="#38bdf8" stroke-width="2.5"/>
+      <line x1="-130" y1="-52" x2="-95" y2="40" stroke="#38bdf8" stroke-width="2.5"/>
+      <path d="M-175,40 Q-130,70 -85,40 Z" fill="url(#mCyan)"/>
+      <text x="-130" y="30" font-family="'Courier New', monospace" font-size="26" font-weight="900" fill="#38bdf8" text-anchor="middle">III</text>
+
+      <!-- Right Pan -->
+      <line x1="130" y1="-52" x2="95" y2="40" stroke="#fbbf24" stroke-width="2.5"/>
+      <line x1="130" y1="-52" x2="165" y2="40" stroke="#fbbf24" stroke-width="2.5"/>
+      <path d="M85,40 Q130,70 175,40 Z" fill="url(#mAmber)"/>
+      <text x="130" y="30" font-family="'Courier New', monospace" font-size="26" font-weight="900" fill="#fbbf24" text-anchor="middle">V</text>
+    </g>
+
+    <!-- Banner -->
+    <g transform="translate(256, 435)">
+      <rect x="-150" y="-22" width="300" height="44" rx="22" fill="#0f172a" stroke="#10b981" stroke-width="3"/>
+      <text x="0" y="7" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="900" fill="#10b981" text-anchor="middle" letter-spacing="3">ZERO MODULO (%)</text>
+    </g>
+  </g>
+</svg>

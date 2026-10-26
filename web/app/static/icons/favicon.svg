@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect width="64" height="64" rx="14" fill="#0b0f19"/>
+  <rect x="2" y="2" width="60" height="60" rx="12" fill="none" stroke="#10b981" stroke-width="2" stroke-opacity="0.8"/>
+  <g transform="translate(32, 30)">
+    <!-- Pillar -->
+    <rect x="-2" y="-12" width="4" height="30" fill="#facc15"/>
+    <rect x="-8" y="18" width="16" height="4" rx="2" fill="#facc15"/>
+    <circle cx="0" cy="-12" r="3.5" fill="#facc15"/>
+    <!-- Beam -->
+    <path d="M-20,-11 L20,-11 L18,-9 L-18,-9 Z" fill="#facc15"/>
+    <!-- Left Pan -->
+    <line x1="-18" y1="-9" x2="-23" y2="4" stroke="#38bdf8" stroke-width="1.2"/>
+    <line x1="-18" y1="-9" x2="-13" y2="4" stroke="#38bdf8" stroke-width="1.2"/>
+    <path d="M-25,4 Q-18,10 -11,4 Z" fill="#0284c7"/>
+    <!-- Right Pan -->
+    <line x1="18" y1="-9" x2="13" y2="4" stroke="#fbbf24" stroke-width="1.2"/>
+    <line x1="18" y1="-9" x2="23" y2="4" stroke="#fbbf24" stroke-width="1.2"/>
+    <path d="M11,4 Q18,10 25,4 Z" fill="#d97706"/>
+  </g>
+</svg>

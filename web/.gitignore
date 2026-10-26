@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+data/*.db*
+/*.png
+!app/static/icons/*.png

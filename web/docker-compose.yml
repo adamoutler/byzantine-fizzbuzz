@@ -1,0 +1,25 @@
+services:
+  byzantine-fizzbuzz:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: byzantine-fizzbuzz-live
+    restart: unless-stopped
+    ports:
+      - "8095:8000"
+    environment:
+      - OLLAMA_SERVER=http://192.168.1.101:11434
+      - OLLAMA_MODEL=gemma4:e2b
+      - OLLAMA_TIMEOUT=45
+      - STAGE_DELAY_SECONDS=5.0
+      - TOKEN_STREAM_DELAY=0.01
+      - RECESS_SECONDS=30
+      - INITIAL_RANGE_START=1
+      - INITIAL_RANGE_END=10
+      - RANGE_EXPANSION_STEP=10
+      - MIN_ALLOWED_DOCKET=1
+      - MAX_ALLOWED_DOCKET=10000
+      - DATABASE_PATH=/data/dockets.db
+      - ADSENSE_PUB_ID=ca-pub-6398207513410830
+    volumes:
+      - ./data:/data

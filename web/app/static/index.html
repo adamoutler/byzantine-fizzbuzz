@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FizzBuzz: The Inquisition 🔴 LIVE</title>
+
+    <!-- Primary Meta Tags -->
+    <meta name="title" content="FizzBuzz: The Inquisition 🔴 LIVE">
+    <meta name="description" content="17 AI agents argue FizzBuzz live in a zero-trust courtroom. Submit a number to the docket and watch the trial unfold.">
+    <meta name="keywords" content="FizzBuzz, LLM, Multi-Agent, AI, Byzantine, Zero-Trust, Ollama, Machine Learning, Benchmark, Adjudication, Courtroom">
+    <meta name="author" content="Adam Outler">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#10b981">
+    <link rel="canonical" href="https://fizzbuzz.adamoutler.com/">
+
+    <!-- Open Graph / Facebook / LinkedIn / Discord / Telegram -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://fizzbuzz.adamoutler.com/">
+    <meta property="og:site_name" content="Adam Outler">
+    <meta property="og:title" content="FizzBuzz: The Inquisition 🔴 LIVE">
+    <meta property="og:description" content="17 AI agents argue FizzBuzz live in a zero-trust courtroom. Submit a number to the docket and watch the trial unfold.">
+    <meta property="og:image" content="https://fizzbuzz.adamoutler.com/static/icons/og-image.png?v=live3">
+    <meta property="og:image:secure_url" content="https://fizzbuzz.adamoutler.com/static/icons/og-image.png?v=live3">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="FizzBuzz: The Inquisition 🔴 LIVE - 17 Agent Swarm - No Modulo - No Division">
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://fizzbuzz.adamoutler.com/">
+    <meta name="twitter:title" content="FizzBuzz: The Inquisition 🔴 LIVE">
+    <meta name="twitter:description" content="17 AI agents argue FizzBuzz live in a zero-trust courtroom. Submit a number to the docket and watch the trial unfold.">
+    <meta name="twitter:image" content="https://fizzbuzz.adamoutler.com/static/icons/og-image.png?v=live3">
+    <meta name="twitter:creator" content="@adamoutler">
+
+    <!-- PWA & Apple Web App Meta -->
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" type="image/svg+xml" href="/static/icons/favicon.svg">
+    <link rel="alternate icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="192x192" href="/static/icons/icon-192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/icons/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="FizzBuzz">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="FizzBuzz">
+    <meta name="msapplication-TileColor" content="#0b0f19">
+
+    <link rel="stylesheet" href="/static/styles.css?v=20261026-6">
+</head>
+<body>
+    <div class="court-container">
+        <!-- Top Court Header -->
+        <header class="court-header">
+            <div class="header-left">
+                <span class="court-icon">⚖️</span>
+                <div>
+                    <h1 class="court-title">FizzBuzz: The Inquisition</h1>
+                    <div class="court-sub">17 Agent Swarm - No Modulo - No Division</div>
+                </div>
+            </div>
+            <div class="header-metrics">
+                <div class="metric-badge" id="observers-badge">
+                    <span class="status-dot green"></span>
+                    <span id="observers-count">1</span> Active Observer(s)
+                </div>
+                <div class="metric-badge" id="status-badge">
+                    <span id="court-session-text">CONVENING...</span>
+                </div>
+                <div class="metric-badge" id="range-badge">
+                    Range: <span id="current-range">1..10</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Split Courtroom -->
+        <main class="court-main">
+            <!-- Left Panel: Continuous Live Proceedings & Persistent Records -->
+            <section class="proceedings-panel" id="proceedings-panel">
+                <!-- Recess Countdown Banner -->
+                <div class="recess-card hidden" id="recess-card">
+                    <div class="recess-title">PARLIAMENTARY RECESS IN PROGRESS</div>
+                    <div class="recess-timer"><span id="recess-counter">30</span>s until next docket commences</div>
+                    <div class="recess-note">Submit an integer into the queue on the right to claim the upcoming docket!</div>
+                </div>
+
+                <!-- Feed Controls Toolbar -->
+                <div class="feed-controls-bar">
+                    <div class="feed-actions">
+                        <label class="auto-scroll-toggle" title="Toggle automatic scrolling while reading">
+                            <input type="checkbox" id="auto-scroll-checkbox" checked onchange="toggleAutoScroll(this.checked)">
+                            <span>Auto-scroll with live speaker</span>
+                        </label>
+                        <button class="btn-subtle" onclick="clearFeedVisuals()" title="Clear previous feed items from display (database preserved)">Clear Feed View</button>
+                    </div>
+                </div>
+
+                <!-- Continuous Courtroom Proceedings Feed (Text is NEVER wiped or cleared) -->
+                <div class="courtroom-feed" id="courtroom-feed">
+                    <div class="feed-welcome-banner" id="feed-welcome">
+                        <div class="welcome-icon">🏛️</div>
+                        <h3>Tribunal Chambers Open</h3>
+                        <p>All testimony, forensic audits, and precedent summaries accumulate here continuously without being cleared or removed.</p>
+                    </div>
+                </div>
+
+                <!-- Floating Jump-to-Latest Button (Appears when scrolled up to read) -->
+                <button class="jump-latest-btn hidden" id="jump-latest-btn" onclick="scrollToBottom(true)">
+                    ↓ New Testimony Below (Click to View)
+                </button>
+            </section>
+
+            <!-- Right Panel: Docket Queue, AdSense, Historical Precedents -->
+            <aside class="sidebar-panel">
+                <!-- Docket Queue Card (Compact with Help Popover) -->
+                <div class="sidebar-card queue-card compact">
+                    <div class="card-header queue-header-compact">
+                        <div class="queue-title-wrap">
+                            <h4>📥 Submit Next Docket</h4>
+                            <button type="button" class="btn-help-bubble" id="queue-help-btn" onclick="toggleQueueHelp()" title="Click for docket queue details">?</button>
+                        </div>
+                        <span class="queue-status-indicator" id="queue-status-pill">Ready</span>
+                    </div>
+
+                    <!-- Collapsible Help Popover -->
+                    <div class="queue-help-popover hidden" id="queue-help-popover">
+                        The priority queue is 1-deep. If submitted before proceedings begin, your integer takes the floor immediately! (Allowed: 1 to 10000)
+                    </div>
+
+                    <form id="queue-form" class="queue-form compact" onsubmit="submitQueue(event)">
+                        <div class="input-group compact">
+                            <input type="text"
+                                   id="payload-input"
+                                   placeholder="Enter number (1-10000)"
+                                   autocomplete="off"
+                                   pattern="[0-9]+"
+                                   maxlength="100"
+                                   inputmode="numeric"
+                                   oninput="validateInput(this)">
+                            <button type="submit" id="submit-btn" class="btn-primary compact">Queue</button>
+                        </div>
+                        <div class="input-feedback hidden" id="input-feedback"></div>
+                    </form>
+                </div>
+
+                <!-- Amazon Associates Sponsored Hardware & Tribunal Gear Card -->
+                <div class="sidebar-card amazon-ad-card" id="amazon-ad-card">
+                    <div class="amazon-ad-header">
+                        <span class="ad-label">🛒 SPONSORED TRIBUNAL HARDWARE • AMAZON</span>
+                        <button type="button" class="btn-subtle amazon-rotate-btn" onclick="rotateAmazonAds()" title="Show more tribunal gear">↻ Next</button>
+                    </div>
+                    <div class="amazon-items-grid" id="amazon-items-grid">
+                        <a href="https://www.amazon.com/s?k=nvidia+rtx+gpu+local+ai+workstation&amp;tag=adamoutler-20"
+                           target="_blank"
+                           rel="nofollow sponsored noopener"
+                           class="amazon-product-item">
+                            <div class="amazon-item-top">
+                                <span class="amazon-item-icon">⚡</span>
+                                <div class="amazon-item-info">
+                                    <div class="amazon-item-title">Local LLM Inference GPUs &amp; AI Rigs</div>
+                                    <div class="amazon-item-desc">Power 17-agent Ollama swarms locally with zero cloud token bills.</div>
+                                </div>
+                            </div>
+                            <span class="amazon-cta-btn">Shop on Amazon &rarr;</span>
+                        </a>
+
+                        <a href="https://www.amazon.com/s?k=judge+gavel+and+block+set+solid+wood&amp;tag=adamoutler-20"
+                           target="_blank"
+                           rel="nofollow sponsored noopener"
+                           class="amazon-product-item">
+                            <div class="amazon-item-top">
+                                <span class="amazon-item-icon">👨‍⚖️</span>
+                                <div class="amazon-item-info">
+                                    <div class="amazon-item-title">Presiding Magistrate Hardwood Gavel Set</div>
+                                    <div class="amazon-item-desc">Overrule remand petitions and dissolve stays at your desk with prejudice.</div>
+                                </div>
+                            </div>
+                            <span class="amazon-cta-btn">View on Amazon &rarr;</span>
+                        </a>
+                    </div>
+                    <div class="amazon-disclosure">As an Amazon Associate, this tribunal earns from qualifying purchases.</div>
+                </div>
+
+                <!-- Historical Docket Ledger -->
+                <div class="sidebar-card ledger-card">
+                    <div class="card-header">
+                        <h3>📜 Historical Precedents</h3>
+                        <span class="ledger-count" id="ledger-count">0 Cases</span>
+                    </div>
+                    <button type="button" class="btn-archives-open" id="open-archives-btn" onclick="openArchivesModal()">
+                        🏛️ Read The Archives (All Priors in Order)
+                    </button>
+                    <div class="ledger-hint">Recent rulings below (click any docket to review):</div>
+                    <div class="ledger-list" id="ledger-list">
+                        <div class="ledger-empty">No historical dockets recorded yet.</div>
+                    </div>
+                </div>
+            </aside>
+        </main>
+    </div>
+
+    <!-- The Archives Popup Modal (All Priors in Order & Full Review) -->
+    <div class="modal-overlay hidden" id="archives-modal">
+        <div class="modal-dialog archives-dialog">
+            <div class="modal-header archives-header">
+                <div>
+                    <h2>🏛️ The Archives: Complete Stare Decisis Ledger</h2>
+                    <div class="modal-case-meta" id="archives-summary-meta">All adjudicated prior dockets in order of inquisition</div>
+                </div>
+                <button class="modal-close-btn" onclick="closeArchivesModal()" title="Close The Archives">&times;</button>
+            </div>
+
+            <div class="archives-toolbar">
+                <div class="archives-filters" id="archives-filters">
+                    <button type="button" class="archive-filter-btn active" data-filter="all" onclick="setArchivesFilter('all')">All Priors</button>
+                    <button type="button" class="archive-filter-btn" data-filter="fizz" onclick="setArchivesFilter('fizz')">Fizz</button>
+                    <button type="button" class="archive-filter-btn" data-filter="buzz" onclick="setArchivesFilter('buzz')">Buzz</button>
+                    <button type="button" class="archive-filter-btn" data-filter="fizzbuzz" onclick="setArchivesFilter('fizzbuzz')">FizzBuzz</button>
+                    <button type="button" class="archive-filter-btn" data-filter="raw" onclick="setArchivesFilter('raw')">Digits</button>
+                </div>
+                <div class="archives-controls">
+                    <input type="text"
+                           id="archives-search-input"
+                           class="archives-search-input"
+                           placeholder="Search number or docket..."
+                           oninput="renderArchivesList()">
+                    <button type="button" class="btn-subtle" id="archives-order-btn" onclick="toggleArchivesOrder()">
+                        Order: Latest Inquisition First
+                    </button>
+                </div>
+            </div>
+
+            <div class="archives-split-body">
+                <!-- Left Pane: Ordered List of All Priors -->
+                <div class="archives-list-pane" id="archives-list-pane">
+                    <div class="modal-loading">Loading The Archives...</div>
+                </div>
+
+                <!-- Right Pane: Full Case Transcript Review -->
+                <div class="archives-review-pane" id="archives-review-pane">
+                    <div class="archives-review-nav" id="archives-review-nav">
+                        <button type="button" class="btn-subtle" id="archives-prev-btn" onclick="stepArchivesDocket(-1)" disabled>&larr; Previous Prior</button>
+                        <span class="archives-nav-label" id="archives-nav-label">Select a docket to review</span>
+                        <button type="button" class="btn-subtle" id="archives-next-btn" onclick="stepArchivesDocket(1)" disabled>Next Prior &rarr;</button>
+                    </div>
+                    <div class="archives-review-content" id="archives-review-content">
+                        <div class="ledger-empty">Select any docket from the list on the left to review its complete courtroom record.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Case Transcript Modal (Full Historical Inspection) -->
+    <div class="modal-overlay hidden" id="case-modal">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <div>
+                    <h2 id="modal-case-title">Docket BZ-2026-0001</h2>
+                    <div class="modal-case-meta" id="modal-case-meta">Payload '1' • Root: 1 • Glyph: '1'</div>
+                </div>
+                <button class="modal-close-btn" onclick="closeCaseModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-case-body">
+                <div class="modal-loading">Loading archived case record...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Standby Overlay (Zero Observers / Inactive Tab) -->
+    <div class="standby-overlay hidden" id="standby-overlay">
+        <div class="standby-modal">
+            <div class="standby-icon">💤</div>
+            <h2>Tribunal in Low-Power Standby</h2>
+            <p>Proceedings paused to conserve compute while no observers are active.</p>
+            <button class="btn-primary" onclick="reconnectObserver()">Wake Courtroom</button>
+        </div>
+    </div>
+
+    <script src="/static/app.js?v=20261026-6"></script>
+    <script>
+        // PWA Service Worker Registration with immediate update check
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js?v=20261026-6', { scope: '/' })
+                    .then((reg) => {
+                        reg.update();
+                        console.log('[PWA] Service Worker registered successfully. Scope:', reg.scope);
+                    })
+                    .catch((err) => {
+                        console.warn('[PWA] Service Worker registration failed:', err);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
