@@ -30,6 +30,7 @@ async def background_adjudication_loop():
     """
     Main continuous loop for the Byzantine Courtroom.
     Conserves compute when 0 active observers are present.
+    Immediately selects a number and starts adjudication when active, then sleeps during recess at the end.
     """
     logger.info("Starting Byzantine Courtroom background adjudication loop.")
 
@@ -38,7 +39,16 @@ async def background_adjudication_loop():
             # 1. Zero-Compute Standby Gate: Halt if no human is actively watching
             await observer_mgr.wait_for_active_observer()
 
-            # 2. Parliamentary Recess & 1-Deep Queue Window
+            # 2. Select next docket payload (Priority queue takes precedence over calendar)
+            payload, source = await scheduler.select_next_payload()
+            logger.info(f"Commencing adjudication for payload '{payload}' (Source: {source})")
+
+            # 3. Execute 9-Phase Tribunal Deliberation (or Official Mistrial if inference quorum fails)
+            transcript = await engine.adjudicate(payload, source, range_end=scheduler.range_end)
+            if transcript.get("final_token") == "Mistrial":
+                await scheduler.register_mistrial(payload, source)
+
+            # 4. Parliamentary Recess & 1-Deep Queue Window at the END of each parliamentary process
             logger.info(f"Court in recess for {config.recess_seconds} seconds.")
             for remaining in range(config.recess_seconds, 0, -1):
                 # If all observers disconnect mid-recess, wait_for_active_observer will pause next round
@@ -48,18 +58,6 @@ async def background_adjudication_loop():
                     "queue_status": scheduler.get_status()
                 })
                 await asyncio.sleep(1.0)
-
-            # Re-check active observer gate before launching full LLM deliberation
-            await observer_mgr.wait_for_active_observer()
-
-            # 3. Select next docket payload (Priority queue takes precedence over calendar)
-            payload, source = await scheduler.select_next_payload()
-            logger.info(f"Commencing adjudication for payload '{payload}' (Source: {source})")
-
-            # 4. Execute 9-Phase Tribunal Deliberation (or Official Mistrial if inference quorum fails)
-            transcript = await engine.adjudicate(payload, source, range_end=scheduler.range_end)
-            if transcript.get("final_token") == "Mistrial":
-                await scheduler.register_mistrial(payload, source)
 
         except asyncio.CancelledError:
             logger.info("Adjudication loop cancelled.")

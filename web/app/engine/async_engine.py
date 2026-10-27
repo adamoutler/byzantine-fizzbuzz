@@ -276,9 +276,6 @@ class AsyncByzantineConsensusEngine:
             "timestamp": time.time()
         })
 
-        if config.phase_delay_seconds > 0:
-            await asyncio.sleep(config.phase_delay_seconds)
-
         transcript: Dict[str, Any] = {
             "case_id": case_id,
             "payload": payload,
