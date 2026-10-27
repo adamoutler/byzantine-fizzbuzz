@@ -44,6 +44,7 @@ const AVATARS = {
     regulator: "⚖️",
     appellate: "🏛️",
     orator: "🎙️",
+    news: "📺",
     clerk: "🏛️"
 };
 
@@ -167,13 +168,12 @@ function handleServerEvent(data) {
             break;
 
         case "RECESS_TICK":
-            finalizeActiveSpeech();
             recessCardEl.classList.remove("hidden");
             recessCounterEl.innerText = data.seconds_remaining;
             updateQueueStatus(data.queue_status);
-            courtSessionTextEl.innerText = `RECESS (${data.seconds_remaining}s)`;
+            courtSessionTextEl.innerText = `RECESS • FUN LIVE (${data.seconds_remaining}s)`;
             courtSessionTextEl.style.color = "var(--color-appellate)";
-            if (readingStatusTextEl) readingStatusTextEl.innerText = `Parliamentary Recess: ${data.seconds_remaining}s until next docket. Submit queued number on right!`;
+            if (readingStatusTextEl) readingStatusTextEl.innerText = `Parliamentary Recess (${data.seconds_remaining}s) • Foo Universal News (FUN) Recap Broadcasting Live!`;
             break;
 
         case "QUEUE_UPDATED":
@@ -296,6 +296,8 @@ function appendDocketDivider(docketId, payload, source, root, glyph) {
 function formatInlineMarkdown(text) {
     if (!text) return "";
     let html = escapeHtml(text);
+    // Teleprompter / Newscaster stage cues: [CUE: ...] or [ANCHOR CUE: ...]
+    html = html.replace(/\[((?:ANCHOR\s+)?CUE:[^\]]+)\]/g, '<span class="fun-stage-cue">[$1]</span>');
     // Bold: **text**
     html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
     // Italics: *text* or _text_
@@ -543,6 +545,12 @@ function buildTranscriptHtml(data) {
                 <div class="verdict-card-token">${escapeHtml(data.emitted_token)}</div>
                 <div class="verdict-card-desc">${escapeHtml(data.verdict)}</div>
             </div>
+
+            ${t.fun_recap ? `
+            <div class="modal-section news" style="margin-top: 10px;">
+                <div class="modal-section-title">📺 Foo Universal News (FUN) — Recess Recap</div>
+                <div class="modal-section-text">${formatInlineMarkdown(t.fun_recap)}</div>
+            </div>` : ""}
         `;
     }
 
@@ -625,6 +633,12 @@ function buildTranscriptHtml(data) {
             <div class="verdict-card-token">${escapeHtml(data.emitted_token)}</div>
             <div class="verdict-card-desc">${escapeHtml(data.verdict)}</div>
         </div>
+
+        ${t.fun_recap ? `
+        <div class="modal-section news" style="margin-top: 10px;">
+            <div class="modal-section-title">📺 Foo Universal News (FUN) — Recess Recap</div>
+            <div class="modal-section-text">${formatInlineMarkdown(t.fun_recap)}</div>
+        </div>` : ""}
     `;
 }
 

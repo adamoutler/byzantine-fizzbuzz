@@ -14,6 +14,7 @@ from app.engine.primitives import (
     recursive_digital_root_reduction
 )
 from app.engine.streaming_parser import StreamingFieldExtractor, ResilientParser, check_court_readiness
+from app.engine.fun_news import fun_news_desk
 from app.engine.structured_schemas import (
     BailiffAnnouncement,
     JudgeBazChamberOrder,
@@ -210,9 +211,10 @@ class AsyncByzantineConsensusEngine:
         speaker_role: str,
         speech_text: str,
         action: str,
-        structured_data: Optional[Dict[str, Any]] = None
+        structured_data: Optional[Dict[str, Any]] = None,
+        token_delay: Optional[float] = None
     ) -> str:
-        """Streams an official statutory proclamation (such as a Mistrial declaration) word by word."""
+        """Streams an official statutory proclamation or broadcast word by word."""
         await self.observer_mgr.broadcast({
             "event": "PHASE_TRANSITION",
             "docket_id": docket_id,
@@ -223,6 +225,7 @@ class AsyncByzantineConsensusEngine:
             "speaker": speaker,
             "speaker_role": speaker_role
         })
+        effective_delay = config.token_stream_delay if token_delay is None else token_delay
         words = speech_text.split(" ")
         for idx, word in enumerate(words):
             token = word if idx == 0 else f" {word}"
@@ -239,8 +242,8 @@ class AsyncByzantineConsensusEngine:
                 "token": token,
                 "timestamp": time.time()
             })
-            if config.token_stream_delay > 0:
-                await asyncio.sleep(config.token_stream_delay)
+            if effective_delay > 0:
+                await asyncio.sleep(effective_delay)
 
         await self.observer_mgr.broadcast({
             "event": "SPEECH_COMPLETE",
@@ -256,6 +259,37 @@ class AsyncByzantineConsensusEngine:
             "timestamp": time.time()
         })
         return speech_text
+
+    async def stream_fun_recap(self, transcript: Dict[str, Any]) -> str:
+        """
+        Streams the Foo Universal News (FUN) recap broadcast during the Parliamentary Recess countdown.
+        """
+        case_id = transcript.get("case_id", "BZ-2026-0000")
+        payload = transcript.get("payload", "0")
+        recap_script = transcript.get("fun_recap")
+        if not recap_script:
+            recap_data = fun_news_desk.build_recap_script(transcript)
+            recap_script = recap_data["script"]
+            transcript["fun_recap"] = recap_script
+            transcript["fun_parody_headline"] = recap_data["parody_headline"]
+
+        # Stream at teleprompter pace during the recess countdown (or 0.0 during unit tests)
+        teleprompter_delay = 0.0 if config.token_stream_delay == 0 else max(config.token_stream_delay, 0.08)
+        return await self._stream_statutory_proclamation(
+            docket_id=case_id,
+            payload=payload,
+            phase_idx=9,
+            phase_name="Foo Universal News (FUN) — Recess Recap",
+            speaker="Foo Universal News (FUN) — Anchor Desk",
+            speaker_role="news",
+            speech_text=recap_script,
+            action="fun_recess_broadcast",
+            structured_data={
+                "network": "Foo Universal News (FUN)",
+                "parody_headline": transcript.get("fun_parody_headline", "")
+            },
+            token_delay=teleprompter_delay
+        )
 
     async def adjudicate(self, payload: str, source: str, range_end: int = 10) -> Dict[str, Any]:
         """
@@ -395,6 +429,9 @@ class AsyncByzantineConsensusEngine:
         # -----------------------------------------------------------------
         final_token = provisional_token
         transcript["final_token"] = final_token
+        recap_data = fun_news_desk.build_recap_script(transcript)
+        transcript["fun_recap"] = recap_data["script"]
+        transcript["fun_parody_headline"] = recap_data["parody_headline"]
 
         await self.ledger.record_docket(
             case_id=case_id,

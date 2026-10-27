@@ -49,16 +49,22 @@ async def background_adjudication_loop():
             if was_mistrial:
                 await scheduler.register_mistrial(payload, source)
 
-            # 4. Parliamentary Recess & 1-Deep Queue Window at the END of each parliamentary process
-            logger.info(f"Court in recess for {config.recess_seconds} seconds.")
-            for remaining in range(config.recess_seconds, 0, -1):
-                # If all observers disconnect mid-recess, wait_for_active_observer will pause next round
-                await observer_mgr.broadcast({
-                    "event": "RECESS_TICK",
-                    "seconds_remaining": remaining,
-                    "queue_status": scheduler.get_status()
-                })
-                await asyncio.sleep(1.0)
+            # 4. Parliamentary Recess & Foo Universal News (FUN) Recap Broadcast at the END of each session
+            logger.info(f"Court in recess for {config.recess_seconds} seconds (airing Foo Universal News recap).")
+
+            async def _run_recess_countdown() -> None:
+                for remaining in range(config.recess_seconds, 0, -1):
+                    await observer_mgr.broadcast({
+                        "event": "RECESS_TICK",
+                        "seconds_remaining": remaining,
+                        "queue_status": scheduler.get_status()
+                    })
+                    await asyncio.sleep(1.0)
+
+            await asyncio.gather(
+                _run_recess_countdown(),
+                engine.stream_fun_recap(transcript)
+            )
 
             # 5. If the docket ended in a Mistrial, hold in extended recess until the inference server is back online
             if was_mistrial:

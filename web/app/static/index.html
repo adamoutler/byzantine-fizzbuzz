@@ -48,7 +48,7 @@
     <meta name="application-name" content="FizzBuzz">
     <meta name="msapplication-TileColor" content="#0b0f19">
 
-    <link rel="stylesheet" href="/static/styles.css?v=20261027-1">
+    <link rel="stylesheet" href="/static/styles.css?v=20261027-2">
 </head>
 <body>
     <div class="court-container">
@@ -280,12 +280,12 @@
         </div>
     </div>
 
-    <script src="/static/app.js?v=20261027-1"></script>
+    <script src="/static/app.js?v=20261027-2"></script>
     <script>
         // PWA Service Worker Registration with immediate update check
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js?v=20261027-1', { scope: '/' })
+                navigator.serviceWorker.register('/sw.js?v=20261027-2', { scope: '/' })
                     .then((reg) => {
                         reg.update();
                         console.log('[PWA] Service Worker registered successfully. Scope:', reg.scope);

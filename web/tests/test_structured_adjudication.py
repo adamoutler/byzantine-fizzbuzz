@@ -245,4 +245,59 @@ async def test_mistrial_declaration_on_ollama_failure(tmp_path):
     assert max_cal == 15
     assert 15 in missing
 
+    # Verify Foo Universal News (FUN) recap script on Mistrial
+    assert "fun_recap" in transcript
+    assert "This just in..." in transcript["fun_recap"]
+    assert "...In other news..." in transcript["fun_recap"]
+    assert transcript["fun_recap"].endswith("You're watching FUN.")
+
+    await engine.close()
+
+
+@pytest.mark.asyncio
+async def test_foo_universal_news_recap_script_and_stream(tmp_path):
+    """
+    Verifies that Foo Universal News (FUN) generates and streams a recap script with:
+    - Newscaster cues ([CUE: ...] / [ANCHOR CUE: ...])
+    - Opening 'This just in...'
+    - Story 1 covering Judge Baz's ruling and the Victory Speech
+    - Transition '...In other news...' + Story 2 (random Onion-style parody headline)
+    - Sign-off 'You're watching FUN.'
+    """
+    from app.config import config
+    config.phase_delay_seconds = 0.0
+    config.token_stream_delay = 0.0
+
+    db_file = str(tmp_path.joinpath("test_fun.db"))
+    ledger = DocketLedger(db_file)
+    await ledger.initialize()
+
+    from starlette.websockets import WebSocketState
+    observer_mgr = ActiveObserverManager()
+    mock_ws = MagicMock()
+    mock_ws.client_state = WebSocketState.CONNECTED
+    mock_ws.send_text = AsyncMock()
+    observer_mgr.observers[mock_ws] = True
+
+    engine = AsyncByzantineConsensusEngine(ledger, observer_mgr)
+
+    sample_transcript = {
+        "case_id": "BZ-2026-0015",
+        "payload": "15",
+        "final_token": "FizzBuzz",
+        "judge_baz_order": "De novo verification confirms digital root 6 and glyph 5 mandate joint token 'FizzBuzz'. All appeals are barred with prejudice.",
+        "victory_address": "Today the merged FizzBuzz Conglomerate achieves total synergistic market dominance!"
+    }
+
+    streamed_script = await engine.stream_fun_recap(sample_transcript)
+
+    assert "CUE:" in streamed_script
+    assert "This just in..." in streamed_script
+    assert "Judge Baz" in streamed_script
+    assert "FizzBuzz" in streamed_script
+    assert "synergistic market dominance" in streamed_script
+    assert "...In other news..." in streamed_script
+    assert sample_transcript["fun_parody_headline"] in streamed_script
+    assert streamed_script.endswith("You're watching FUN.")
+
     await engine.close()
