@@ -1,7 +1,7 @@
 import aiosqlite
 import json
 import time
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Optional, Any, Tuple
 
 CREATE_DOCKETS_TABLE = """
 CREATE TABLE IF NOT EXISTS dockets (
@@ -92,14 +92,16 @@ class DocketLedger:
             return row[0] if row else 0
 
     async def get_highest_calendar_seq(self) -> int:
-        """Returns the highest sequential integer adjudicated under the Statutory Calendar."""
+        """Returns the highest sequential integer adjudicated under the Statutory Calendar (excluding Mistrials)."""
         async with aiosqlite.connect(self.db_path) as db:
             cursor = await db.execute(
-                "SELECT payload, transcript_json FROM dockets"
+                "SELECT payload, emitted_token, transcript_json FROM dockets"
             )
             rows = await cursor.fetchall()
             max_cal = 0
-            for payload_str, t_json in rows:
+            for payload_str, token, t_json in rows:
+                if token == "Mistrial":
+                    continue
                 if t_json and "Statutory Calendar" in t_json:
                     try:
                         val = int(payload_str)
@@ -108,6 +110,46 @@ class DocketLedger:
                     except ValueError:
                         pass
             return max_cal
+
+    async def get_calendar_state(self, start_seq: int = 1) -> Tuple[int, List[int]]:
+        """
+        Returns (highest_calendar_seq, missing_or_mistrial_seqs) across start_seq..highest_calendar_seq
+        so the scheduler retries mistrials and gaps before increasing the top number count.
+        """
+        async with aiosqlite.connect(self.db_path) as db:
+            cursor = await db.execute(
+                "SELECT payload, emitted_token, transcript_json FROM dockets"
+            )
+            rows = await cursor.fetchall()
+            max_cal = 0
+            valid_completed = set()
+            for payload_str, token, t_json in rows:
+                try:
+                    val = int(payload_str)
+                except ValueError:
+                    continue
+                if t_json and "Statutory Calendar" in t_json and val > max_cal:
+                    max_cal = val
+                if token != "Mistrial":
+                    valid_completed.add(val)
+            missing = [
+                seq for seq in range(start_seq, max_cal + 1)
+                if seq not in valid_completed
+            ]
+            return max_cal, missing
+
+    async def delete_mistrial_dockets(self) -> int:
+        """Deletes any legacy corrupted docket records containing raw Ollama communication failure strings."""
+        async with aiosqlite.connect(self.db_path) as db:
+            cursor = await db.execute(
+                """
+                DELETE FROM dockets
+                WHERE transcript_json LIKE '%Communication Failure%'
+                """
+            )
+            deleted = cursor.rowcount
+            await db.commit()
+            return deleted
 
     async def get_last_ruling(self) -> Optional[Dict[str, Any]]:
         """Returns the immediately preceding ruling of the court."""

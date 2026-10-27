@@ -48,7 +48,7 @@
     <meta name="application-name" content="FizzBuzz">
     <meta name="msapplication-TileColor" content="#0b0f19">
 
-    <link rel="stylesheet" href="/static/styles.css?v=20261026-6">
+    <link rel="stylesheet" href="/static/styles.css?v=20261027-1">
 </head>
 <body>
     <div class="court-container">
@@ -219,6 +219,7 @@
                     <button type="button" class="archive-filter-btn" data-filter="buzz" onclick="setArchivesFilter('buzz')">Buzz</button>
                     <button type="button" class="archive-filter-btn" data-filter="fizzbuzz" onclick="setArchivesFilter('fizzbuzz')">FizzBuzz</button>
                     <button type="button" class="archive-filter-btn" data-filter="raw" onclick="setArchivesFilter('raw')">Digits</button>
+                    <button type="button" class="archive-filter-btn" data-filter="mistrial" onclick="setArchivesFilter('mistrial')">Mistrial</button>
                 </div>
                 <div class="archives-controls">
                     <input type="text"
@@ -279,12 +280,12 @@
         </div>
     </div>
 
-    <script src="/static/app.js?v=20261026-6"></script>
+    <script src="/static/app.js?v=20261027-1"></script>
     <script>
         // PWA Service Worker Registration with immediate update check
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js?v=20261026-6', { scope: '/' })
+                navigator.serviceWorker.register('/sw.js?v=20261027-1', { scope: '/' })
                     .then((reg) => {
                         reg.update();
                         console.log('[PWA] Service Worker registered successfully. Scope:', reg.scope);

@@ -358,10 +358,14 @@ function finalizeActiveSpeech() {
 }
 
 function appendVerdictCard(docketId, payload, token, verdict) {
+    const isMistrial = String(token || "").toLowerCase() === "mistrial";
     const card = document.createElement("div");
-    card.className = "docket-verdict-card";
+    card.className = isMistrial ? "docket-verdict-card mistrial" : "docket-verdict-card";
+    const headerLabel = isMistrial
+        ? `OFFICIAL ORDER OF MISTRIAL • ${escapeHtml(docketId)} (PAYLOAD '${escapeHtml(payload)}')`
+        : `CERTIFIED BYZANTINE CONSENSUS EMISSION • ${escapeHtml(docketId)} (PAYLOAD '${escapeHtml(payload)}')`;
     card.innerHTML = `
-        <div class="verdict-card-label">CERTIFIED BYZANTINE CONSENSUS EMISSION • ${escapeHtml(docketId)} (PAYLOAD '${escapeHtml(payload)}')</div>
+        <div class="verdict-card-label">${headerLabel}</div>
         <div class="verdict-card-token">${escapeHtml(token)}</div>
         <div class="verdict-card-desc">${escapeHtml(verdict)}</div>
     `;
@@ -463,6 +467,7 @@ function getBadgeClass(token) {
     if (tok === "fizz") return "fizz";
     if (tok === "buzz") return "buzz";
     if (tok === "fizzbuzz") return "fizzbuzz";
+    if (tok === "mistrial") return "mistrial";
     return "raw";
 }
 
@@ -503,6 +508,43 @@ function renderLedger(items) {
 function buildTranscriptHtml(data) {
     const t = data.transcript || {};
     const dateStr = new Date(data.adjudicated_at * 1000).toLocaleString();
+    const isMistrial = Boolean(t.mistrial || String(data.emitted_token || "").toLowerCase() === "mistrial");
+
+    if (isMistrial) {
+        const retrialInfo = t.retrial_scheduled_for
+            ? `${t.retrial_scheduled_for} (Mandatory Retrial Prior to Statutory Ceiling Expansion Beyond #${t.retrial_before_max_increase || "Next"})`
+            : "Scheduled prior to next statutory range expansion";
+        return `
+            <div class="archive-case-banner">
+                <div>
+                    <div class="archive-case-title">${escapeHtml(data.case_id)} — Inbound Payload '${escapeHtml(data.payload)}'</div>
+                    <div class="archive-case-sub">Digital Root: ${escapeHtml(data.digital_root)} • Terminal Glyph: '${escapeHtml(data.terminal_glyph)}' • Adjudicated: ${escapeHtml(dateStr)}</div>
+                </div>
+                <span class="token-badge mistrial" style="font-size:0.9rem;padding:4px 10px;">${escapeHtml(data.emitted_token)}</span>
+            </div>
+
+            <div class="modal-section bailiff">
+                <div class="modal-section-title">Bailiff Bar Emergency Mistrial Proclamation</div>
+                <div class="modal-section-text">${escapeHtml(t.bailiff_mistrial_proclamation || "Judicial inference quorum severed during floor testimony; Mistrial escalated to Judge Baz.")}</div>
+            </div>
+
+            <div class="modal-section judge">
+                <div class="modal-section-title">Judge Baz Official Order of Mistrial &amp; Retrial Calendar</div>
+                <div class="modal-section-text">${escapeHtml(t.judge_mistrial_order || t.judge_baz_order || data.verdict)}</div>
+            </div>
+
+            <div class="modal-section historian">
+                <div class="modal-section-title">Mandatory De Novo Retrial Docket Window</div>
+                <div class="modal-section-text">${escapeHtml(retrialInfo)}</div>
+            </div>
+
+            <div class="docket-verdict-card mistrial" style="margin-top: 12px;">
+                <div class="verdict-card-label">OFFICIAL ORDER OF MISTRIAL</div>
+                <div class="verdict-card-token">${escapeHtml(data.emitted_token)}</div>
+                <div class="verdict-card-desc">${escapeHtml(data.verdict)}</div>
+            </div>
+        `;
+    }
 
     return `
         <div class="archive-case-banner">
@@ -605,10 +647,12 @@ async function openArchivesModal(initialCaseId = null) {
         const fizzCount = allArchivesDockets.filter(d => d.emitted_token === "Fizz").length;
         const buzzCount = allArchivesDockets.filter(d => d.emitted_token === "Buzz").length;
         const fbCount = allArchivesDockets.filter(d => d.emitted_token === "FizzBuzz").length;
-        const rawCount = allArchivesDockets.length - fizzCount - buzzCount - fbCount;
+        const mistrialCount = allArchivesDockets.filter(d => d.emitted_token === "Mistrial").length;
+        const rawCount = allArchivesDockets.length - fizzCount - buzzCount - fbCount - mistrialCount;
 
         if (summaryMetaEl) {
-            summaryMetaEl.innerText = `${allArchivesDockets.length} Total Priors • Fizz: ${fizzCount} • Buzz: ${buzzCount} • FizzBuzz: ${fbCount} • Digits: ${rawCount}`;
+            const mistrialSuffix = mistrialCount > 0 ? ` • Mistrial: ${mistrialCount}` : "";
+            summaryMetaEl.innerText = `${allArchivesDockets.length} Total Priors • Fizz: ${fizzCount} • Buzz: ${buzzCount} • FizzBuzz: ${fbCount} • Digits: ${rawCount}${mistrialSuffix}`;
         }
         if (ledgerCountEl) {
             ledgerCountEl.innerText = `${allArchivesDockets.length} Priors`;

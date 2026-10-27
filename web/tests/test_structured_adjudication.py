@@ -176,3 +176,73 @@ async def test_structured_adjudication_flow(tmp_path):
     assert last["emitted_token"] == "Fizz"
 
     await engine.close()
+
+
+@pytest.mark.asyncio
+async def test_mistrial_declaration_on_ollama_failure(tmp_path):
+    """
+    Verifies that when Ollama communication fails:
+    1. Remaining normal tribunal stages are immediately aborted.
+    2. Bailiff Bar and Judge Baz officially declare a Mistrial and set a future retrial date
+       prior to the next statutory max range increase (#range_end).
+    3. 'Mistrial' is recorded as the emitted_token event (instead of Fizz/Buzz/number).
+    4. Internal server URLs/IPs are never leaked into the transcript or WebSocket broadcasts.
+    """
+    import httpx
+    from app.config import config
+    config.phase_delay_seconds = 0.0
+    config.token_stream_delay = 0.0
+    config.stage_delay_seconds = 0.0
+
+    db_file = str(tmp_path.joinpath("test_mistrial.db"))
+    ledger = DocketLedger(db_file)
+    await ledger.initialize()
+
+    from starlette.websockets import WebSocketState
+    observer_mgr = ActiveObserverManager()
+    mock_ws = MagicMock()
+    mock_ws.client_state = WebSocketState.CONNECTED
+    mock_ws.send_text = AsyncMock()
+    observer_mgr.observers[mock_ws] = True
+
+    engine = AsyncByzantineConsensusEngine(ledger, observer_mgr)
+
+    class FailingStreamContext:
+        async def __aenter__(self):
+            raise httpx.ConnectError("All connection attempts failed")
+        async def __aexit__(self, exc_type, exc_val, exc_tb):
+            pass
+
+    def failing_stream(method, url, json=None):
+        return FailingStreamContext()
+
+    engine.client.stream = failing_stream
+
+    transcript = await engine.adjudicate("15", "Statutory Calendar", range_end=600)
+
+    assert transcript["mistrial"] is True
+    assert transcript["final_token"] == "Mistrial"
+    assert transcript["retrial_before_max_increase"] == 600
+    assert "Bailiff Bar" in transcript["bailiff_mistrial_proclamation"] or "Judge Baz" in transcript["bailiff_mistrial_proclamation"]
+    assert "MISTRIAL" in transcript["judge_mistrial_order"]
+    assert "#600" in transcript["judge_mistrial_order"]
+    assert transcript["retrial_scheduled_for"] in transcript["judge_mistrial_order"]
+
+    # Ensure no internal IP or raw exception string leaked into transcript
+    raw_dump = json.dumps(transcript)
+    assert "192.168." not in raw_dump
+    assert "All connection attempts failed" not in raw_dump
+
+    # Verify database recorded 'Mistrial' as the emitted_token
+    last = await ledger.get_last_ruling()
+    assert last is not None
+    assert last["payload"] == "15"
+    assert last["emitted_token"] == "Mistrial"
+    assert "OFFICIAL ORDER OF MISTRIAL" in last["verdict"]
+
+    # Verify get_calendar_state treats the Mistrial as pending retrial
+    max_cal, missing = await ledger.get_calendar_state(start_seq=15)
+    assert max_cal == 15
+    assert 15 in missing
+
+    await engine.close()

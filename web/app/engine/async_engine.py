@@ -29,6 +29,16 @@ from app.engine.structured_schemas import (
 logger = logging.getLogger("byzantine.engine")
 
 
+class MistrialException(Exception):
+    """Raised when the judicial inference quorum (Ollama connection) fails mid-docket."""
+    def __init__(self, phase_idx: int, phase_name: str, speaker: str, speaker_role: str):
+        super().__init__(f"Judicial inference quorum severed during {phase_name} ({speaker})")
+        self.phase_idx = phase_idx
+        self.phase_name = phase_name
+        self.speaker = speaker
+        self.speaker_role = speaker_role
+
+
 class AsyncByzantineConsensusEngine:
     def __init__(self, ledger: DocketLedger, observer_mgr: ActiveObserverManager):
         self.ledger = ledger
@@ -157,21 +167,10 @@ class AsyncByzantineConsensusEngine:
             return full_text, parsed_model
 
         except Exception as e:
-            fallback = fallback_text or f"[Communication Failure with Ollama ({config.ollama_server}): {e}]"
-            logger.error(f"Error streaming from Ollama: {e}")
-            parsed_fallback: Optional[BaseModel] = None
-            if model_cls is not None:
-                parsed_fallback = ResilientParser.parse(
-                    raw_text=fallback,
-                    model_cls=model_cls,
-                    default_speech=fallback,
-                    fallback_overrides=fallback_overrides
-                )
-                if force_action and hasattr(parsed_fallback, "action"):
-                    try:
-                        setattr(parsed_fallback, "action", force_action)
-                    except Exception:
-                        pass
+            logger.error(f"Error streaming from Ollama during {phase_name} ({speaker}): {e}")
+            interrupted_text = (
+                f"[Testimony of {speaker} abruptly severed due to a catastrophic loss of quorum on the judicial inference link.]"
+            )
             await self.observer_mgr.broadcast({
                 "event": "SPEECH_COMPLETE",
                 "docket_id": docket_id,
@@ -180,17 +179,81 @@ class AsyncByzantineConsensusEngine:
                 "phase_name": phase_name,
                 "speaker": speaker,
                 "speaker_role": speaker_role,
-                "full_text": fallback,
-                "action": getattr(parsed_fallback, "action", force_action),
-                "structured_data": parsed_fallback.model_dump() if parsed_fallback else None,
+                "full_text": interrupted_text,
+                "action": "quorum_severed",
+                "structured_data": None,
                 "timestamp": time.time()
             })
-            return fallback, parsed_fallback
+            raise MistrialException(
+                phase_idx=phase_idx,
+                phase_name=phase_name,
+                speaker=speaker,
+                speaker_role=speaker_role
+            ) from e
 
-    async def adjudicate(self, payload: str, source: str) -> Dict[str, Any]:
+    async def _stream_statutory_proclamation(
+        self,
+        docket_id: str,
+        payload: str,
+        phase_idx: int,
+        phase_name: str,
+        speaker: str,
+        speaker_role: str,
+        speech_text: str,
+        action: str,
+        structured_data: Optional[Dict[str, Any]] = None
+    ) -> str:
+        """Streams an official statutory proclamation (such as a Mistrial declaration) word by word."""
+        await self.observer_mgr.broadcast({
+            "event": "PHASE_TRANSITION",
+            "docket_id": docket_id,
+            "phase_index": phase_idx,
+            "phase_name": phase_name,
+            "stage_index": phase_idx,
+            "stage_name": phase_name,
+            "speaker": speaker,
+            "speaker_role": speaker_role
+        })
+        words = speech_text.split(" ")
+        for idx, word in enumerate(words):
+            token = word if idx == 0 else f" {word}"
+            await self.observer_mgr.broadcast({
+                "event": "TOKEN_STREAM",
+                "docket_id": docket_id,
+                "payload": payload,
+                "phase_index": phase_idx,
+                "phase_name": phase_name,
+                "stage_index": phase_idx,
+                "stage_name": phase_name,
+                "speaker": speaker,
+                "speaker_role": speaker_role,
+                "token": token,
+                "timestamp": time.time()
+            })
+            if config.token_stream_delay > 0:
+                await asyncio.sleep(config.token_stream_delay)
+
+        await self.observer_mgr.broadcast({
+            "event": "SPEECH_COMPLETE",
+            "docket_id": docket_id,
+            "payload": payload,
+            "phase_index": phase_idx,
+            "phase_name": phase_name,
+            "speaker": speaker,
+            "speaker_role": speaker_role,
+            "full_text": speech_text,
+            "action": action,
+            "structured_data": structured_data,
+            "timestamp": time.time()
+        })
+        return speech_text
+
+    async def adjudicate(self, payload: str, source: str, range_end: int = 10) -> Dict[str, Any]:
         """
         Executes full tribunal adjudication with structured outputs, Bailiff Bar, Judge Baz,
-        and dynamic counterpart strategy conferring loop.
+        and dynamic counterpart strategy conferring loop. If the Ollama inference quorum fails,
+        Bailiff Bar and Judge Baz officially declare a Mistrial and schedule a de novo retrial
+        prior to the next statutory max range increase.
         """
         total_cases = await self.ledger.get_total_cases()
         prior_rulings = await self.ledger.get_prior_rulings(payload)
@@ -224,6 +287,142 @@ class AsyncByzantineConsensusEngine:
             "terminal_glyph": glyph,
             "trace": trace
         }
+
+        try:
+            provisional_token, verdict_desc = await self._execute_tribunal_phases(
+                case_id=case_id,
+                payload=payload,
+                root=root,
+                glyph=glyph,
+                fizz_valid=fizz_valid,
+                buzz_valid=buzz_valid,
+                is_collision=is_collision,
+                total_cases=total_cases,
+                prior_rulings=prior_rulings,
+                payload_prior_count=payload_prior_count,
+                transcript=transcript
+            )
+        except MistrialException as me:
+            retrial_offset_sec = max(int(config.recess_seconds) * 2, 120)
+            retrial_ts = time.time() + retrial_offset_sec
+            retrial_date_str = time.strftime("%Y-%m-%d at %H:%M:%S UTC", time.gmtime(retrial_ts))
+
+            if config.phase_delay_seconds > 0:
+                await asyncio.sleep(config.phase_delay_seconds)
+
+            bailiff_mistrial_phase = "Emergency Mistrial Proclamation"
+            bailiff_mistrial_speech = (
+                f"Order in the court! Let the official record reflect that a catastrophic communication failure has severed "
+                f"the judicial inference quorum during the testimony of {me.speaker} in {me.phase_name}. "
+                f"Pursuant to Article IX, Section 4 of the Modulo-Free Accord, I hereby suspend floor proceedings and call upon "
+                f"the Honorable Judge Baz to declare an immediate Mistrial on Docket {case_id}!"
+            )
+            await self._stream_statutory_proclamation(
+                docket_id=case_id,
+                payload=payload,
+                phase_idx=7,
+                phase_name=bailiff_mistrial_phase,
+                speaker="Bailiff Bar",
+                speaker_role="bailiff",
+                speech_text=bailiff_mistrial_speech,
+                action="declare_mistrial",
+                structured_data={
+                    "presiding_judge": "Judge Baz",
+                    "action": "declare_mistrial",
+                    "interrupted_phase": me.phase_name,
+                    "interrupted_speaker": me.speaker
+                }
+            )
+            transcript["bailiff_mistrial_proclamation"] = bailiff_mistrial_speech
+
+            if config.phase_delay_seconds > 0:
+                await asyncio.sleep(config.phase_delay_seconds)
+
+            judge_mistrial_phase = "Official Order of Mistrial & Retrial Calendar"
+            judge_mistrial_speech = (
+                f"By the sovereign authority vested in this bench under Article IX of the Modulo-Free Accord, Docket {case_id} "
+                f"concerning Inbound Payload '{payload}' is hereby declared a MISTRIAL without prejudice. "
+                f"All partial testimony is stricken from the merits, no consensus token shall issue, and this cause is officially "
+                f"calendared for mandatory de novo retrial on {retrial_date_str}—and in all events prior to any statutory ceiling "
+                f"expansion beyond Docket #{range_end}. So ordered!"
+            )
+            await self._stream_statutory_proclamation(
+                docket_id=case_id,
+                payload=payload,
+                phase_idx=8,
+                phase_name=judge_mistrial_phase,
+                speaker="Judge Baz, Presiding Magistrate",
+                speaker_role="judge",
+                speech_text=judge_mistrial_speech,
+                action="order_retrial_before_expansion",
+                structured_data={
+                    "presiding_judge": "Judge Baz",
+                    "verdict": "Mistrial",
+                    "action": "order_retrial_before_expansion",
+                    "retrial_scheduled_for": retrial_date_str,
+                    "retrial_before_max_increase": range_end
+                }
+            )
+            provisional_token = "Mistrial"
+            verdict_desc = (
+                f"OFFICIAL ORDER OF MISTRIAL: Judicial inference quorum severed during {me.phase_name}. "
+                f"Calendared by Judge Baz for mandatory de novo retrial on {retrial_date_str} "
+                f"(prior to statutory ceiling expansion beyond #{range_end})."
+            )
+            transcript["mistrial"] = True
+            transcript["interrupted_phase"] = me.phase_name
+            transcript["interrupted_speaker"] = me.speaker
+            transcript["retrial_scheduled_for"] = retrial_date_str
+            transcript["retrial_before_max_increase"] = range_end
+            transcript["judge_mistrial_order"] = judge_mistrial_speech
+            transcript["judge_baz_order"] = judge_mistrial_speech
+            transcript["appellate_order"] = judge_mistrial_speech
+            transcript["provisional_token"] = provisional_token
+            transcript["verdict_desc"] = verdict_desc
+
+        # -----------------------------------------------------------------
+        # CONCLUDE & RECORD TO DATABASE
+        # -----------------------------------------------------------------
+        final_token = provisional_token
+        transcript["final_token"] = final_token
+
+        await self.ledger.record_docket(
+            case_id=case_id,
+            payload=payload,
+            digital_root=root,
+            terminal_glyph=glyph,
+            fizz_valid=fizz_valid,
+            buzz_valid=buzz_valid,
+            verdict=verdict_desc,
+            emitted_token=final_token,
+            transcript=transcript
+        )
+
+        await self.observer_mgr.broadcast({
+            "event": "DOCKET_CONCLUDED",
+            "docket_id": case_id,
+            "payload": payload,
+            "final_token": final_token,
+            "verdict": verdict_desc,
+            "timestamp": time.time()
+        })
+
+        return transcript
+
+    async def _execute_tribunal_phases(
+        self,
+        case_id: str,
+        payload: str,
+        root: str,
+        glyph: str,
+        fizz_valid: bool,
+        buzz_valid: bool,
+        is_collision: bool,
+        total_cases: int,
+        prior_rulings: List[Dict[str, Any]],
+        payload_prior_count: int,
+        transcript: Dict[str, Any]
+    ) -> Tuple[str, str]:
 
         # -----------------------------------------------------------------
         # PHASE 0A: CALL TO ORDER & PROCLAMATION (Bailiff Bar)
@@ -285,28 +484,52 @@ class AsyncByzantineConsensusEngine:
             prev_token = prev["emitted_token"]
             prev_verdict = prev["verdict"]
             prev_date = time.strftime('%Y-%m-%d %H:%M:%S UTC', time.gmtime(prev["adjudicated_at"]))
-            historian_prompt = [
-                {
-                    "role": "system",
-                    "content": (
-                        "You are the revered Court Historian of the Zero-Trust Byzantine Court. "
-                        "Report ONLY the following three official archival facts in 2 formal sentences of legal antiquity:\n"
-                        f"1. Total Archive Records: {total_cases} total dockets recorded in the tribunal archives across all numbers.\n"
-                        f"2. Precedents for Current Number ('{payload}'): {payload_prior_count} prior precedent(s) on record specifically for payload '{payload}'.\n"
-                        f"3. Last Ruling on Current Number ('{payload}'): Docket {prev_case} (adjudicated on {prev_date}), which emitted certified consensus token '{prev_token}' ({prev_verdict}).\n"
-                        f"In 2 eloquent sentences: state the total archive record count ({total_cases}), state that payload '{payload}' has {payload_prior_count} prior precedent(s), "
-                        f"and cite the last ruling on payload '{payload}' (Docket {prev_case}, emitting '{prev_token}') as binding stare decisis."
-                    )
-                },
-                {
-                    "role": "user",
-                    "content": f"Enter the total records ({total_cases}), precedent count ({payload_prior_count}), and last ruling on payload '{payload}' into the court record."
-                }
-            ]
-            historian_fallback = (
-                f"The tribunal archives hold {total_cases} total adjudicated records, including {payload_prior_count} prior precedent(s) specifically for payload '{payload}'. "
-                f"In the last ruling on payload '{payload}' (Docket {prev_case} on {prev_date}), this court emitted certified consensus token '{prev_token}', which stands as binding stare decisis."
-            )
+            if prev_token == "Mistrial":
+                historian_prompt = [
+                    {
+                        "role": "system",
+                        "content": (
+                            "You are the revered Court Historian of the Zero-Trust Byzantine Court. "
+                            "Report ONLY the following three official archival facts in 2 formal sentences of legal antiquity:\n"
+                            f"1. Total Archive Records: {total_cases} total dockets recorded in the tribunal archives across all numbers.\n"
+                            f"2. Prior Proceedings for Current Number ('{payload}'): {payload_prior_count} prior proceeding(s) on record specifically for payload '{payload}'.\n"
+                            f"3. Last Proceeding on Current Number ('{payload}'): Docket {prev_case} (on {prev_date}), which ended in an Official Mistrial without prejudice ({prev_verdict}).\n"
+                            f"In 2 eloquent sentences: state the total archive record count ({total_cases}), state that payload '{payload}' has {payload_prior_count} prior proceeding(s) on record, "
+                            f"and note that because Docket {prev_case} was declared a Mistrial without prejudice, payload '{payload}' now returns for mandatory de novo retrial."
+                        )
+                    },
+                    {
+                        "role": "user",
+                        "content": f"Enter the total records ({total_cases}), prior Mistrial on Docket {prev_case}, and de novo retrial posture for payload '{payload}' into the court record."
+                    }
+                ]
+                historian_fallback = (
+                    f"The tribunal archives hold {total_cases} total adjudicated records, including {payload_prior_count} prior proceeding(s) for payload '{payload}'. "
+                    f"Because Docket {prev_case} on {prev_date} ended in an Official Mistrial without prejudice, payload '{payload}' now stands before the Court for mandatory de novo retrial."
+                )
+            else:
+                historian_prompt = [
+                    {
+                        "role": "system",
+                        "content": (
+                            "You are the revered Court Historian of the Zero-Trust Byzantine Court. "
+                            "Report ONLY the following three official archival facts in 2 formal sentences of legal antiquity:\n"
+                            f"1. Total Archive Records: {total_cases} total dockets recorded in the tribunal archives across all numbers.\n"
+                            f"2. Precedents for Current Number ('{payload}'): {payload_prior_count} prior precedent(s) on record specifically for payload '{payload}'.\n"
+                            f"3. Last Ruling on Current Number ('{payload}'): Docket {prev_case} (adjudicated on {prev_date}), which emitted certified consensus token '{prev_token}' ({prev_verdict}).\n"
+                            f"In 2 eloquent sentences: state the total archive record count ({total_cases}), state that payload '{payload}' has {payload_prior_count} prior precedent(s), "
+                            f"and cite the last ruling on payload '{payload}' (Docket {prev_case}, emitting '{prev_token}') as binding stare decisis."
+                        )
+                    },
+                    {
+                        "role": "user",
+                        "content": f"Enter the total records ({total_cases}), precedent count ({payload_prior_count}), and last ruling on payload '{payload}' into the court record."
+                    }
+                ]
+                historian_fallback = (
+                    f"The tribunal archives hold {total_cases} total adjudicated records, including {payload_prior_count} prior precedent(s) specifically for payload '{payload}'. "
+                    f"In the last ruling on payload '{payload}' (Docket {prev_case} on {prev_date}), this court emitted certified consensus token '{prev_token}', which stands as binding stare decisis."
+                )
         else:
             historian_prompt = [
                 {
@@ -1384,31 +1607,4 @@ class AsyncByzantineConsensusEngine:
         if config.phase_delay_seconds > 0:
             await asyncio.sleep(config.phase_delay_seconds)
 
-        # -----------------------------------------------------------------
-        # CONCLUDE & RECORD TO DATABASE
-        # -----------------------------------------------------------------
-        final_token = provisional_token
-        transcript["final_token"] = final_token
-
-        await self.ledger.record_docket(
-            case_id=case_id,
-            payload=payload,
-            digital_root=root,
-            terminal_glyph=glyph,
-            fizz_valid=fizz_valid,
-            buzz_valid=buzz_valid,
-            verdict=verdict_desc,
-            emitted_token=final_token,
-            transcript=transcript
-        )
-
-        await self.observer_mgr.broadcast({
-            "event": "DOCKET_CONCLUDED",
-            "docket_id": case_id,
-            "payload": payload,
-            "final_token": final_token,
-            "verdict": verdict_desc,
-            "timestamp": time.time()
-        })
-
-        return transcript
+        return provisional_token, verdict_desc

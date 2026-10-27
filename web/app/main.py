@@ -56,8 +56,10 @@ async def background_adjudication_loop():
             payload, source = await scheduler.select_next_payload()
             logger.info(f"Commencing adjudication for payload '{payload}' (Source: {source})")
 
-            # 4. Execute 9-Phase Tribunal Deliberation
-            await engine.adjudicate(payload, source)
+            # 4. Execute 9-Phase Tribunal Deliberation (or Official Mistrial if inference quorum fails)
+            transcript = await engine.adjudicate(payload, source, range_end=scheduler.range_end)
+            if transcript.get("final_token") == "Mistrial":
+                await scheduler.register_mistrial(payload, source)
 
         except asyncio.CancelledError:
             logger.info("Adjudication loop cancelled.")
@@ -68,10 +70,13 @@ async def background_adjudication_loop():
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup: ensure tables exist and resume statutory calendar from ledger
+    # Startup: ensure tables exist, purge legacy corrupted rows, and resume statutory calendar
     await ledger.initialize()
-    highest_cal = await ledger.get_highest_calendar_seq()
-    scheduler.resume_from_calendar_seq(highest_cal)
+    deleted_legacy = await ledger.delete_mistrial_dockets()
+    if deleted_legacy:
+        logger.info(f"Purged {deleted_legacy} legacy corrupted docket rows on startup.")
+    highest_cal, missing_seqs = await ledger.get_calendar_state(config.initial_range_start)
+    scheduler.resume_from_calendar_seq(highest_cal, missing_seqs)
     adjudication_task = asyncio.create_task(background_adjudication_loop())
     yield
     # Shutdown

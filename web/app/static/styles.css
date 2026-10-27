@@ -507,7 +507,10 @@ body {
 .speech-action-tag.action-decline-and-demand-remand,
 .speech-action-tag.action-advise-remand-challenge,
 .speech-action-tag.action-reject-all-claims,
-.speech-action-tag.action-rebut-claim {
+.speech-action-tag.action-rebut-claim,
+.speech-action-tag.action-declare-mistrial,
+.speech-action-tag.action-order-retrial-before-expansion,
+.speech-action-tag.action-quorum-severed {
     background-color: rgba(239, 68, 68, 0.18);
     border-color: rgba(239, 68, 68, 0.5);
     color: #fca5a5;
@@ -564,6 +567,19 @@ body {
     flex-direction: column;
     gap: 6px;
     margin: 6px 0;
+}
+
+.docket-verdict-card.mistrial {
+    background: linear-gradient(135deg, #3b0a0a, #450a0a);
+    border: 2px solid var(--color-danger);
+}
+
+.docket-verdict-card.mistrial .verdict-card-token {
+    color: #fca5a5;
+}
+
+.docket-verdict-card.mistrial .verdict-card-desc {
+    color: #fecaca;
 }
 
 .verdict-card-label {
@@ -969,6 +985,7 @@ body {
 .token-badge.fizz { background-color: rgba(59, 130, 246, 0.2); color: var(--color-fizz); }
 .token-badge.buzz { background-color: rgba(245, 158, 11, 0.2); color: var(--color-buzz); }
 .token-badge.fizzbuzz { background-color: rgba(139, 92, 246, 0.2); color: var(--color-appellate); }
+.token-badge.mistrial { background-color: rgba(239, 68, 68, 0.22); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.45); }
 .token-badge.raw { background-color: rgba(148, 163, 184, 0.2); color: var(--text-secondary); }
 
 .ledger-empty {
