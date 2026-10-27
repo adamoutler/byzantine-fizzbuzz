@@ -65,7 +65,10 @@ class DocketScheduler:
                 }
             else:
                 if val not in self.pending_mistrials:
-                    self.pending_mistrials.append(val)
+                    if "Mistrial Retrial" in source:
+                        self.pending_mistrials.insert(0, val)
+                    else:
+                        self.pending_mistrials.append(val)
                 # If the final number of a range just triggered a premature range expansion before mistrialing,
                 # roll back range_end so the mistrial is retried prior to increasing the top number count.
                 if self.current_seq - 1 == val and (self.range_end - self.expansion_step) == val:

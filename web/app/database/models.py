@@ -144,7 +144,7 @@ class DocketLedger:
             cursor = await db.execute(
                 """
                 DELETE FROM dockets
-                WHERE transcript_json LIKE '%Communication Failure%'
+                WHERE transcript_json LIKE '%Communication Failure with Ollama%'
                 """
             )
             deleted = cursor.rowcount

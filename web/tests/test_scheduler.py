@@ -80,18 +80,18 @@ async def test_mistrial_retrial_before_increasing_top_number():
     assert "Mistrial Retrial" in src1
     assert scheduler.range_end == 10
 
-    # Suppose 4 mistrials again! Register mistrial and move on to 7 without increasing range_end
+    # Suppose 4 mistrials again during its retrial! It is placed at the front so it retries next once quorum recovers
     await scheduler.register_mistrial(p_retry1, src1)
     assert scheduler.range_end == 10
-    assert 4 in scheduler.pending_mistrials
+    assert scheduler.pending_mistrials[0] == 4
 
-    # Next retries 7, then 4 again, and only increases range_end to 20 after all mistrials succeed!
-    p_retry2, _ = await scheduler.select_next_payload()
-    assert p_retry2 == "7"
-    assert scheduler.range_end == 10
-
+    # Next retries 4 again, then 7, and only increases range_end to 20 after all mistrials succeed!
     p_retry1b, _ = await scheduler.select_next_payload()
     assert p_retry1b == "4"
+    assert scheduler.range_end == 10
+
+    p_retry2, _ = await scheduler.select_next_payload()
+    assert p_retry2 == "7"
     assert scheduler.range_end == 10
 
     # Now pending_mistrials is empty -> next payload expands range_end to 20 and selects 11!

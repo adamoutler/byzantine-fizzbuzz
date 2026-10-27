@@ -45,7 +45,8 @@ async def background_adjudication_loop():
 
             # 3. Execute 9-Phase Tribunal Deliberation (or Official Mistrial if inference quorum fails)
             transcript = await engine.adjudicate(payload, source, range_end=scheduler.range_end)
-            if transcript.get("final_token") == "Mistrial":
+            was_mistrial = transcript.get("final_token") == "Mistrial"
+            if was_mistrial:
                 await scheduler.register_mistrial(payload, source)
 
             # 4. Parliamentary Recess & 1-Deep Queue Window at the END of each parliamentary process
@@ -58,6 +59,17 @@ async def background_adjudication_loop():
                     "queue_status": scheduler.get_status()
                 })
                 await asyncio.sleep(1.0)
+
+            # 5. If the docket ended in a Mistrial, hold in extended recess until the inference server is back online
+            if was_mistrial:
+                while not await engine.check_inference_quorum():
+                    logger.info("Awaiting judicial inference quorum recovery before convening next docket...")
+                    await observer_mgr.broadcast({
+                        "event": "RECESS_TICK",
+                        "seconds_remaining": 5,
+                        "queue_status": scheduler.get_status()
+                    })
+                    await asyncio.sleep(5.0)
 
         except asyncio.CancelledError:
             logger.info("Adjudication loop cancelled.")

@@ -48,6 +48,15 @@ class AsyncByzantineConsensusEngine:
     async def close(self):
         await self.client.aclose()
 
+    async def check_inference_quorum(self) -> bool:
+        """Checks whether the judicial inference server is reachable before convening a retrial."""
+        endpoint = f"{config.ollama_server.rstrip('/')}/api/tags"
+        try:
+            resp = await self.client.get(endpoint, timeout=3.0)
+            return resp.status_code == 200
+        except Exception:
+            return False
+
     async def stream_ollama(
         self,
         messages: List[Dict[str, str]],
@@ -257,11 +266,15 @@ class AsyncByzantineConsensusEngine:
         """
         total_cases = await self.ledger.get_total_cases()
         prior_rulings = await self.ledger.get_prior_rulings(payload)
+        completed_priors = [r for r in prior_rulings if r.get("emitted_token") != "Mistrial"]
+        mistrial_priors = [r for r in prior_rulings if r.get("emitted_token") == "Mistrial"]
         payload_prior_count = len(prior_rulings)
-        if payload_prior_count == 0:
+        if mistrial_priors and not completed_priors:
+            case_id = mistrial_priors[0]["case_id"]
+        elif not completed_priors:
             case_id = f"BZ-2026-{payload.zfill(4)}"
         else:
-            case_id = f"BZ-2026-{payload.zfill(4)}-R{payload_prior_count + 1}"
+            case_id = f"BZ-2026-{payload.zfill(4)}-R{len(completed_priors) + 1}"
 
         fizz_valid, buzz_valid, root, glyph, trace = verify_fizz_buzz_invariants(payload)
         is_collision = fizz_valid and buzz_valid
