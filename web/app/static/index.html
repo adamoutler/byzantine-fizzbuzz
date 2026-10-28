@@ -48,7 +48,7 @@
     <meta name="application-name" content="FizzBuzz">
     <meta name="msapplication-TileColor" content="#0b0f19">
 
-    <link rel="stylesheet" href="/static/styles.css?v=20261028-2">
+    <link rel="stylesheet" href="/static/styles.css?v=20261028-3">
 </head>
 <body>
     <div class="court-container">
@@ -315,7 +315,7 @@
             <!-- Tab 1: 17 Agent Swarm Static Directory -->
             <div class="modal-body info-tab-panel" id="info-panel-swarm">
                 <div class="info-intro-banner">
-                    Every integer submitted to the docket is adjudicated by a specialized <strong>17-Agent Swarm</strong> operating under a Byzantine Fault-Tolerant consensus workflow. Each role has distinct statutory authority, adversarial incentives, and verification duties:
+                    Every integer submitted to the docket is adjudicated by a specialized <strong>17-Agent Swarm</strong> inside a doubly <strong>Byzantine Courtroom</strong>: it operates under a <strong>Byzantine Fault-Tolerant</strong> consensus workflow while remaining unapologetically <em>byzantine</em> in the classical sense (absurdly complicated, labyrinthine, and ceremonious). To resolve a single integer of FizzBuzz, each role exercises distinct statutory authority, adversarial incentives, ceremonial pageantry, and verification duties:
                 </div>
 
                 <div class="swarm-roles-grid">
@@ -597,12 +597,12 @@
         </div>
     </div>
 
-    <script src="/static/app.js?v=20261028-2"></script>
+    <script src="/static/app.js?v=20261028-3"></script>
     <script>
         // PWA Service Worker Registration with immediate update check
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js?v=20261028-2', { scope: '/' })
+                navigator.serviceWorker.register('/sw.js?v=20261028-3', { scope: '/' })
                     .then((reg) => {
                         reg.update();
                         console.log('[PWA] Service Worker registered successfully. Scope:', reg.scope);
