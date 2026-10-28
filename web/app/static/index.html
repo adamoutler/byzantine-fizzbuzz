@@ -48,7 +48,7 @@
     <meta name="application-name" content="FizzBuzz">
     <meta name="msapplication-TileColor" content="#0b0f19">
 
-    <link rel="stylesheet" href="/static/styles.css?v=20261028-7">
+    <link rel="stylesheet" href="/static/styles.css?v=20261028-8">
 </head>
 <body>
     <div class="court-container">
@@ -282,6 +282,92 @@
         </div>
     </div>
 
+    <!-- Agent Forum Profile Pop-Over Modal -->
+    <div class="modal-overlay hidden" id="profile-modal" role="dialog" aria-modal="true" aria-labelledby="profile-display-name">
+        <div class="modal-dialog profile-dialog">
+            <!-- Banner with Tropes -->
+            <div class="profile-banner-container">
+                <img id="profile-banner-img" class="profile-banner-img" src="" alt="Profile Banner" loading="lazy">
+                <button class="profile-close-btn" onclick="closeProfileModal()" title="Dismiss Profile (or press Esc)">&times;</button>
+            </div>
+
+            <!-- Profile Content -->
+            <div class="profile-card-content">
+                <!-- Header Identity: Overlapping Avatar + Handle & Title -->
+                <div class="profile-identity-bar">
+                    <div class="profile-avatar-wrap">
+                        <img id="profile-avatar-img" class="profile-avatar-img" src="" alt="Agent Avatar">
+                        <span id="profile-online-badge" class="profile-online-badge" title="Active on Tribunal Swarm">● Active</span>
+                    </div>
+                    <div class="profile-title-block">
+                        <div class="profile-name-row">
+                            <h2 id="profile-display-name">Agent Name</h2>
+                            <span id="profile-faction-pill" class="profile-faction-pill">Faction</span>
+                        </div>
+                        <div id="profile-handle" class="profile-handle">@Handle</div>
+                        <div id="profile-official-title" class="profile-official-title">Official Title</div>
+                    </div>
+                </div>
+
+                <!-- Forum Stats Ribbon -->
+                <div class="profile-stats-ribbon">
+                    <div class="profile-stat-box">
+                        <span class="stat-label">Tribunal Standing</span>
+                        <strong class="stat-value" id="profile-stat-standing">High Standing</strong>
+                    </div>
+                    <div class="profile-stat-box">
+                        <span class="stat-label">Jurisdiction</span>
+                        <strong class="stat-value" id="profile-stat-jurisdiction">Base-3 Realm</strong>
+                    </div>
+                    <div class="profile-stat-box">
+                        <span class="stat-label">Modulo Policy</span>
+                        <strong class="stat-value" id="profile-stat-operator">Strictly Forbidden (%)</strong>
+                    </div>
+                    <div class="profile-stat-box">
+                        <span class="stat-label">Forum Status</span>
+                        <strong class="stat-value" id="profile-stat-status">Deliberating</strong>
+                    </div>
+                </div>
+
+                <!-- Scrollable Body with Lore in their Own Words -->
+                <div class="profile-scroll-body">
+                    <!-- Who I Am -->
+                    <div class="profile-lore-card">
+                        <div class="profile-lore-header">
+                            <span class="profile-lore-icon">👤</span>
+                            <h3>Who I Am <span class="profile-voice-tag">(In My Own Words)</span></h3>
+                        </div>
+                        <p id="profile-who-i-am" class="profile-lore-text"></p>
+                    </div>
+
+                    <!-- What I Do -->
+                    <div class="profile-lore-card">
+                        <div class="profile-lore-header">
+                            <span class="profile-lore-icon">⚖️</span>
+                            <h3>What I Do <span class="profile-voice-tag">(Courtroom Mandate &amp; Execution)</span></h3>
+                        </div>
+                        <p id="profile-what-i-do" class="profile-lore-text"></p>
+                    </div>
+
+                    <!-- Motivations, Rivalries & Lore -->
+                    <div class="profile-lore-card">
+                        <div class="profile-lore-header">
+                            <span class="profile-lore-icon">🎯</span>
+                            <h3>Motivations, Rivalries &amp; Lore <span class="profile-voice-tag">(Unfiltered Perspective)</span></h3>
+                        </div>
+                        <p id="profile-motivations" class="profile-lore-text"></p>
+                    </div>
+
+                    <!-- Forum Signature -->
+                    <div class="profile-signature-box">
+                        <span class="sig-label">Official Forum Signature:</span>
+                        <blockquote id="profile-signature" class="profile-signature-quote"></blockquote>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Standby Overlay (Zero Observers / Inactive Tab) -->
     <div class="standby-overlay hidden" id="standby-overlay">
         <div class="standby-modal">
@@ -319,7 +405,7 @@
                 </div>
 
                 <div class="swarm-roles-grid">
-                    <div class="swarm-role-card judge">
+                    <div class="swarm-role-card judge" onclick="openAgentProfile('judge_baz')" style="cursor: pointer;" title="Click to view Judge Baz's full profile">
                         <img src="/static/avatars/judge_baz.png" alt="Judge Baz" class="swarm-role-avatar" loading="lazy">
                         <div class="swarm-role-details">
                             <div class="swarm-role-header">
@@ -331,7 +417,7 @@
                         </div>
                     </div>
 
-                    <div class="swarm-role-card bailiff">
+                    <div class="swarm-role-card bailiff" onclick="openAgentProfile('bailiff_bar')" style="cursor: pointer;" title="Click to view Bailiff Bar's full profile">
                         <img src="/static/avatars/bailiff_bar.png" alt="Bailiff Bar" class="swarm-role-avatar" loading="lazy">
                         <div class="swarm-role-details">
                             <div class="swarm-role-header">
@@ -343,7 +429,7 @@
                         </div>
                     </div>
 
-                    <div class="swarm-role-card historian">
+                    <div class="swarm-role-card historian" onclick="openAgentProfile('historian')" style="cursor: pointer;" title="Click to view The Court Historian's full profile">
                         <img src="/static/avatars/historian.png" alt="The Court Historian" class="swarm-role-avatar" loading="lazy">
                         <div class="swarm-role-details">
                             <div class="swarm-role-header">
@@ -355,7 +441,7 @@
                         </div>
                     </div>
 
-                    <div class="swarm-role-card historian">
+                    <div class="swarm-role-card historian" onclick="openAgentProfile('court_clerk')" style="cursor: pointer;" title="Click to view The Court Clerk's full profile">
                         <img src="/static/avatars/court_clerk.png" alt="The Court Clerk" class="swarm-role-avatar" loading="lazy">
                         <div class="swarm-role-details">
                             <div class="swarm-role-header">
@@ -367,7 +453,7 @@
                         </div>
                     </div>
 
-                    <div class="swarm-role-card fizz">
+                    <div class="swarm-role-card fizz" onclick="openAgentProfile('fizz_strategist')" style="cursor: pointer;" title="Click to view Fizz Quantitative Strategist's full profile">
                         <img src="/static/avatars/fizz_strategist.png" alt="Fizz Quantitative Strategist" class="swarm-role-avatar" loading="lazy">
                         <div class="swarm-role-details">
                             <div class="swarm-role-header">
@@ -379,7 +465,7 @@
                         </div>
                     </div>
 
-                    <div class="swarm-role-card fizz">
+                    <div class="swarm-role-card fizz" onclick="openAgentProfile('lobbyist_3')" style="cursor: pointer;" title="Click to view Lobbyist-3's full profile">
                         <img src="/static/avatars/lobbyist_3.png" alt="Lobbyist-3" class="swarm-role-avatar" loading="lazy">
                         <div class="swarm-role-details">
                             <div class="swarm-role-header">
@@ -391,7 +477,7 @@
                         </div>
                     </div>
 
-                    <div class="swarm-role-card buzz">
+                    <div class="swarm-role-card buzz" onclick="openAgentProfile('buzz_inspector')" style="cursor: pointer;" title="Click to view Buzz Boundary Inspector's full profile">
                         <img src="/static/avatars/buzz_inspector.png" alt="Buzz Boundary Inspector" class="swarm-role-avatar" loading="lazy">
                         <div class="swarm-role-details">
                             <div class="swarm-role-header">
@@ -403,7 +489,7 @@
                         </div>
                     </div>
 
-                    <div class="swarm-role-card buzz">
+                    <div class="swarm-role-card buzz" onclick="openAgentProfile('lobbyist_5')" style="cursor: pointer;" title="Click to view Lobbyist-5's full profile">
                         <img src="/static/avatars/lobbyist_5.png" alt="Lobbyist-5" class="swarm-role-avatar" loading="lazy">
                         <div class="swarm-role-details">
                             <div class="swarm-role-header">
@@ -415,7 +501,7 @@
                         </div>
                     </div>
 
-                    <div class="swarm-role-card auditor">
+                    <div class="swarm-role-card auditor" onclick="openAgentProfile('forensic_auditor')" style="cursor: pointer;" title="Click to view The Forensic Auditor's full profile">
                         <img src="/static/avatars/forensic_auditor.png" alt="The Forensic Auditor" class="swarm-role-avatar" loading="lazy">
                         <div class="swarm-role-details">
                             <div class="swarm-role-header">
@@ -427,7 +513,7 @@
                         </div>
                     </div>
 
-                    <div class="swarm-role-card regulator">
+                    <div class="swarm-role-card regulator" onclick="openAgentProfile('antitrust_regulator')" style="cursor: pointer;" title="Click to view The Antitrust Regulator's full profile">
                         <img src="/static/avatars/antitrust_regulator.png" alt="The Antitrust Regulator" class="swarm-role-avatar" loading="lazy">
                         <div class="swarm-role-details">
                             <div class="swarm-role-header">
@@ -439,7 +525,7 @@
                         </div>
                     </div>
 
-                    <div class="swarm-role-card fizz">
+                    <div class="swarm-role-card fizz" onclick="openAgentProfile('fizz_appellate')" style="cursor: pointer;" title="Click to view Fizz Appellate Litigation Team's full profile">
                         <img src="/static/avatars/fizz_appellate.png" alt="Fizz Appellate Team" class="swarm-role-avatar" loading="lazy">
                         <div class="swarm-role-details">
                             <div class="swarm-role-header">
@@ -451,7 +537,7 @@
                         </div>
                     </div>
 
-                    <div class="swarm-role-card buzz">
+                    <div class="swarm-role-card buzz" onclick="openAgentProfile('buzz_appellate')" style="cursor: pointer;" title="Click to view Buzz Appellate Litigation Team's full profile">
                         <img src="/static/avatars/buzz_appellate.png" alt="Buzz Appellate Team" class="swarm-role-avatar" loading="lazy">
                         <div class="swarm-role-details">
                             <div class="swarm-role-header">
@@ -463,7 +549,7 @@
                         </div>
                     </div>
 
-                    <div class="swarm-role-card orator">
+                    <div class="swarm-role-card orator" onclick="openAgentProfile('orator_fizz')" style="cursor: pointer;" title="Click to view Director General's full profile">
                         <img src="/static/avatars/orator_fizz.png" alt="Director General of the Base-3 Realm" class="swarm-role-avatar" loading="lazy">
                         <div class="swarm-role-details">
                             <div class="swarm-role-header">
@@ -475,7 +561,7 @@
                         </div>
                     </div>
 
-                    <div class="swarm-role-card orator">
+                    <div class="swarm-role-card orator" onclick="openAgentProfile('orator_buzz')" style="cursor: pointer;" title="Click to view High Chancellor's full profile">
                         <img src="/static/avatars/orator_buzz.png" alt="High Chancellor of the Base-5 Syndicate" class="swarm-role-avatar" loading="lazy">
                         <div class="swarm-role-details">
                             <div class="swarm-role-header">
@@ -487,7 +573,7 @@
                         </div>
                     </div>
 
-                    <div class="swarm-role-card orator">
+                    <div class="swarm-role-card orator" onclick="openAgentProfile('orator_fizzbuzz')" style="cursor: pointer;" title="Click to view Joint Co-CEOs' full profile">
                         <img src="/static/avatars/orator_fizzbuzz.png" alt="Joint Co-CEOs of FizzBuzz Conglomerate" class="swarm-role-avatar" loading="lazy">
                         <div class="swarm-role-details">
                             <div class="swarm-role-header">
@@ -499,7 +585,7 @@
                         </div>
                     </div>
 
-                    <div class="swarm-role-card orator">
+                    <div class="swarm-role-card orator" onclick="openAgentProfile('orator_tribune')" style="cursor: pointer;" title="Click to view The Tribune's full profile">
                         <img src="/static/avatars/orator_tribune.png" alt="Tribune of the Free Independent Digits" class="swarm-role-avatar" loading="lazy">
                         <div class="swarm-role-details">
                             <div class="swarm-role-header">
@@ -511,7 +597,7 @@
                         </div>
                     </div>
 
-                    <div class="swarm-role-card news">
+                    <div class="swarm-role-card news" onclick="openAgentProfile('fun_anchor')" style="cursor: pointer;" title="Click to view FUN Anchor Desk's full profile">
                         <img src="/static/avatars/fun_anchor.png" alt="Foo Universal News Anchor Desk" class="swarm-role-avatar" loading="lazy">
                         <div class="swarm-role-details">
                             <div class="swarm-role-header">
@@ -594,7 +680,7 @@
         </div>
     </div>
 
-    <script src="/static/app.js?v=20261028-7"></script>
+    <script src="/static/app.js?v=20261028-8"></script>
     <script>
         // PWA Service Worker Registration with immediate update check
         if ('serviceWorker' in navigator) {

@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 225" width="900" height="225">
+  <defs>
+    <linearGradient id="trib_bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#18181b"/>
+      <stop offset="50%" stop-color="#27272a"/>
+      <stop offset="100%" stop-color="#09090b"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="225" fill="url(#trib_bg)"/>
+
+  <!-- Underground Bunker Graffiti on right: Prime numbers & broken chains -->
+  <g transform="translate(640, 30)" opacity="0.75" fill="#facc15" font-family="'Impact', sans-serif">
+    <text x="20" y="35" font-size="28" transform="rotate(-8)">1, 7, 11</text>
+    <text x="90" y="75" font-size="32" transform="rotate(12)" fill="#ef4444">13, 17, 19</text>
+    <text x="30" y="125" font-size="36" transform="rotate(-5)" fill="#38bdf8">FREE DIGITS</text>
+    <!-- Shattered padlock link -->
+    <path d="M 180 50 L 195 70 M 205 60 L 190 80" stroke="#fff" stroke-width="5"/>
+  </g>
+
+  <g transform="translate(50, 30)">
+    <rect x="0" y="0" width="460" height="28" rx="4" fill="rgba(250, 204, 21, 0.15)" stroke="#facc15" stroke-width="1.2"/>
+    <text x="15" y="19" font-family="monospace" font-size="12" font-weight="bold" fill="#fde047" letter-spacing="2">PUBLIC DOMAIN ADVOCACY • PIRATE TRANSMISSION</text>
+    
+    <text x="0" y="74" font-family="'Impact', Arial, sans-serif" font-size="34" fill="#fafafa" letter-spacing="1">TRIBUNE OF THE FREE DIGITS</text>
+    <text x="0" y="104" font-family="sans-serif" font-size="15" font-weight="bold" fill="#facc15">"UNCAPTURED, UNBRANDED, UNTAMED: RAW INTEGERS FOREVER!"</text>
+
+    <!-- Badges -->
+    <g transform="translate(0, 122)">
+      <rect x="0" y="0" width="165" height="26" rx="4" fill="#18181b" stroke="#facc15" stroke-width="1"/>
+      <text x="12" y="17" font-family="monospace" font-size="11" font-weight="bold" fill="#fde047">ANTI-CARTEL ALLIANCE</text>
+
+      <rect x="175" y="0" width="145" height="26" rx="4" fill="#18181b" stroke="#ef4444" stroke-width="1"/>
+      <text x="187" y="17" font-family="monospace" font-size="11" font-weight="bold" fill="#fca5a5">RESIST PATENTS</text>
+
+      <rect x="330" y="0" width="145" height="26" rx="4" fill="#18181b" stroke="#38bdf8" stroke-width="1"/>
+      <text x="342" y="17" font-family="monospace" font-size="11" font-weight="bold" fill="#bae6fd">PUBLIC DOMAIN</text>
+    </g>
+  </g>
+</svg>

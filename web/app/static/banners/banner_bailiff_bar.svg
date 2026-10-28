@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 225" width="900" height="225">
+  <defs>
+    <linearGradient id="bar_bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b0f19"/>
+      <stop offset="60%" stop-color="#161f33"/>
+      <stop offset="100%" stop-color="#080c14"/>
+    </linearGradient>
+    <linearGradient id="gold_badge" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="50%" stop-color="#eab308"/>
+      <stop offset="100%" stop-color="#854d0e"/>
+    </linearGradient>
+    <pattern id="police_stripes" width="40" height="40" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="20" height="40" fill="#facc15"/>
+      <rect x="20" y="0" width="20" height="40" fill="#1e293b"/>
+    </pattern>
+  </defs>
+  <rect width="900" height="225" fill="url(#bar_bg)"/>
+
+  <!-- Top Caution Hazard Tape -->
+  <rect x="0" y="0" width="900" height="14" fill="url(#police_stripes)"/>
+  <rect x="0" y="211" width="900" height="14" fill="url(#police_stripes)"/>
+
+  <!-- Giant Police / AST Security Star Badge -->
+  <g transform="translate(710, 25)" opacity="0.9">
+    <polygon points="100,10 125,75 190,75 135,115 155,180 100,140 45,180 65,115 10,75 75,75" fill="url(#gold_badge)" stroke="#ca8a04" stroke-width="4"/>
+    <circle cx="100" cy="100" r="42" fill="#0f172a" stroke="#facc15" stroke-width="3"/>
+    <text x="100" y="96" font-family="'Impact', sans-serif" font-size="14" font-weight="bold" fill="#facc15" text-anchor="middle">AST POLICE</text>
+    <text x="100" y="112" font-family="'Impact', sans-serif" font-size="11" fill="#fff" text-anchor="middle">UNIT 00</text>
+  </g>
+
+  <!-- Heavy Handcuffs Graphic -->
+  <g transform="translate(600, 75)" opacity="0.45" stroke="#94a3b8" stroke-width="6" fill="none">
+    <circle cx="40" cy="40" r="32"/>
+    <circle cx="110" cy="40" r="32"/>
+    <path d="M 72 40 L 78 40"/>
+  </g>
+
+  <g transform="translate(50, 30)">
+    <rect x="0" y="0" width="480" height="28" rx="4" fill="rgba(234, 179, 8, 0.15)" stroke="#eab308" stroke-width="1.5"/>
+    <text x="15" y="19" font-family="'Impact', 'Arial Black', sans-serif" font-size="13" fill="#facc15" letter-spacing="2">OFFICE OF THE SERGEANT-AT-ARMS • DECORUM DIVISION</text>
+    
+    <text x="0" y="74" font-family="'Impact', 'Arial Black', sans-serif" font-size="36" fill="#f8fafc" letter-spacing="1">BAILIFF BAR // SECURITY DESK</text>
+    <text x="0" y="104" font-family="sans-serif" font-size="15" font-weight="bold" fill="#94a3b8">"ALL DIVISION OPERATORS WILL BE CONFISCATED AND INCINERATED"</text>
+
+    <!-- Stat badges -->
+    <g transform="translate(0, 122)">
+      <rect x="0" y="0" width="140" height="26" rx="4" fill="#1e293b" stroke="#facc15" stroke-width="1"/>
+      <text x="12" y="17" font-family="monospace" font-size="11" font-weight="bold" fill="#facc15">STATUS: ON PATROL</text>
+
+      <rect x="150" y="0" width="165" height="26" rx="4" fill="#1e293b" stroke="#f43f5e" stroke-width="1"/>
+      <text x="162" y="17" font-family="monospace" font-size="11" font-weight="bold" fill="#f43f5e">MODULO BAN: ARMED</text>
+
+      <rect x="325" y="0" width="165" height="26" rx="4" fill="#1e293b" stroke="#38bdf8" stroke-width="1"/>
+      <text x="337" y="17" font-family="monospace" font-size="11" font-weight="bold" fill="#38bdf8">MISTRIAL WATCH: ON</text>
+    </g>
+  </g>
+</svg>

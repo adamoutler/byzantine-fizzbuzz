@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 225" width="900" height="225">
+  <defs>
+    <linearGradient id="at_bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e1024"/>
+      <stop offset="50%" stop-color="#3b1747"/>
+      <stop offset="100%" stop-color="#130817"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="225" fill="url(#at_bg)"/>
+
+  <!-- Giant 50/50 Split Pie Chart & Gavel on right -->
+  <g transform="translate(730, 110)" opacity="0.85">
+    <!-- Left half 50% (Fizz blue) -->
+    <path d="M 0 0 L 0 -65 A 65 65 0 0 0 0 65 Z" fill="#3b82f6"/>
+    <!-- Right half 50% (Buzz green) -->
+    <path d="M 0 0 L 0 65 A 65 65 0 0 0 0 -65 Z" fill="#10b981"/>
+    <!-- Split lightning divider -->
+    <line x1="0" y1="-75" x2="0" y2="75" stroke="#fbbf24" stroke-width="4"/>
+    <text x="-25" y="8" font-family="'Impact', sans-serif" font-size="16" fill="#fff" text-anchor="middle">50%</text>
+    <text x="25" y="8" font-family="'Impact', sans-serif" font-size="16" fill="#fff" text-anchor="middle">50%</text>
+  </g>
+
+  <g transform="translate(50, 30)">
+    <rect x="0" y="0" width="460" height="28" rx="4" fill="rgba(217, 70, 239, 0.15)" stroke="#c026d3" stroke-width="1.2"/>
+    <text x="15" y="19" font-family="sans-serif" font-size="12" font-weight="bold" fill="#f5d0fe" letter-spacing="2">FEDERAL ALGORITHMIC MONOPOLY &amp; MERGER UNIT</text>
+    
+    <text x="0" y="74" font-family="'Impact', Arial, sans-serif" font-size="34" fill="#faf5ff" letter-spacing="1">THE ANTITRUST REGULATOR</text>
+    <text x="0" y="104" font-family="sans-serif" font-size="14" font-weight="bold" fill="#e879f9">"NO UNILATERAL MONOPOLIES: MANDATORY FIZZBUZZ CONSOLIDATION"</text>
+
+    <!-- Badges -->
+    <g transform="translate(0, 122)">
+      <rect x="0" y="0" width="165" height="26" rx="4" fill="#581c87" stroke="#c026d3" stroke-width="1"/>
+      <text x="12" y="17" font-family="sans-serif" font-size="11" font-weight="bold" fill="#f5d0fe">HSR INJUNCTION ARMED</text>
+
+      <rect x="175" y="0" width="150" height="26" rx="4" fill="#581c87" stroke="#c026d3" stroke-width="1"/>
+      <text x="187" y="17" font-family="sans-serif" font-size="11" font-weight="bold" fill="#f5d0fe">50/50 KPI DIVESTITURE</text>
+
+      <rect x="335" y="0" width="140" height="26" rx="4" fill="#581c87" stroke="#fbbf24" stroke-width="1"/>
+      <text x="347" y="17" font-family="sans-serif" font-size="11" font-weight="bold" fill="#fef08a">STAGE 4 SUPREMO</text>
+    </g>
+  </g>
+</svg>

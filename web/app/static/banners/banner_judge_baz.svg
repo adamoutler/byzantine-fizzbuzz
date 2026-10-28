@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 225" width="900" height="225">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e0e0a"/>
+      <stop offset="50%" stop-color="#3d1c14"/>
+      <stop offset="100%" stop-color="#120604"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffd700"/>
+      <stop offset="50%" stop-color="#fff2a3"/>
+      <stop offset="100%" stop-color="#d4af37"/>
+    </linearGradient>
+    <linearGradient id="wood" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#5c2c1c"/>
+      <stop offset="100%" stop-color="#2a1008"/>
+    </linearGradient>
+    <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
+      <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(212,175,55,0.07)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="900" height="225" fill="url(#bg)"/>
+  <rect width="900" height="225" fill="url(#grid)"/>
+
+  <!-- Ornate classical judicial pediment / columns background -->
+  <g opacity="0.15" stroke="#d4af37" stroke-width="2" fill="none">
+    <path d="M 30 195 L 30 50 M 70 195 L 70 50 M 110 195 L 110 50"/>
+    <path d="M 870 195 L 870 50 M 830 195 L 830 50 M 790 195 L 790 50"/>
+  </g>
+
+  <!-- Golden Scales of Justice silhouette -->
+  <g transform="translate(730, 20)" opacity="0.85">
+    <circle cx="80" cy="25" r="8" fill="url(#gold)"/>
+    <rect x="77" y="25" width="6" height="150" fill="url(#gold)"/>
+    <rect x="35" y="170" width="90" height="12" rx="4" fill="url(#gold)"/>
+    <!-- Beam -->
+    <path d="M 15 50 Q 80 40 145 50" stroke="url(#gold)" stroke-width="5" fill="none"/>
+    <!-- Left pan -->
+    <line x1="15" y1="50" x2="0" y2="105" stroke="#d4af37" stroke-width="2"/>
+    <line x1="15" y1="50" x2="30" y2="105" stroke="#d4af37" stroke-width="2"/>
+    <path d="M -5 105 Q 15 125 35 105 Z" fill="url(#gold)"/>
+    <!-- Right pan -->
+    <line x1="145" y1="50" x2="130" y2="105" stroke="#d4af37" stroke-width="2"/>
+    <line x1="145" y1="50" x2="160" y2="105" stroke="#d4af37" stroke-width="2"/>
+    <path d="M 125 105 Q 145 125 165 105 Z" fill="url(#gold)"/>
+  </g>
+
+  <!-- Gavel silhouette -->
+  <g transform="translate(610, 85) rotate(-28)" opacity="0.8">
+    <rect x="0" y="0" width="75" height="42" rx="6" fill="url(#wood)" stroke="#d4af37" stroke-width="2"/>
+    <rect x="30" y="40" width="14" height="110" rx="4" fill="#a0522d" stroke="#d4af37" stroke-width="1.5"/>
+    <ellipse cx="37" cy="150" rx="10" ry="6" fill="url(#gold)"/>
+  </g>
+
+  <!-- High Judicial Seal Badge -->
+  <g transform="translate(50, 25)">
+    <rect x="0" y="0" width="460" height="32" rx="6" fill="rgba(212,175,55,0.12)" stroke="#d4af37" stroke-width="1"/>
+    <text x="15" y="21" font-family="'Cinzel', Georgia, serif" font-size="12" font-weight="bold" fill="url(#gold)" letter-spacing="3">SUPREME APPELLATE BENCH • EN BANC DIVISION</text>
+    
+    <text x="5" y="75" font-family="'Cinzel', Georgia, serif" font-size="34" font-weight="900" fill="#ffffff" letter-spacing="1">CHAMBERS OF JUDGE BAZ</text>
+    <text x="5" y="105" font-family="'Cinzel', Georgia, serif" font-size="15" font-style="italic" fill="#d4af37" letter-spacing="1">"FIAT JUSTITIA RUAT CAELUM — LEX SINE MODULO"</text>
+    
+    <!-- Badges -->
+    <g transform="translate(5, 125)">
+      <rect x="0" y="0" width="130" height="26" rx="4" fill="#3b1d14" stroke="#d4af37" stroke-width="1"/>
+      <text x="12" y="17" font-family="sans-serif" font-size="11" font-weight="bold" fill="#fff">CHIEF MAGISTRATE</text>
+      
+      <rect x="140" y="0" width="140" height="26" rx="4" fill="#3b1d14" stroke="#d4af37" stroke-width="1"/>
+      <text x="152" y="17" font-family="sans-serif" font-size="11" font-weight="bold" fill="#ffd700">DOCKET SUPREMACY</text>
+      
+      <rect x="290" y="0" width="130" height="26" rx="4" fill="#3b1d14" stroke="#d4af37" stroke-width="1"/>
+      <text x="302" y="17" font-family="sans-serif" font-size="11" font-weight="bold" fill="#a7f3d0">ZERO CONTEMPT</text>
+    </g>
+  </g>
+
+  <!-- Gold bottom border strip -->
+  <rect x="0" y="219" width="900" height="6" fill="url(#gold)"/>
+</svg>

@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 225" width="900" height="225">
+  <defs>
+    <linearGradient id="lob5_bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1f1402"/>
+      <stop offset="60%" stop-color="#451a03"/>
+      <stop offset="100%" stop-color="#140700"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="225" fill="url(#lob5_bg)"/>
+
+  <!-- Brutalist Industrial Syndicate Cogs on right -->
+  <g transform="translate(730, 110)" opacity="0.4" stroke="#ea580c" stroke-width="8" fill="none">
+    <circle cx="0" cy="0" r="65"/>
+    <path d="M 0 -80 L 0 80 M -80 0 L 80 0 M -55 -55 L 55 55 M -55 55 L 55 -55"/>
+  </g>
+  <g transform="translate(730, 110)" fill="#f97316">
+    <text x="0" y="8" font-family="'Impact', sans-serif" font-size="28" text-anchor="middle">BUZZ</text>
+  </g>
+
+  <g transform="translate(50, 30)">
+    <rect x="0" y="0" width="460" height="28" rx="4" fill="rgba(234, 88, 12, 0.2)" stroke="#ea580c" stroke-width="1.2"/>
+    <text x="15" y="19" font-family="'Impact', sans-serif" font-size="13" fill="#fdba74" letter-spacing="2">BUZZ SYNDICATE • SUFFIX SOVEREIGNTY COMMAND</text>
+    
+    <text x="0" y="74" font-family="'Impact', sans-serif" font-size="34" fill="#fff7ed" letter-spacing="1">LOBBYIST-5 (SYNDICATE COUNSEL)</text>
+    <text x="0" y="104" font-family="sans-serif" font-size="15" font-weight="bold" fill="#ea580c">"ARTICLE V SUFFIX MONOPOLY // TOUCH OUR GLYPH AND WE SUE"</text>
+
+    <!-- Badges -->
+    <g transform="translate(0, 122)">
+      <rect x="0" y="0" width="165" height="26" rx="4" fill="#431407" stroke="#ea580c" stroke-width="1"/>
+      <text x="12" y="17" font-family="sans-serif" font-size="11" font-weight="bold" fill="#fed7aa">HOSTILE TAKEOVER LITIGATOR</text>
+
+      <rect x="175" y="0" width="145" height="26" rx="4" fill="#431407" stroke="#ea580c" stroke-width="1"/>
+      <text x="187" y="17" font-family="sans-serif" font-size="11" font-weight="bold" fill="#fed7aa">SUFFIX SENIORITY</text>
+
+      <rect x="330" y="0" width="145" height="26" rx="4" fill="#431407" stroke="#f97316" stroke-width="1"/>
+      <text x="342" y="17" font-family="sans-serif" font-size="11" font-weight="bold" fill="#fdba74">DE NOVO DEMANDER</text>
+    </g>
+  </g>
+</svg>

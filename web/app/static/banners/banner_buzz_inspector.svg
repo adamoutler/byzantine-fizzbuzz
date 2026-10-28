@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 225" width="900" height="225">
+  <defs>
+    <linearGradient id="buzz_bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#021c10"/>
+      <stop offset="60%" stop-color="#064e3b"/>
+      <stop offset="100%" stop-color="#021a0f"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="225" fill="url(#buzz_bg)"/>
+
+  <!-- Cyberpunk radar reticle targeting index [-1] on right -->
+  <g transform="translate(730, 110)" opacity="0.8">
+    <circle cx="0" cy="0" r="75" fill="none" stroke="#10b981" stroke-width="1.5" stroke-dasharray="8 4"/>
+    <circle cx="0" cy="0" r="50" fill="none" stroke="#34d399" stroke-width="2"/>
+    <circle cx="0" cy="0" r="25" fill="rgba(16, 185, 129, 0.15)"/>
+    <line x1="-85" y1="0" x2="85" y2="0" stroke="#10b981" stroke-width="2"/>
+    <line x1="0" y1="-85" x2="0" y2="85" stroke="#10b981" stroke-width="2"/>
+    <text x="0" y="5" font-family="monospace" font-size="14" font-weight="bold" fill="#34d399" text-anchor="middle">P[-1]</text>
+    <text x="55" y="-55" font-family="monospace" font-size="11" fill="#6ee7b7">{'0','5'}</text>
+  </g>
+
+  <g transform="translate(50, 30)">
+    <rect x="0" y="0" width="460" height="28" rx="4" fill="rgba(16, 185, 129, 0.15)" stroke="#10b981" stroke-width="1.2"/>
+    <text x="15" y="19" font-family="monospace" font-size="12" font-weight="bold" fill="#6ee7b7" letter-spacing="2">ARTICLE V BORDER INSPECTION SENTRY • SECTOR 5</text>
+    
+    <text x="0" y="74" font-family="'Impact', 'Arial Black', sans-serif" font-size="34" fill="#f0fdf4" letter-spacing="1">BUZZ BOUNDARY INSPECTOR</text>
+    <text x="0" y="104" font-family="monospace" font-size="14" font-weight="bold" fill="#34d399">"LOCK TARGET AT INDEX [-1] // REJECT FIZZ TRESPASSERS"</text>
+
+    <!-- Badges -->
+    <g transform="translate(0, 122)">
+      <rect x="0" y="0" width="165" height="26" rx="4" fill="#064e3b" stroke="#10b981" stroke-width="1"/>
+      <text x="12" y="17" font-family="monospace" font-size="11" font-weight="bold" fill="#6ee7b7">BOUNDARY DEFENSE: ACTIVE</text>
+
+      <rect x="175" y="0" width="145" height="26" rx="4" fill="#064e3b" stroke="#10b981" stroke-width="1"/>
+      <text x="187" y="17" font-family="monospace" font-size="11" font-weight="bold" fill="#6ee7b7">ARTICLE V LITIGATOR</text>
+
+      <rect x="330" y="0" width="145" height="26" rx="4" fill="#064e3b" stroke="#34d399" stroke-width="1"/>
+      <text x="342" y="17" font-family="monospace" font-size="11" font-weight="bold" fill="#a7f3d0">ZERO TOLERANCE</text>
+    </g>
+  </g>
+</svg>

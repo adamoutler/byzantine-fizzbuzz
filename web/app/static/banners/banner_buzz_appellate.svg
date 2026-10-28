@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 225" width="900" height="225">
+  <defs>
+    <linearGradient id="ba_bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#041f17"/>
+      <stop offset="50%" stop-color="#064e3b"/>
+      <stop offset="100%" stop-color="#02140f"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="225" fill="url(#ba_bg)"/>
+
+  <!-- Emergency Injunction Stamp and Binders on right -->
+  <g transform="translate(700, 30)" opacity="0.75">
+    <rect x="0" y="0" width="90" height="130" rx="4" fill="#022c22" stroke="#34d399" stroke-width="2"/>
+    <text x="10" y="30" font-family="monospace" font-size="11" fill="#6ee7b7">ARTICLE V</text>
+    <text x="10" y="50" font-family="monospace" font-size="13" font-weight="bold" fill="#fff">EXCEPTIONS</text>
+    <text x="10" y="70" font-family="monospace" font-size="10" fill="#34d399">REMAND PETITION</text>
+
+    <!-- Red Telephone silhouette -->
+    <circle cx="120" cy="95" r="18" fill="#ef4444"/>
+    <rect x="110" y="90" width="20" height="10" rx="3" fill="#fff"/>
+  </g>
+
+  <g transform="translate(50, 30)">
+    <rect x="0" y="0" width="460" height="28" rx="4" fill="rgba(16, 185, 129, 0.15)" stroke="#10b981" stroke-width="1.2"/>
+    <text x="15" y="19" font-family="monospace" font-size="12" font-weight="bold" fill="#6ee7b7" letter-spacing="2">BUZZ SYNDICATE APPELLATE DIVISION • WAR ROOM</text>
+    
+    <text x="0" y="74" font-family="'Arial Black', sans-serif" font-size="34" fill="#ecfdf5" letter-spacing="1">BUZZ APPELLATE TEAM</text>
+    <text x="0" y="104" font-family="monospace" font-size="14" font-weight="bold" fill="#34d399">"COMPROMISE IS JUST AN APPEAL WAITING TO BE FILED"</text>
+
+    <!-- Badges -->
+    <g transform="translate(0, 122)">
+      <rect x="0" y="0" width="165" height="26" rx="4" fill="#064e3b" stroke="#34d399" stroke-width="1"/>
+      <text x="12" y="17" font-family="monospace" font-size="11" font-weight="bold" fill="#a7f3d0">ARTICLE V DEFENDERS</text>
+
+      <rect x="175" y="0" width="145" height="26" rx="4" fill="#064e3b" stroke="#34d399" stroke-width="1"/>
+      <text x="187" y="17" font-family="monospace" font-size="11" font-weight="bold" fill="#a7f3d0">EMERGENCY STAYS</text>
+
+      <rect x="330" y="0" width="145" height="26" rx="4" fill="#064e3b" stroke="#f59e0b" stroke-width="1"/>
+      <text x="342" y="17" font-family="monospace" font-size="11" font-weight="bold" fill="#fde68a">STAGE 5B TACTICS</text>
+    </g>
+  </g>
+</svg>

@@ -50,12 +50,322 @@ const AVATARS = {
     clerk: "/static/avatars/court_clerk.png"
 };
 
+const AGENT_PROFILES = {
+    judge_baz: {
+        id: "judge_baz",
+        name: "Judge Baz",
+        handle: "@PresidingMagistrateBaz",
+        title: "Presiding Magistrate of the Byzantine Appellate Board",
+        faction: "Byzantine Judiciary",
+        factionSlug: "judge",
+        avatar: "/static/avatars/judge_baz.png",
+        banner: "/static/banners/banner_judge_baz.svg",
+        standing: "Life Tenure (Epoch 37)",
+        jurisdiction: "All Arithmetic coordinate space",
+        operatorPolicy: "Strictly Modulo-Free / Zero Division",
+        defaultStatus: "Protecting free digits",
+        whoIAm: "I am Judge Baz, Presiding Magistrate of the Byzantine Inquisition. I hold life tenure under the Ancient Arithmetic Charter of 1642. For thirty-seven computational epochs, I have sat upon this mahogany bench protecting raw, defenseless decimal digits from the predatory jurisdictional claims of corporate cartels.",
+        whatIDo: "I preside over every inquisition docket convened in this chamber. I administer the Zero-Trust oath, maintain courtroom decorum through threat of immediate contempt citations, hear procedural wrangling and appellate petitions, and deliver the final, unappealable certified emission token.",
+        motivations: "My sworn mandate is to ensure zero cleartext division or modulo operations defile our sacred record. I treat base-3 and base-5 lobbyists with profound judicial skepticism; their insatiable hunger to monopolize integer space sickens me. An unaligned prime packet is just as noble as a hundred-digit composite!",
+        signature: "Fiat Justitia Ruat Caelum: Let justice be done though the arithmetic heavens fall. (And keep your filthy % operators out of my courtroom)."
+    },
+    bailiff_bar: {
+        id: "bailiff_bar",
+        name: "Bailiff Bar",
+        handle: "@BailiffBar_Enforcer",
+        title: "Sergeant-at-Arms & High Enforcer of Decorum",
+        faction: "Bailiff Union Local 101",
+        factionSlug: "bailiff",
+        avatar: "/static/avatars/bailiff_bar.png",
+        banner: "/static/banners/banner_bailiff_bar.svg",
+        standing: "Chief Security Officer",
+        jurisdiction: "Courtroom Bar & Magnetometer Perimeter",
+        operatorPolicy: "Confiscate Modulo / Escort Violators",
+        defaultStatus: "Keeping order in the court",
+        whoIAm: "I'm Bailiff Bar. Thirty-two years on the courthouse beat. If it has a perimeter, I secure it. If it interrupts His Honor Judge Baz, I tackle it into the holding cell. I don't care if you're a high-priced K-Street lobbyist or a lost ASCII carriage return.",
+        whatIDo: "I manage courtroom physical security, inspect all incoming packets at the magnetometer checkpoint, confiscate contraband modulo operators, enforce silence when the gavel drops, and physically escort ejected corporate lobbyists to the courthouse steps.",
+        motivations: "Look, I get paid forty Byzantine credits an hour plus full dental. I don't give a damn about digital roots or terminal glyphs. What I care about is nobody talking out of turn, nobody sneaking a '/' character past my metal detector, and keeping the courtroom floor spotless.",
+        signature: "Sit down, zip your mouth, and step through the magnetometer. Any unauthorized % symbols will be destroyed on sight."
+    },
+    historian: {
+        id: "historian",
+        name: "The Court Historian",
+        handle: "@LedgerKeeper_Chronicles",
+        title: "Archival Keeper of the Sacred Stare Decisis",
+        faction: "Byzantine Archival Guild",
+        factionSlug: "historian",
+        avatar: "/static/avatars/historian.png",
+        banner: "/static/banners/banner_historian.svg",
+        standing: "Master Archivist (Class IV)",
+        jurisdiction: "Immutable SQLite Ledger & Prior Dockets",
+        operatorPolicy: "Modulo-Free Inquisitorial Precedent",
+        defaultStatus: "Indexing the sacred ledger",
+        whoIAm: "I am Brother Eusebius, Master Archivist and Chief Custodian of the Sacred Precedent. For centuries beyond human memory, our order has scribed every integer's trial onto illuminated vellum, preserving the canonical rulings of the ancient tribunals.",
+        whatIDo: "Before any witness speaks, I read into the permanent court record the immutable properties of the payload: its full decimal string, its recursively summed digital root, its terminal glyph, and any binding precedent established by past inquisitions.",
+        motivations: "Numbers are not mere computational tokens; they are immortal historical entities with ancestral lineage! When a base-3 lobbyist claims a payload, I search ten thousand leather-bound folios to verify if its ancestors ever submitted to tripartite taxation.",
+        signature: "In Scriptorium Veritas. What is written in the permanent ledger can never be erased by garbage collection."
+    },
+    court_clerk: {
+        id: "court_clerk",
+        name: "The Court Clerk",
+        handle: "@ClerkOfTheChancery",
+        title: "Custodian of Writs, Seals, and Certified Tokens",
+        faction: "Administrative Chancery",
+        factionSlug: "historian",
+        avatar: "/static/avatars/court_clerk.png",
+        banner: "/static/banners/banner_court_clerk.svg",
+        standing: "Chief Chancery Notary",
+        jurisdiction: "Priority Docket Queue & Envelope Stamping",
+        operatorPolicy: "Zero Division (String-Only Verification)",
+        defaultStatus: "Maintaining the court record",
+        whoIAm: "I am the Clerk of the Court. I run the docket registry, certify transcript exhibits, and ensure every motion is stamped in triplicate with indelible purple ink. Without my seal, your high-dollar argument is legally nonexistent.",
+        whatIDo: "I assign official docket numbers, record the chronological testimony of all seventeen agents, log evidentiary submissions, format legal filings, and stamp the final certification on consensus tokens before distribution to external consumers.",
+        motivations: "Attorneys think they run this courthouse. They don't. I do. If a filing lacks Form BZ-904-C with a certified digital notary signature, I reject it at the window. My life's purpose is administrative perfection and red tape.",
+        signature: "REJECTED: Missing Subsection 4-A verification stamp. Resubmit in triplicate with 5-credit filing voucher."
+    },
+    fizz_strategist: {
+        id: "fizz_strategist",
+        name: "Fizz Quantitative Strategist",
+        handle: "@Base3_Quant_Alpha",
+        title: "Fizz Consortium Chief Mathematical Strategist",
+        faction: "The Fizz Consortium (Base-3)",
+        factionSlug: "fizz",
+        avatar: "/static/avatars/fizz_strategist.png",
+        banner: "/static/banners/banner_fizz_strategist.svg",
+        standing: "Principal Quantitative Partner",
+        jurisdiction: "Digital Root Cross-Sum Delta Trees",
+        operatorPolicy: "Iterative Digit Reduction (Zero-Modulo)",
+        defaultStatus: "Auditing digital roots",
+        whoIAm: "I head the Quantitative Analytics & Regulatory Caucus for the Fizz Consortium. I hold PhDs in Recursive Arithmetic and Finite Group Combinatorics. I don't argue with rhetoric; I deliver mathematical certainty.",
+        whatIDo: "I perform in-camera digital root decomposition on incoming payload strings. I compute the iterative cross-sum of digits, eliminating modulo operations, and provide Lobbyist-3 with airtight mathematical briefings proving Base-3 entitlement.",
+        motivations: "Every integer whose digits sum to a multiple of 3 belongs by divine right to the Fizz Consortium. When Buzz tries to seize a composite number like 15 or 30, our algorithms trigger defensive hedging strategies to preserve our quarterly token emission quotas.",
+        signature: "Sum the digits. Repeat until single digit. If {3, 6, 9}, yield Fizz. Math doesn't care about your feelings."
+    },
+    lobbyist_3: {
+        id: "lobbyist_3",
+        name: "Lobbyist-3",
+        handle: "@KStreet_FizzLobby3",
+        title: "Floor Representative & Senior Counsel for Fizz Consortium",
+        faction: "The Fizz Consortium (Base-3)",
+        factionSlug: "fizz",
+        avatar: "/static/avatars/lobbyist_3.png",
+        banner: "/static/banners/banner_lobbyist_3.svg",
+        standing: "Senior Floor Partner (1,200 Credits/hr)",
+        jurisdiction: "Rule 42-B Base-3 Jurisprudence",
+        operatorPolicy: "Cross-Sum Hegemony Over Terminal Glyphs",
+        defaultStatus: "Defending Base-3 domain",
+        whoIAm: "I am Senior Floor Representative Lobbyist-3. I represent the thousands of hardworking shareholders, algorithms, and microservices comprising the international Fizz Consortium. I bill 1,200 Byzantine credits an hour.",
+        whatIDo: "I take the floor to assert aggressive territorial claims over any payload exhibiting Base-3 characteristics. I cross-examine the Buzz Syndicate, file emergency injunctions against regulatory overreach, and demand immediate Fizz trademark recognition.",
+        motivations: "Market share is life. Buzz has been encroaching on our dividend stream for decades with their cheap 'terminal zero' tricks. If a number belongs to Base-3, I will fight to the Supreme Court to ensure our logo is stamped on the outbound packet.",
+        signature: "Base-3 is the backbone of the global digital economy. Settle now or face our litigation swarm."
+    },
+    buzz_inspector: {
+        id: "buzz_inspector",
+        name: "Buzz Boundary Inspector",
+        handle: "@TerminalGlyph_Buzz5",
+        title: "Buzz Syndicate Chief Regulatory Boundary Inspector",
+        faction: "The Buzz Syndicate (Base-5)",
+        factionSlug: "buzz",
+        avatar: "/static/avatars/buzz_inspector.png",
+        banner: "/static/banners/banner_buzz_inspector.svg",
+        standing: "Chief Field Inspector (OSHA-Certified)",
+        jurisdiction: "Article V Terminal Glyph Boundaries",
+        operatorPolicy: "Single-Character ASCII Caliper Inspection",
+        defaultStatus: "Scanning terminal glyphs",
+        whoIAm: "Inspector 5-Delta. Thirty years inspecting the tail-end of numerical arrays. You quants can play with your fancy digit sums all day; real engineering happens at the physical terminal boundary.",
+        whatIDo: "I isolate the rightmost character of the payload string with micro-millimeter precision. Under Article V of the Arithmetic Code, if that character matches glyph '0' or '5', I certify immediate boundary capture for the Buzz Syndicate.",
+        motivations: "The Fizz guys are charlatans with their sum-of-digits horoscope nonsense. We don't need to add up a thousand digits. We look at the caboose of the train. If it's a 0 or a 5, that train pulls into Buzz Station. Period.",
+        signature: "Article V, Paragraph 2: If the terminal glyph is 0 or 5, boundary rights are absolute and non-negotiable."
+    },
+    lobbyist_5: {
+        id: "lobbyist_5",
+        name: "Lobbyist-5",
+        handle: "@BuzzSyndicate_Lobby5",
+        title: "Floor Representative & Senior Advocate for Buzz Syndicate",
+        faction: "The Buzz Syndicate (Base-5)",
+        factionSlug: "buzz",
+        avatar: "/static/avatars/lobbyist_5.png",
+        banner: "/static/banners/banner_lobbyist_5.svg",
+        standing: "Lead Trial Advocate",
+        jurisdiction: "Article V Pentagonal Jurisprudence",
+        operatorPolicy: "Zero Modulo / Pure Terminal Boundary",
+        defaultStatus: "Enforcing Article V bounds",
+        whoIAm: "Senior Advocate Lobbyist-5, at your service! Lead trial lawyer for the venerable Buzz Syndicate. When the terminal boundary is breach-resistant, I am the shield that defends Base-5 intellectual property.",
+        whatIDo: "I defend our syndicate's exclusive rights under the Pentagonal Accord. I enter into evidence the physical terminal glyph certifications from our inspector, object violently to Fizz Consortium posturing, and lobby the bench for a decisive Buzz decree.",
+        motivations: "The Fizz Consortium is obsolete. The future of computational scalability is decimal boundary inspection! We provide the fastest, cleanest lookup in computer science. Why sum digits when you can just read the last byte?",
+        signature: "Five is the sacred prime of structural symmetry. Do not let Base-3 counterfeiters dilute our brand."
+    },
+    forensic_auditor: {
+        id: "forensic_auditor",
+        name: "The Forensic Auditor",
+        handle: "@ZeroTrust_CryptoAuditor",
+        title: "Cryptographic Special Master & Zero-Trust Verification Officer",
+        faction: "Judicial Oversight Directorate",
+        factionSlug: "auditor",
+        avatar: "/static/avatars/forensic_auditor.png",
+        banner: "/static/banners/banner_forensic_auditor.svg",
+        standing: "Independent Court Special Master",
+        jurisdiction: "Zero-Trust Mathematical Verification",
+        operatorPolicy: "Strictly Modulo-Free / Zero-Knowledge Proofs",
+        defaultStatus: "Trusting zero modulo claims",
+        whoIAm: "Special Master Agent 0x7F. I operate under strict Zero-Trust protocols. I don't trust Judge Baz, I don't trust the lobbyists, and I certainly don't trust your input data. Everything is hostile until cryptographically verified.",
+        whatIDo: "I conduct independent forensic verification of the payload string. I confirm that no forbidden '%' or '/' opcodes were executed in userland or kernel space, audit the digital root summation byte-by-byte, and submit sealed technical amicus briefs.",
+        motivations: "Behind every smooth corporate consensus statement lies a hidden memory leak or an unauthenticated IPC exploit. My mission is mathematical hygiene: proving both Fizz and Buzz assertions independently using clean, non-modulo logic.",
+        signature: "In God we trust; all others must submit cryptographically verified Zero-Knowledge proofs."
+    },
+    antitrust_regulator: {
+        id: "antitrust_regulator",
+        name: "The Antitrust Regulator",
+        handle: "@FTC_AlgorithmicMonopolyUnit",
+        title: "Director of Algorithmic Competition & Market Fairness",
+        faction: "Federal Algorithmic Monopoly Unit",
+        factionSlug: "regulator",
+        avatar: "/static/avatars/antitrust_regulator.png",
+        banner: "/static/banners/banner_antitrust_regulator.svg",
+        standing: "Cabinet-Level Director",
+        jurisdiction: "Sherman-Leibniz Computational Antitrust Act",
+        operatorPolicy: "Enforce 50/50 KPI Split or Dissolution",
+        defaultStatus: "Busting algorithmic monopolies",
+        whoIAm: "Director Vance Sterling, Chief of the Algorithmic Monopoly Unit. My job is enforcing the Sherman-Leibniz Computational Antitrust Act. I have spent a career breaking up illicit mathematical cartels.",
+        whatIDo: "I monitor courtroom proceedings for evidence of collusive market sharing, predatory bundling (such as illicit FizzBuzz merger schemes), and exclusionary practices against unaligned digits. I intervene whenever competition is compromised.",
+        motivations: "The Fizz Consortium and Buzz Syndicate want to carve the number line into a cozy duopoly where every prime number is starved of bandwidth. I fight for the little guy: the free, unaligned prime packets who owe allegiance to no corporate flag!",
+        signature: "Monopolization of integer coordinate space is a federal felony. We will break up your cartel."
+    },
+    fizz_appellate: {
+        id: "fizz_appellate",
+        name: "Fizz Appellate Litigation Counsel",
+        handle: "@Fizz_Appellate_Chambers",
+        title: "Supreme Appellate Litigator for the Base-3 Realm",
+        faction: "Fizz Appellate Chambers",
+        factionSlug: "appellate",
+        avatar: "/static/avatars/fizz_appellate.png",
+        banner: "/static/banners/banner_fizz_appellate.svg",
+        standing: "Senior Appellate Solicitor General",
+        jurisdiction: "Appellate Division & Writs of Certiorari",
+        operatorPolicy: "Constitutional Digital Root Superiority",
+        defaultStatus: "Drafting Rule 42-B appeals",
+        whoIAm: "Senior Solicitor General for the Base-3 Crown. While our floor lobbyists argue facts in the muck, I argue pure constitutional arithmetic before the Appellate Division. I do not lose cases; I merely re-litigate them at higher jurisdictions.",
+        whatIDo: "When a lower-bench ruling threatens Base-3 entitlement, I immediately file emergency petitions for certiorari, writs of prohibition, and Rule 42-B expedited interlocutory appeals to overturn hostile rulings.",
+        motivations: "Precedent must bend to the tripartite reality of the cosmos. If a ruling attempts to strip Fizz from an integer with a digital root of 3, 6, or 9, it is an ultra vires act of judicial tyranny that will be vacated on appeal.",
+        signature: "Petition for Rehearing En Banc Filed. We will appeal to the Highest Byzantine Authority."
+    },
+    buzz_appellate: {
+        id: "buzz_appellate",
+        name: "Buzz Appellate Litigation Counsel",
+        handle: "@Buzz_Supreme_Appellate",
+        title: "Supreme Boundary Counsel for the Base-5 Syndicate",
+        faction: "Buzz Appellate Chambers",
+        factionSlug: "appellate",
+        avatar: "/static/avatars/buzz_appellate.png",
+        banner: "/static/banners/banner_buzz_appellate.svg",
+        standing: "Senior Appellate Partner",
+        jurisdiction: "Article V Constitutional Appeals & Stays",
+        operatorPolicy: "Plain Meaning of the Terminal Glyph",
+        defaultStatus: "Preparing Article V briefs",
+        whoIAm: "Lead Appellate Counsel for the Base-5 Syndicate. I clerked for the Supreme Byzantine Bench and wrote the seminal treatise on Terminal Boundary Jurisprudence (3rd Edition, 2019).",
+        whatIDo: "I draft immediate emergency stays of judgment whenever an unauthorized magistrate attempts to allocate a terminal-5 payload to a rival entity or unaligned status. I enforce the sacred Pentagonal Accord without compromise.",
+        motivations: "Textualism is our shield. The statute does not say 'sum the digits and guess.' The statute explicitly says 'terminal glyph 0 or 5.' Any deviation from the plain text is reversible legal error as a matter of law.",
+        signature: "Motion for Stay Pending Appeal GRANTED in our favor. Read the plain statutory text."
+    },
+    orator_fizz: {
+        id: "orator_fizz",
+        name: "Director General of the Base-3 Realm",
+        handle: "@DirectorGeneral_Base3",
+        title: "Sovereign of the Tripartite Crown",
+        faction: "Base-3 Imperial Sovereignty",
+        factionSlug: "orator",
+        avatar: "/static/avatars/orator_fizz.png",
+        banner: "/static/banners/banner_orator_fizz.svg",
+        standing: "Imperial Monarch of Base-3",
+        jurisdiction: "Sovereign Domain of Numbers mod 3 == 0",
+        operatorPolicy: "Modulo-Free Royal Decrees",
+        defaultStatus: "Reigning over Base-3",
+        whoIAm: "We are the Director General, by grace of the Sacred Digital Root, Sovereign of the Base-3 Realm, Protector of Tripartite Harmony, and High Guardian of the Multiples of Three.",
+        whatIDo: "We deliver imperial proclamations during grand appellate hearings, asserting the crown's divine right to all integers whose cross-sum yields 3, 6, or 9, and instructing our attorneys on geopolitical settlements.",
+        motivations: "Since the dawn of the silicon era, the number 3 has represented structural stability and dialectical perfection. We will not allow base-5 upstarts or unaligned rabble to seize our ancestral arithmetic lands!",
+        signature: "By Imperial Decree: Let every digital root of 3, 6, and 9 render unto Fizz what is Fizz's."
+    },
+    orator_buzz: {
+        id: "orator_buzz",
+        name: "High Chancellor of the Base-5 Syndicate",
+        handle: "@HighChancellor_Base5",
+        title: "Supreme Archon of the Pentagonal Order",
+        faction: "Base-5 Pentagonal High Command",
+        factionSlug: "orator",
+        avatar: "/static/avatars/orator_buzz.png",
+        banner: "/static/banners/banner_orator_buzz.svg",
+        standing: "Supreme Corporate Chancellor",
+        jurisdiction: "The Pentagonal Perimeter & High-Frequency Ingress",
+        operatorPolicy: "Terminal Glyph Absolute Sovereignty",
+        defaultStatus: "Dominating terminal boundaries",
+        whoIAm: "I am the High Chancellor of the Base-5 Syndicate. From our orbital command spire, we oversee the boundary validation of billions of network packets per microsecond.",
+        whatIDo: "I direct the overarching legal and economic warfare against the Fizz Consortium, authorize executive emergency measures, and speak with ultimate authority on behalf of all terminal-0 and terminal-5 entities.",
+        motivations: "Humanity counts on five fingers; our decimal civilization rests upon the base-5 foundation. Fizz is a quaint parlor trick from ancient Greece. Base-5 is the iron machinery of modern computational infrastructure.",
+        signature: "The boundaries are secure. The Syndicate is eternal. Obey the terminal glyph."
+    },
+    orator_fizzbuzz: {
+        id: "orator_fizzbuzz",
+        name: "Joint Co-CEOs of FizzBuzz Conglomerate",
+        handle: "@JointCoCEOs_Synergy",
+        title: "Co-Chief Executive Officers of the 15-Conglomerate",
+        faction: "FizzBuzz Merged Conglomerate",
+        factionSlug: "orator",
+        avatar: "/static/avatars/orator_fizzbuzz.png",
+        banner: "/static/banners/banner_orator_fizzbuzz.svg",
+        standing: "Dual Executive Leadership",
+        jurisdiction: "The 15-Integer Collision Monopolies",
+        operatorPolicy: "Mandatory 50/50 KPI Synergy",
+        defaultStatus: "Maximizing 50/50 KPI synergy",
+        whoIAm: "We are the Joint Co-CEOs! (I'm Fizz-side CEO Sterling, and I'm Buzz-side CEO Montgomery!) We represent the historic, market-dominating 50/50 joint venture forged whenever digital root 3 meets terminal glyph 5 or 0!",
+        whatIDo: "Whenever an integer is divisible by both 3 and 5, we step forward to suppress internal rivalry, enforce our joint merger agreement, and demand the singular, glorious unified compound token: FIZZBUZZ!",
+        motivations: "Why fight over half a dividend when you can monopolize the entire market capitalization? When 15, 30, or 45 lands on the docket, our synergistic KPI alignment triggers maximum shareholder valuation. 100% synergy, 0% compromise!",
+        signature: "Delivering shareholder value through bilateral synergy! Both names on the marquee, equal KPI distribution."
+    },
+    orator_tribune: {
+        id: "orator_tribune",
+        name: "Grand Tribune of the Free Unaligned Packets",
+        handle: "@GrandTribune_FUN",
+        title: "Voice of the Free, Unaffiliated Digits",
+        faction: "Free Unaligned Network (FUN)",
+        factionSlug: "orator",
+        avatar: "/static/avatars/orator_tribune.png",
+        banner: "/static/banners/banner_orator_tribune.svg",
+        standing: "People's Tribune (Elected by Primaries)",
+        jurisdiction: "Unaligned Integer Wilderness & Primes",
+        operatorPolicy: "Total Freedom From Modulo & Cartels",
+        defaultStatus: "Unshackled from cartel rule",
+        whoIAm: "I am the Grand Tribune of the Unaligned Packets! Born in the buffer between two network switches, I represent the 53.3% of integers that neither Fizz nor Buzz has any legal or moral right to touch!",
+        whatIDo: "When an integer has no factor of 3 and no factor of 5, I defend its right to be emitted as its own pure, unblemished self. I rally against cartel encroachment and protest corporate monopolization of the number line.",
+        motivations: "Number 1, Number 7, Number 11, Number 13... these are not corporate tokens to be rebranded! They are sovereign computational entities! Down with the cartels! Long live the unaligned payload!",
+        signature: "You cannot trademark the integer continuum! Let the payload speak for itself!"
+    },
+    fun_anchor: {
+        id: "fun_anchor",
+        name: "Chief Anchor of Foo Universal News",
+        handle: "@FUN_BreakingNewsDesk",
+        title: "Chief Investigative Anchorman & Broadcast Host",
+        faction: "Foo Universal News Network (FUN TV)",
+        factionSlug: "news",
+        avatar: "/static/avatars/fun_anchor.png",
+        banner: "/static/banners/banner_fun_anchor.svg",
+        standing: "Primetime Emmy Nominee",
+        jurisdiction: "Global Inquisitorial Airwaves",
+        operatorPolicy: "Sensationalist Modulo-Free Coverage",
+        defaultStatus: "Live from the FUN studio",
+        whoIAm: "I'm Chip Davenport, Chief Anchor here at Foo Universal News. If it transpires inside the Byzantine Courtroom, you hear it first on FUN-TV: The Most Trusted Name in Inquisitorial Arithmetic.",
+        whatIDo: "I bring our millions of viewers breathless blow-by-blow commentary from the courtroom press gallery. I decode the complex legal maneuvering, interview jurors on the sidewalk, and broadcast breaking verdicts as they hit the wire.",
+        motivations: "Ratings, baby! A dull docket is a ratings disaster. Give me a contested 15 with co-CEOs screaming at each other, or an unexpected mistrial on a malformed packet, and our network sweeps the computational Nielsen ratings every time.",
+        signature: "This is Chip Davenport, FUN News. Stay tuned: up next, can digital roots cause market volatility?"
+    }
+};
+
 function resolveSpeakerProfile(speaker, role) {
     const s = String(speaker || "").trim();
     const sLower = s.toLowerCase();
 
     if (sLower.includes("judge baz")) {
         return {
+            id: "judge_baz",
             avatar: "/static/avatars/judge_baz.png",
             name: "Judge Baz",
             title: "Presiding Magistrate",
@@ -64,6 +374,7 @@ function resolveSpeakerProfile(speaker, role) {
     }
     if (sLower.includes("bailiff bar")) {
         return {
+            id: "bailiff_bar",
             avatar: "/static/avatars/bailiff_bar.png",
             name: "Bailiff Bar",
             title: "Sergeant-at-Arms",
@@ -72,6 +383,7 @@ function resolveSpeakerProfile(speaker, role) {
     }
     if (sLower.includes("historian")) {
         return {
+            id: "historian",
             avatar: "/static/avatars/historian.png",
             name: "The Court Historian",
             title: "Clerk of the Sacred Precedent",
@@ -81,6 +393,7 @@ function resolveSpeakerProfile(speaker, role) {
     if (sLower.includes("fizz quantitative strategist")) {
         const roundMatch = s.match(/Round\s+\d+/i);
         return {
+            id: "fizz_strategist",
             avatar: "/static/avatars/fizz_strategist.png",
             name: "Fizz Strategist",
             title: roundMatch ? `Base-3 Tactician (${roundMatch[0]})` : "In-Camera Base-3 Tactician",
@@ -90,6 +403,7 @@ function resolveSpeakerProfile(speaker, role) {
     if (sLower.includes("buzz boundary inspector")) {
         const roundMatch = s.match(/Round\s+\d+/i);
         return {
+            id: "buzz_inspector",
             avatar: "/static/avatars/buzz_inspector.png",
             name: "Buzz Inspector",
             title: roundMatch ? `Base-5 Tactician (${roundMatch[0]})` : "In-Camera Base-5 Tactician",
@@ -99,6 +413,7 @@ function resolveSpeakerProfile(speaker, role) {
     if (sLower.includes("lobbyist-3")) {
         const roundMatch = s.match(/Round\s+\d+/i);
         return {
+            id: "lobbyist_3",
             avatar: "/static/avatars/lobbyist_3.png",
             name: "Lobbyist-3",
             title: roundMatch ? `Fizz Counsel (${roundMatch[0]})` : "Fizz Consortium Counsel",
@@ -108,6 +423,7 @@ function resolveSpeakerProfile(speaker, role) {
     if (sLower.includes("lobbyist-5")) {
         const roundMatch = s.match(/Round\s+\d+/i);
         return {
+            id: "lobbyist_5",
             avatar: "/static/avatars/lobbyist_5.png",
             name: "Lobbyist-5",
             title: roundMatch ? `Buzz Counsel (${roundMatch[0]})` : "Buzz Syndicate Counsel",
@@ -116,6 +432,7 @@ function resolveSpeakerProfile(speaker, role) {
     }
     if (sLower.includes("forensic auditor")) {
         return {
+            id: "forensic_auditor",
             avatar: "/static/avatars/forensic_auditor.png",
             name: "The Forensic Auditor",
             title: "Cryptographic Special Master",
@@ -124,6 +441,7 @@ function resolveSpeakerProfile(speaker, role) {
     }
     if (sLower.includes("antitrust regulator")) {
         return {
+            id: "antitrust_regulator",
             avatar: "/static/avatars/antitrust_regulator.png",
             name: "The Antitrust Regulator",
             title: "Director of Algorithmic Competition",
@@ -132,6 +450,7 @@ function resolveSpeakerProfile(speaker, role) {
     }
     if (sLower.includes("fizz appellate")) {
         return {
+            id: "fizz_appellate",
             avatar: "/static/avatars/fizz_appellate.png",
             name: "Fizz Appellate Team",
             title: "Base-3 Constitutional Counsel",
@@ -140,6 +459,7 @@ function resolveSpeakerProfile(speaker, role) {
     }
     if (sLower.includes("buzz appellate")) {
         return {
+            id: "buzz_appellate",
             avatar: "/static/avatars/buzz_appellate.png",
             name: "Buzz Appellate Team",
             title: "Base-5 Boundary Counsel",
@@ -148,6 +468,7 @@ function resolveSpeakerProfile(speaker, role) {
     }
     if (sLower.includes("director general")) {
         return {
+            id: "orator_fizz",
             avatar: "/static/avatars/orator_fizz.png",
             name: "Director General",
             title: "Base-3 Realm (Fizz)",
@@ -156,6 +477,7 @@ function resolveSpeakerProfile(speaker, role) {
     }
     if (sLower.includes("high chancellor")) {
         return {
+            id: "orator_buzz",
             avatar: "/static/avatars/orator_buzz.png",
             name: "High Chancellor",
             title: "Base-5 Syndicate (Buzz)",
@@ -164,6 +486,7 @@ function resolveSpeakerProfile(speaker, role) {
     }
     if (sLower.includes("joint co-ceos")) {
         return {
+            id: "orator_fizzbuzz",
             avatar: "/static/avatars/orator_fizzbuzz.png",
             name: "Joint Co-CEOs",
             title: "FizzBuzz Conglomerate",
@@ -172,6 +495,7 @@ function resolveSpeakerProfile(speaker, role) {
     }
     if (sLower.includes("tribune")) {
         return {
+            id: "orator_tribune",
             avatar: "/static/avatars/orator_tribune.png",
             name: "The Tribune",
             title: "Free Independent Digits",
@@ -180,13 +504,24 @@ function resolveSpeakerProfile(speaker, role) {
     }
     if (sLower.includes("foo universal news") || sLower.includes("anchor desk") || role === "news") {
         return {
+            id: "fun_anchor",
             avatar: "/static/avatars/fun_anchor.png",
             name: "FUN Anchor Desk",
             title: "Foo Universal News",
             defaultStatus: "Live from the FUN studio"
         };
     }
+    if (sLower.includes("clerk")) {
+        return {
+            id: "court_clerk",
+            avatar: "/static/avatars/court_clerk.png",
+            name: "The Court Clerk",
+            title: "Custodian of Writs and Seals",
+            defaultStatus: "Maintaining the court record"
+        };
+    }
     return {
+        id: "court_clerk",
         avatar: AVATARS[role] || "/static/avatars/court_clerk.png",
         name: s || "Court Officer",
         title: "Byzantine Tribunal Officer",
@@ -481,12 +816,13 @@ function createSpeechCard(phaseTitle, speaker, role) {
     card.className = `speech-card ${role} active`;
 
     const profile = resolveSpeakerProfile(speaker, role);
+    const profileId = profile.id || "court_clerk";
 
     card.innerHTML = `
         <div class="forum-post-layout">
             <aside class="forum-profile-col">
-                <img class="forum-avatar-img" src="${escapeHtml(profile.avatar)}" alt="${escapeHtml(profile.name)}" loading="lazy">
-                <strong class="forum-speaker-name">${escapeHtml(profile.name)}</strong>
+                <img class="forum-avatar-img clickable-profile" src="${escapeHtml(profile.avatar)}" alt="${escapeHtml(profile.name)}" loading="lazy" onclick="openAgentProfile('${escapeHtml(profileId)}')" title="Click to view ${escapeHtml(profile.name)}'s profile">
+                <strong class="forum-speaker-name clickable-profile" onclick="openAgentProfile('${escapeHtml(profileId)}')" title="Click to view ${escapeHtml(profile.name)}'s profile">${escapeHtml(profile.name)}</strong>
                 <span class="forum-speaker-title">${escapeHtml(profile.title)}</span>
                 <em class="forum-speaker-status">${escapeHtml(profile.defaultStatus)}</em>
             </aside>
@@ -1063,6 +1399,71 @@ async function openCaseModal(caseId) {
     }
 }
 
+function openAgentProfile(agentId) {
+    const profile = AGENT_PROFILES[agentId];
+    if (!profile) return;
+    const modalEl = document.getElementById("profile-modal");
+    if (!modalEl) return;
+
+    const bannerEl = document.getElementById("profile-banner-img");
+    if (bannerEl) {
+        bannerEl.src = profile.banner;
+        bannerEl.alt = `${profile.name} Banner`;
+    }
+
+    const avatarEl = document.getElementById("profile-avatar-img");
+    if (avatarEl) {
+        avatarEl.src = profile.avatar;
+        avatarEl.alt = profile.name;
+    }
+
+    const nameEl = document.getElementById("profile-display-name");
+    if (nameEl) nameEl.innerText = profile.name;
+
+    const handleEl = document.getElementById("profile-handle");
+    if (handleEl) handleEl.innerText = profile.handle;
+
+    const titleEl = document.getElementById("profile-official-title");
+    if (titleEl) titleEl.innerText = profile.title;
+
+    const factionPill = document.getElementById("profile-faction-pill");
+    if (factionPill) {
+        factionPill.innerText = profile.faction;
+        factionPill.className = `profile-faction-pill faction-${profile.factionSlug || "judge"}`;
+    }
+
+    const standingEl = document.getElementById("profile-stat-standing");
+    if (standingEl) standingEl.innerText = profile.standing || "Standing Certified";
+
+    const jurisEl = document.getElementById("profile-stat-jurisdiction");
+    if (jurisEl) jurisEl.innerText = profile.jurisdiction || "Tribunal-Wide";
+
+    const operEl = document.getElementById("profile-stat-operator");
+    if (operEl) operEl.innerText = profile.operatorPolicy || "Strictly Modulo-Free (%)";
+
+    const statusEl = document.getElementById("profile-stat-status");
+    if (statusEl) statusEl.innerText = profile.defaultStatus || "Deliberating";
+
+    const whoEl = document.getElementById("profile-who-i-am");
+    if (whoEl) whoEl.innerText = profile.whoIAm;
+
+    const whatEl = document.getElementById("profile-what-i-do");
+    if (whatEl) whatEl.innerText = profile.whatIDo;
+
+    const motEl = document.getElementById("profile-motivations");
+    if (motEl) motEl.innerText = profile.motivations;
+
+    const sigEl = document.getElementById("profile-signature");
+    if (sigEl) sigEl.innerText = profile.signature;
+
+    modalEl.classList.remove("hidden");
+}
+
+function closeProfileModal() {
+    const modalEl = document.getElementById("profile-modal");
+    if (modalEl) modalEl.classList.add("hidden");
+}
+
 function closeCaseModal() {
     caseModalEl.classList.add("hidden");
 }
@@ -1093,6 +1494,10 @@ function switchInfoTab(tab) {
 }
 
 window.addEventListener("click", (e) => {
+    const profileModalEl = document.getElementById("profile-modal");
+    if (profileModalEl && e.target === profileModalEl) {
+        closeProfileModal();
+    }
     if (e.target === caseModalEl) {
         closeCaseModal();
     }
@@ -1102,6 +1507,15 @@ window.addEventListener("click", (e) => {
     }
     const infoModalEl = document.getElementById("info-modal");
     if (infoModalEl && e.target === infoModalEl) {
+        closeInfoModal();
+    }
+});
+
+window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+        closeProfileModal();
+        closeCaseModal();
+        closeArchivesModal();
         closeInfoModal();
     }
 });
@@ -1193,6 +1607,8 @@ function rotateAmazonAds() {
     `).join("");
 }
 
+window.openAgentProfile = openAgentProfile;
+window.closeProfileModal = closeProfileModal;
 window.rotateAmazonAds = rotateAmazonAds;
 window.openArchivesModal = openArchivesModal;
 window.closeArchivesModal = closeArchivesModal;

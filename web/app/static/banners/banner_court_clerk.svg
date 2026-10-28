@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 225" width="900" height="225">
+  <defs>
+    <linearGradient id="crt_bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#021a0a"/>
+      <stop offset="50%" stop-color="#063314"/>
+      <stop offset="100%" stop-color="#010d05"/>
+    </linearGradient>
+    <pattern id="scanlines" width="100" height="4" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="0" x2="100" y2="0" stroke="rgba(0,0,0,0.5)" stroke-width="2"/>
+    </pattern>
+  </defs>
+  <rect width="900" height="225" fill="url(#crt_bg)"/>
+  <rect width="900" height="225" fill="url(#scanlines)"/>
+
+  <!-- Continuous feed printer paper / punch-card tape on right -->
+  <g transform="translate(680, 20)" opacity="0.6">
+    <rect x="0" y="0" width="180" height="185" fill="#04230d" stroke="#00ff66" stroke-width="1.5"/>
+    <g fill="#00ff66" font-family="monospace" font-size="9">
+      <text x="10" y="25">QUEUE_SLOT: [01/01]</text>
+      <text x="10" y="42">AST_MODULO: PROHIBITED</text>
+      <text x="10" y="59">PEANO_CONCAT: ACTIVE</text>
+      <text x="10" y="76">DIGIT_ROOT_MAP: 3,6,9</text>
+      <text x="10" y="93">GLYPH_SET: '0','5'</text>
+      <text x="10" y="110">DIV_ZERO_TRAP: HARD</text>
+      <text x="10" y="127">FIFO_INTEGRITY: 100%</text>
+      <text x="10" y="144">EMIT_SYNC: OK</text>
+      <text x="10" y="161">COMMIT: SQLITE3</text>
+    </g>
+  </g>
+
+  <g transform="translate(50, 30)">
+    <rect x="0" y="0" width="460" height="28" rx="4" fill="rgba(0, 255, 102, 0.12)" stroke="#00ff66" stroke-width="1"/>
+    <text x="15" y="19" font-family="'Courier New', monospace" font-size="12" font-weight="bold" fill="#00ff66" letter-spacing="2">DETERMINISTIC ZERO-TRUST EXECUTION ENGINE</text>
+    
+    <text x="0" y="74" font-family="'Courier New', monospace" font-size="34" font-weight="900" fill="#a7f3d0" letter-spacing="1">THE COURT CLERK (ROOT)</text>
+    <text x="0" y="104" font-family="'Courier New', monospace" font-size="14" font-weight="bold" fill="#00ff66">CLERK@KERNEL:~$ primitives.py --strict-peano --no-mod</text>
+
+    <!-- Badges -->
+    <g transform="translate(0, 122)">
+      <rect x="0" y="0" width="145" height="26" rx="4" fill="#022c10" stroke="#00ff66" stroke-width="1"/>
+      <text x="12" y="17" font-family="monospace" font-size="11" font-weight="bold" fill="#00ff66">FIFO QUEUE = 1</text>
+
+      <rect x="155" y="0" width="160" height="26" rx="4" fill="#022c10" stroke="#00ff66" stroke-width="1"/>
+      <text x="167" y="17" font-family="monospace" font-size="11" font-weight="bold" fill="#00ff66">ZERO IMPORT MATH</text>
+
+      <rect x="325" y="0" width="155" height="26" rx="4" fill="#022c10" stroke="#00ff66" stroke-width="1"/>
+      <text x="337" y="17" font-family="monospace" font-size="11" font-weight="bold" fill="#00ff66">STARE DECISIS FIFO</text>
+    </g>
+  </g>
+</svg>

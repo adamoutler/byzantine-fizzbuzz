@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 225" width="900" height="225">
+  <defs>
+    <linearGradient id="hist_bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1c130e"/>
+      <stop offset="50%" stop-color="#2d1e15"/>
+      <stop offset="100%" stop-color="#140a05"/>
+    </linearGradient>
+    <linearGradient id="parchment" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f5e6c8"/>
+      <stop offset="100%" stop-color="#d8c29d"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="225" fill="url(#hist_bg)"/>
+
+  <!-- Dusty library bookshelf silhouettes -->
+  <g opacity="0.25" fill="#523927">
+    <rect x="680" y="20" width="25" height="185"/>
+    <rect x="710" y="45" width="22" height="160"/>
+    <rect x="736" y="15" width="28" height="190"/>
+    <rect x="768" y="35" width="20" height="170"/>
+    <rect x="792" y="25" width="30" height="180"/>
+    <rect x="826" y="50" width="18" height="155"/>
+    <rect x="848" y="10" width="32" height="195"/>
+    <line x1="660" y1="205" x2="890" y2="205" stroke="#8c6239" stroke-width="4"/>
+  </g>
+
+  <!-- Glowing Hourglass -->
+  <g transform="translate(630, 45)" opacity="0.8">
+    <path d="M 20 15 L 70 15 M 20 125 L 70 125" stroke="#d4af37" stroke-width="5"/>
+    <path d="M 25 15 C 25 60, 65 60, 65 15 Z" fill="rgba(245, 230, 200, 0.15)" stroke="#d4af37" stroke-width="2"/>
+    <path d="M 25 125 C 25 80, 65 80, 65 125 Z" fill="rgba(245, 230, 200, 0.15)" stroke="#d4af37" stroke-width="2"/>
+    <circle cx="45" cy="70" r="3" fill="#fde047"/>
+    <path d="M 33 115 Q 45 95 57 115 Z" fill="#d4af37"/>
+  </g>
+
+  <g transform="translate(50, 30)">
+    <rect x="0" y="0" width="460" height="28" rx="4" fill="rgba(212, 175, 55, 0.15)" stroke="#b45309" stroke-width="1.2"/>
+    <text x="15" y="18" font-family="'Cinzel', Georgia, serif" font-size="12" font-weight="bold" fill="#fde68a" letter-spacing="2">ARCHIVES OF THE ANCIENT MODULO-FREE ACCORD</text>
+    
+    <text x="0" y="74" font-family="'Cinzel', Georgia, serif" font-size="34" font-weight="bold" fill="#fef3c7" letter-spacing="1">THE COURT HISTORIAN</text>
+    <text x="0" y="104" font-family="Georgia, serif" font-size="15" font-style="italic" fill="#d97706">"STARE DECISIS EST INVIOLABILIS // ALL PRIORS RECORDED"</text>
+
+    <!-- Badges -->
+    <g transform="translate(0, 122)">
+      <rect x="0" y="0" width="165" height="26" rx="4" fill="#3a2518" stroke="#d97706" stroke-width="1"/>
+      <text x="12" y="17" font-family="serif" font-size="11" font-weight="bold" fill="#fde68a">CHRONICLER OF PRIORS</text>
+
+      <rect x="175" y="0" width="160" height="26" rx="4" fill="#3a2518" stroke="#d97706" stroke-width="1"/>
+      <text x="187" y="17" font-family="serif" font-size="11" font-weight="bold" fill="#fde68a">SQLITE LEDGER SENTRY</text>
+
+      <rect x="345" y="0" width="145" height="26" rx="4" fill="#3a2518" stroke="#d97706" stroke-width="1"/>
+      <text x="357" y="17" font-family="serif" font-size="11" font-weight="bold" fill="#a7f3d0">CASE 0001 → INF</text>
+    </g>
+  </g>
+</svg>
