@@ -48,7 +48,7 @@
     <meta name="application-name" content="FizzBuzz">
     <meta name="msapplication-TileColor" content="#0b0f19">
 
-    <link rel="stylesheet" href="/static/styles.css?v=20261028-3">
+    <link rel="stylesheet" href="/static/styles.css?v=20261028-4">
 </head>
 <body>
     <div class="court-container">
@@ -534,15 +534,15 @@
                 <div class="math-explainer-section fizz">
                     <h3>1. Rule 42-B: The Recursive Digital Root System (<code>Fizz</code> / Base-3)</h3>
                     <p>
-                        In base-10 arithmetic, every power of ten satisfies <code>10<sup>k</sup> &equiv; 1 (mod 3)</code>. Consequently, any integer has the exact same divisibility by 3 as the sum of its decimal digits.
+                        In base-10 arithmetic, every power of ten (<code>10</code>, <code>100</code>, <code>1000</code>...) leaves a remainder of <code>1</code> when grouped by 3s. Consequently, any integer has the exact same divisibility by 3 as the sum of its decimal digits.
                     </p>
                     <p>
-                        Instead of dividing by 3, the tribunal repeatedly sums the ASCII digits of the payload using a lookup table until a single-digit <strong>Digital Root</strong> (<code>0</code>&ndash;<code>9</code>) remains:
+                        Instead of dividing by 3, the tribunal repeatedly sums the ASCII digits of the payload using a lookup table until a single-digit <strong>Digital Root</strong> (<code>0</code>-<code>9</code>) remains:
                     </p>
                     <div class="math-example-box">
                         <div><strong>Certification Set:</strong> <code>FIZZ_ROOTS = {'3', '6', '9', '0'}</code></div>
-                        <div><strong>Example A (Payload <code>'987'</code>):</strong> <code>9 + 8 + 7 = 24</code> &rarr; <code>2 + 4 = 6</code>. Digital Root is <code>'6'</code> &isin; <code>{'3', '6', '9'}</code> &rarr; <span class="token-badge fizz">Fizz PASS</span></div>
-                        <div><strong>Example B (Payload <code>'548'</code>):</strong> <code>5 + 4 + 8 = 17</code> &rarr; <code>1 + 7 = 8</code>. Digital Root is <code>'8'</code> &notin; <code>{'3', '6', '9'}</code> &rarr; <span class="token-badge raw">Fizz REJECT</span></div>
+                        <div><strong>Example A (Payload <code>'987'</code>):</strong> <code>9 + 8 + 7 = 24</code> &rarr; <code>2 + 4 = 6</code>. Digital Root is <code>'6'</code>, which matches the Fizz Roots (<code>'6' = {'3', '6', '9'}</code>) &rarr; <span class="token-badge fizz">Fizz PASS</span></div>
+                        <div><strong>Example B (Payload <code>'548'</code>):</strong> <code>5 + 4 + 8 = 17</code> &rarr; <code>1 + 7 = 8</code>. Digital Root is <code>'8'</code>, which does not match the Fizz Roots (<code>'8' /= {'3', '6', '9'}</code>) &rarr; <span class="token-badge raw">Fizz REJECT</span></div>
                     </div>
                 </div>
 
@@ -553,8 +553,8 @@
                     </p>
                     <div class="math-example-box">
                         <div><strong>Certification Set:</strong> <code>BUZZ_GLYPHS = {'0', '5'}</code></div>
-                        <div><strong>Example A (Payload <code>'545'</code>):</strong> Rightmost glyph is <code>'5'</code> &isin; <code>{'0', '5'}</code> &rarr; <span class="token-badge buzz">Buzz PASS</span></div>
-                        <div><strong>Example B (Payload <code>'548'</code>):</strong> Rightmost glyph is <code>'8'</code> &notin; <code>{'0', '5'}</code> &rarr; <span class="token-badge raw">Buzz REJECT</span></div>
+                        <div><strong>Example A (Payload <code>'545'</code>):</strong> Rightmost char is <code>'5'</code>, which matches the Terminal Glyphs (<code>'5' = {'0', '5'}</code>) &rarr; <span class="token-badge buzz">Buzz PASS</span></div>
+                        <div><strong>Example B (Payload <code>'548'</code>):</strong> Rightmost char is <code>'8'</code>, which does not match the Terminal Glyphs (<code>'8' /= {'0', '5'}</code>) &rarr; <span class="token-badge raw">Buzz REJECT</span></div>
                     </div>
                 </div>
 
@@ -568,26 +568,26 @@
                             <span>Emitted Token</span>
                         </div>
                         <div class="math-matrix-row">
-                            <span><code>&isin; {'3', '6', '9'}</code></span>
-                            <span><code>&notin; {'0', '5'}</code></span>
+                            <span>equals <code>{'3', '6', '9'}</code></span>
+                            <span>not equals <code>{'0', '5'}</code></span>
                             <span>Fizz PASS / Buzz REJECT</span>
                             <span><span class="token-badge fizz">Fizz</span></span>
                         </div>
                         <div class="math-matrix-row">
-                            <span><code>&notin; {'3', '6', '9'}</code></span>
-                            <span><span><code>&isin; {'0', '5'}</code></span></span>
+                            <span>not equals <code>{'3', '6', '9'}</code></span>
+                            <span>equals <code>{'0', '5'}</code></span>
                             <span>Fizz REJECT / Buzz PASS</span>
                             <span><span class="token-badge buzz">Buzz</span></span>
                         </div>
                         <div class="math-matrix-row">
-                            <span><code>&isin; {'3', '6', '9'}</code></span>
-                            <span><code>&isin; {'0', '5'}</code></span>
+                            <span>equals <code>{'3', '6', '9'}</code></span>
+                            <span>equals <code>{'0', '5'}</code></span>
                             <span>Dual Collision (Antitrust Merger)</span>
                             <span><span class="token-badge fizzbuzz">FizzBuzz</span></span>
                         </div>
                         <div class="math-matrix-row">
-                            <span><code>&notin; {'3', '6', '9'}</code></span>
-                            <span><code>&notin; {'0', '5'}</code></span>
+                            <span>not equals <code>{'3', '6', '9'}</code></span>
+                            <span>not equals <code>{'0', '5'}</code></span>
                             <span>Both Cartels Rejected</span>
                             <span><span class="token-badge raw">Raw Digit (e.g. '548')</span></span>
                         </div>
@@ -597,12 +597,12 @@
         </div>
     </div>
 
-    <script src="/static/app.js?v=20261028-3"></script>
+    <script src="/static/app.js?v=20261028-4"></script>
     <script>
         // PWA Service Worker Registration with immediate update check
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js?v=20261028-3', { scope: '/' })
+                navigator.serviceWorker.register('/sw.js?v=20261028-4', { scope: '/' })
                     .then((reg) => {
                         reg.update();
                         console.log('[PWA] Service Worker registered successfully. Scope:', reg.scope);
