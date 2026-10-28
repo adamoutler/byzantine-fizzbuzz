@@ -1,14 +1,14 @@
 /**
- * Service Worker for FizzBuzz: The Inquisition PWA
+ * Service Worker for FizzBuzz: The Byzantine Inquisition PWA
  * Uses Network-First for HTML, JS, and CSS so UI updates take effect immediately,
  * while maintaining offline cache fallback.
  */
 
-const CACHE_NAME = 'fizzbuzz-inquisition-v16';
+const CACHE_NAME = 'fizzbuzz-inquisition-v17';
 const PRECACHE_ASSETS = [
   '/',
-  '/static/styles.css?v=20261028-6',
-  '/static/app.js?v=20261028-6',
+  '/static/styles.css?v=20261028-7',
+  '/static/app.js?v=20261028-7',
   '/static/manifest.json',
   '/static/icons/favicon.svg',
   '/static/icons/favicon.ico',

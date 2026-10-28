@@ -1,7 +1,7 @@
 {
-  "name": "FizzBuzz: The Inquisition",
+  "name": "FizzBuzz: The Byzantine Inquisition",
   "short_name": "FizzBuzz",
-  "description": "17 Agent Swarm - No Modulo - No Division. 17 AI agents argue FizzBuzz live in a zero-trust courtroom.",
+  "description": "17 Agent Swarm - No modulo or division. 17 AI agents argue FizzBuzz live in a zero-trust courtroom.",
   "start_url": "/",
   "id": "/",
   "scope": "/",

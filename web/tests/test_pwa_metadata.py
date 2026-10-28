@@ -15,7 +15,7 @@ async def test_pwa_manifest_route():
         res = await ac.get("/manifest.json")
         assert res.status_code == 200
         data = res.json()
-        assert data["name"] == "FizzBuzz: The Inquisition"
+        assert data["name"] == "FizzBuzz: The Byzantine Inquisition"
         assert data["short_name"] == "FizzBuzz"
         assert data["display"] == "standalone"
         assert len(data["icons"]) >= 4
@@ -52,7 +52,7 @@ async def test_index_html_metadata():
         html = res.text
 
         # Title & Subtitle Links + Help Button
-        assert "FizzBuzz: The Inquisition" in html
+        assert "FizzBuzz: The Byzantine Inquisition" in html
         assert "17 Agent Swarm" in html
         assert "No modulo or division" in html
         assert 'id="header-help-btn"' in html
