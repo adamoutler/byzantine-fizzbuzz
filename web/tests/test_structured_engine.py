@@ -81,9 +81,10 @@ def test_resilient_parser_judge_ruling():
     assert ruling.prejudice is True
 
 def test_schema_property_ordering_speech_first_enums_last():
-    """Verify that speech (reasoning) is the first field and enum actions are last in all structured schemas."""
+    """Verify that speech (reasoning) is first, action is second-to-last, and status is last in all structured schemas."""
     from app.engine.structured_schemas import (
         BailiffAnnouncement,
+        HistorianPrecedentReport,
         JudgeBazChamberOrder,
         StrategyConferralTurn,
         FloorPetition,
@@ -91,29 +92,33 @@ def test_schema_property_ordering_speech_first_enums_last():
         AntitrustDetermination,
         AppellateBriefing,
         RatificationPlea,
-        JudgeBazRuling
+        JudgeBazRuling,
+        VictoryAddressReport
     )
 
     models = [
-        (BailiffAnnouncement, "action"),
-        (JudgeBazChamberOrder, "action"),
-        (StrategyConferralTurn, "action"),
-        (FloorPetition, "action"),
-        (ForensicAuditReport, "action"),
-        (AntitrustDetermination, "action"),
-        (AppellateBriefing, "action"),
-        (RatificationPlea, "action"),
-        (JudgeBazRuling, "action")
+        BailiffAnnouncement,
+        HistorianPrecedentReport,
+        JudgeBazChamberOrder,
+        StrategyConferralTurn,
+        FloorPetition,
+        ForensicAuditReport,
+        AntitrustDetermination,
+        AppellateBriefing,
+        RatificationPlea,
+        JudgeBazRuling,
+        VictoryAddressReport
     ]
 
-    for model_cls, expected_last_field in models:
+    for model_cls in models:
         schema = model_cls.model_json_schema()
         keys = list(schema["properties"].keys())
         required_keys = schema.get("required", [])
         assert keys[0] == "speech", f"{model_cls.__name__} must have 'speech' as first property for reasoning prior to decisions."
-        assert keys[-1] == expected_last_field, f"{model_cls.__name__} must have '{expected_last_field}' as the last property so decisions follow reasoning."
+        assert keys[-2] == "action", f"{model_cls.__name__} must have 'action' immediately before 'status'."
+        assert keys[-1] == "status", f"{model_cls.__name__} must have 'status' (public social media status) as the last property."
         assert required_keys == keys, (
-            f"{model_cls.__name__} must include ALL properties in 'required' ({keys}) so Ollama's GBNF grammar forces the LLM to emit 'action'!"
+            f"{model_cls.__name__} must include ALL properties in 'required' ({keys}) so Ollama's GBNF grammar forces the LLM to emit 'action' and 'status'!"
         )
 
 

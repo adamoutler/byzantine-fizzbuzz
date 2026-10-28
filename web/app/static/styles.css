@@ -51,6 +51,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 10px 16px;
     flex-shrink: 0;
 }
 
@@ -58,10 +60,25 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
+    min-width: 0;
 }
 
 .court-icon {
     font-size: 28px;
+    flex-shrink: 0;
+}
+
+.court-title-block {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.court-title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .court-title {
@@ -71,14 +88,49 @@ body {
     color: var(--color-historian);
 }
 
+.header-help-btn {
+    width: 21px;
+    height: 21px;
+    font-size: 0.78rem;
+    font-weight: 800;
+    background-color: rgba(59, 130, 246, 0.18);
+    border-color: rgba(59, 130, 246, 0.55);
+    color: #93c5fd;
+    flex-shrink: 0;
+}
+
 .court-sub {
-    font-size: 0.75rem;
+    font-size: 0.76rem;
     color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.court-sub-link {
+    color: #93c5fd;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-underline-offset: 3px;
+    font-weight: 600;
+    transition: color 0.15s ease;
+}
+
+.court-sub-link:hover {
+    color: var(--color-historian);
+    text-decoration-style: solid;
+}
+
+.court-sub-sep {
+    color: var(--text-muted);
 }
 
 .header-metrics {
     display: flex;
-    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 .metric-badge {
@@ -91,6 +143,7 @@ body {
     display: flex;
     align-items: center;
     gap: 6px;
+    max-width: 100%;
 }
 
 .status-dot {
@@ -415,22 +468,20 @@ body {
     font-size: 0.92rem;
 }
 
-/* Speech Card in Feed */
+/* Forum-Post Speech Card in Feed */
 .speech-card {
     background-color: var(--bg-card);
     border: 1px solid var(--border-color);
     border-left: 4px solid var(--border-highlight);
-    border-radius: 8px;
-    padding: 14px 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    transition: border-color 0.2s;
+    border-radius: 10px;
+    padding: 0;
+    overflow: hidden;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .speech-card.active {
     background-color: var(--bg-card-active);
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
 }
 
 .speech-card.historian { border-left-color: var(--color-historian); }
@@ -447,6 +498,87 @@ body {
     border-color: rgba(6, 182, 212, 0.35);
 }
 
+.forum-post-layout {
+    display: flex;
+    align-items: stretch;
+    min-height: 138px;
+}
+
+.forum-profile-col {
+    flex: 0 0 168px;
+    background-color: rgba(11, 17, 32, 0.52);
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 14px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center;
+    gap: 3px;
+}
+
+.forum-avatar-img {
+    width: 68px;
+    height: 68px;
+    border-radius: 10px;
+    object-fit: cover;
+    border: 2px solid var(--border-highlight);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+    margin-bottom: 5px;
+    background-color: var(--bg-dark);
+}
+
+.speech-card.judge .forum-avatar-img { border-color: var(--color-judge); }
+.speech-card.bailiff .forum-avatar-img { border-color: var(--color-bailiff); }
+.speech-card.historian .forum-avatar-img { border-color: var(--color-historian); }
+.speech-card.fizz .forum-avatar-img { border-color: var(--color-fizz); }
+.speech-card.buzz .forum-avatar-img { border-color: var(--color-buzz); }
+.speech-card.auditor .forum-avatar-img { border-color: var(--color-auditor); }
+.speech-card.regulator .forum-avatar-img,
+.speech-card.appellate .forum-avatar-img { border-color: var(--color-appellate); }
+.speech-card.orator .forum-avatar-img { border-color: var(--color-orator); }
+.speech-card.news .forum-avatar-img { border-color: #06b6d4; }
+
+.forum-speaker-name {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+
+.forum-speaker-title {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    line-height: 1.25;
+}
+
+.forum-speaker-status {
+    font-size: 0.7rem;
+    font-style: italic;
+    color: #93c5fd;
+    line-height: 1.25;
+    margin-top: 3px;
+}
+
+.forum-content-col {
+    flex: 1;
+    min-width: 0;
+    padding: 15px 18px 11px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.forum-card-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    padding-top: 8px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
 .fun-stage-cue {
     display: inline-block;
     font-family: monospace;
@@ -461,66 +593,23 @@ body {
     letter-spacing: 0.02em;
 }
 
-.speech-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    padding-bottom: 6px;
-}
-
-.speech-speaker-info {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.speech-avatar {
-    font-size: 18px;
-}
-
-.speech-phase-label,
-.speech-stage-label {
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    color: var(--text-secondary);
-}
-
-.speech-speaker-name {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--text-primary);
-}
-
-.speech-status-tag {
-    font-size: 0.7rem;
-    font-weight: 600;
-    padding: 2px 6px;
-    border-radius: 4px;
-    background-color: rgba(255, 255, 255, 0.05);
-    color: var(--text-muted);
-    white-space: nowrap;
-    text-align: center;
-    flex-shrink: 0;
-}
-.speech-card.active .speech-status-tag {
-    background-color: rgba(59, 130, 246, 0.2);
-    color: var(--color-fizz);
-}
-
 .speech-action-tag {
-    font-size: 0.68rem;
+    font-size: 0.72rem;
     font-weight: 700;
-    padding: 2px 7px;
-    border-radius: 4px;
+    padding: 3px 9px;
+    border-radius: 5px;
     background-color: rgba(99, 102, 241, 0.18);
     border: 1px solid rgba(99, 102, 241, 0.4);
     color: #c7d2fe;
-    text-transform: capitalize;
     letter-spacing: 0.02em;
     white-space: nowrap;
+}
+
+.speech-action-tag.action-pending {
+    background-color: rgba(148, 163, 184, 0.12);
+    border-color: rgba(148, 163, 184, 0.3);
+    color: var(--text-secondary);
+    font-style: italic;
 }
 
 .speech-action-tag.action-decline-and-demand-remand,
@@ -541,7 +630,12 @@ body {
 .speech-action-tag.action-certify-fizz,
 .speech-action-tag.action-certify-buzz,
 .speech-action-tag.action-grant-market-clearance,
-.speech-action-tag.action-ratify-uncontested {
+.speech-action-tag.action-ratify-uncontested,
+.speech-action-tag.action-dissolve-stays-and-emit,
+.speech-action-tag.action-declare-digital-independence,
+.speech-action-tag.action-proclaim-fizz-supremacy,
+.speech-action-tag.action-proclaim-buzz-supremacy,
+.speech-action-tag.action-celebrate-synergistic-merger {
     background-color: rgba(16, 185, 129, 0.18);
     border-color: rgba(16, 185, 129, 0.5);
     color: #6ee7b7;
@@ -558,11 +652,12 @@ body {
 
 .speech-card-body {
     font-family: "Georgia", serif;
-    font-size: 1.05rem;
+    font-size: 1.03rem;
     line-height: 1.6;
     color: #e2e8f0;
     white-space: pre-wrap;
     word-break: break-word;
+    flex: 1;
 }
 
 .speech-cursor {
@@ -1328,15 +1423,276 @@ body {
     font-size: 40px;
 }
 
+/* Tribunal Guide Modal (17 Agent Swarm & No Modulo or Division) */
+.modal-dialog.info-dialog {
+    max-width: 980px;
+    width: 96%;
+    max-height: 88vh;
+}
+
+.info-modal-tabs {
+    display: flex;
+    gap: 8px;
+    padding: 10px 20px;
+    background-color: var(--bg-dark);
+    border-bottom: 1px solid var(--border-color);
+    flex-wrap: wrap;
+}
+
+.info-tab-btn {
+    background-color: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    padding: 7px 14px;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.info-tab-btn:hover {
+    border-color: var(--color-fizz);
+    color: #fff;
+}
+
+.info-tab-btn.active {
+    background-color: var(--color-fizz);
+    border-color: var(--color-fizz);
+    color: #fff;
+}
+
+.info-intro-banner {
+    background-color: var(--bg-dark);
+    border: 1px solid var(--border-highlight);
+    border-left: 4px solid var(--color-historian);
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: #e2e8f0;
+}
+
+.swarm-roles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(410px, 1fr));
+    gap: 12px;
+}
+
+.swarm-role-card {
+    background-color: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    border-left: 4px solid var(--border-highlight);
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.swarm-role-card.judge { border-left-color: var(--color-judge); }
+.swarm-role-card.bailiff { border-left-color: var(--color-bailiff); }
+.swarm-role-card.historian { border-left-color: var(--color-historian); }
+.swarm-role-card.fizz { border-left-color: var(--color-fizz); }
+.swarm-role-card.buzz { border-left-color: var(--color-buzz); }
+.swarm-role-card.auditor { border-left-color: var(--color-auditor); }
+.swarm-role-card.regulator { border-left-color: var(--color-appellate); }
+.swarm-role-card.orator { border-left-color: var(--color-orator); }
+.swarm-role-card.news { border-left-color: #06b6d4; }
+
+.swarm-role-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 2px solid var(--border-highlight);
+    flex-shrink: 0;
+    background-color: var(--bg-panel);
+}
+
+.swarm-role-details {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.swarm-role-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.swarm-role-header strong {
+    font-size: 0.92rem;
+    color: var(--text-primary);
+}
+
+.swarm-phase-badge {
+    font-size: 0.68rem;
+    font-weight: 700;
+    background-color: rgba(59, 130, 246, 0.16);
+    border: 1px solid rgba(59, 130, 246, 0.4);
+    color: #93c5fd;
+    padding: 1px 7px;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.swarm-role-title {
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: var(--color-historian);
+}
+
+.swarm-role-details p {
+    font-size: 0.8rem;
+    line-height: 1.45;
+    color: var(--text-secondary);
+    margin-top: 2px;
+}
+
+.math-explainer-section {
+    background-color: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    border-left: 4px solid var(--border-highlight);
+    border-radius: 8px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.math-explainer-section.fizz { border-left-color: var(--color-fizz); }
+.math-explainer-section.buzz { border-left-color: var(--color-buzz); }
+.math-explainer-section.auditor { border-left-color: var(--color-auditor); }
+
+.math-explainer-section h3 {
+    font-size: 0.96rem;
+    color: var(--text-primary);
+}
+
+.math-explainer-section p {
+    font-size: 0.86rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+.math-example-box {
+    background-color: rgba(15, 23, 42, 0.85);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.82rem;
+    color: #e2e8f0;
+}
+
+.math-matrix-grid {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    overflow: hidden;
+    font-size: 0.8rem;
+}
+
+.math-matrix-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.4fr 1fr;
+    gap: 8px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border-color);
+    align-items: center;
+}
+
+.math-matrix-row:last-child {
+    border-bottom: none;
+}
+
+.math-matrix-row.header {
+    background-color: rgba(15, 23, 42, 0.9);
+    font-weight: 800;
+    color: var(--color-historian);
+    text-transform: uppercase;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+}
+
 .hidden {
     display: none !important;
 }
 
 @media (max-width: 900px) {
-    .court-container { height: auto; }
+    .court-container { height: auto; overflow: visible; }
     .court-main { flex-direction: column; overflow: visible; }
     .proceedings-panel, .sidebar-panel { flex: 1 1 100%; border-right: none; overflow: visible; }
     .sidebar-card.ledger-card { max-height: 360px; }
     .archives-split-body { flex-direction: column; }
     .archives-list-pane { flex: 0 0 180px; border-right: none; border-bottom: 1px solid var(--border-color); }
+    .swarm-roles-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+    .court-header {
+        padding: 10px 12px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+    .header-left {
+        width: 100%;
+    }
+    .court-title {
+        font-size: 1.08rem;
+    }
+    .header-metrics {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        justify-content: flex-start;
+    }
+    .metric-badge {
+        font-size: 0.72rem;
+        padding: 4px 8px;
+        flex: 0 1 auto;
+        max-width: 100%;
+        white-space: normal;
+        word-break: break-word;
+    }
+    .courtroom-feed {
+        padding: 10px;
+    }
+    .forum-profile-col {
+        flex: 0 0 112px;
+        padding: 10px 8px;
+    }
+    .forum-avatar-img {
+        width: 52px;
+        height: 52px;
+    }
+    .forum-speaker-name {
+        font-size: 0.8rem;
+    }
+    .forum-speaker-title {
+        font-size: 0.66rem;
+    }
+    .forum-speaker-status {
+        font-size: 0.64rem;
+    }
+    .forum-content-col {
+        padding: 11px 12px 9px 12px;
+    }
+    .speech-card-body {
+        font-size: 0.94rem;
+    }
+    .math-matrix-row {
+        grid-template-columns: 1fr 1fr;
+    }
 }

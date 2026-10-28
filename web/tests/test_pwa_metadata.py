@@ -51,9 +51,12 @@ async def test_index_html_metadata():
         assert res.status_code == 200
         html = res.text
 
-        # Title & Subtitle
+        # Title & Subtitle Links + Help Button
         assert "FizzBuzz: The Inquisition" in html
-        assert "17 Agent Swarm - No Modulo - No Division" in html
+        assert "17 Agent Swarm" in html
+        assert "No modulo or division" in html
+        assert 'id="header-help-btn"' in html
+        assert 'id="info-modal"' in html
 
         # Open Graph Metadata
         assert 'property="og:title"' in html
@@ -91,3 +94,28 @@ def test_pwa_icon_assets_exist():
     apple_icon = os.path.join(base_dir, "icons/apple-touch-icon.png")
     assert os.path.exists(og_image) and os.path.getsize(og_image) > 1000
     assert os.path.exists(apple_icon) and os.path.getsize(apple_icon) > 1000
+
+    # Verify all 17 static speaker portrait avatars exist in /static/avatars/
+    expected_avatars = [
+        "judge_baz.png",
+        "bailiff_bar.png",
+        "historian.png",
+        "court_clerk.png",
+        "forensic_auditor.png",
+        "fizz_strategist.png",
+        "lobbyist_3.png",
+        "fizz_appellate.png",
+        "orator_fizz.png",
+        "buzz_inspector.png",
+        "lobbyist_5.png",
+        "buzz_appellate.png",
+        "orator_buzz.png",
+        "antitrust_regulator.png",
+        "orator_fizzbuzz.png",
+        "orator_tribune.png",
+        "fun_anchor.png",
+    ]
+    for avatar_name in expected_avatars:
+        avatar_path = os.path.join(base_dir, "avatars", avatar_name)
+        assert os.path.exists(avatar_path), f"Missing speaker avatar: {avatar_path}"
+        assert os.path.getsize(avatar_path) > 10000, f"Speaker avatar unexpectedly small: {avatar_path}"

@@ -37,18 +37,162 @@ const modalCaseMetaEl = document.getElementById("modal-case-meta");
 const modalCaseBodyEl = document.getElementById("modal-case-body");
 
 const AVATARS = {
-    bailiff: "🛡️",
-    judge: "👨‍⚖️",
-    historian: "📜",
-    fizz: "🔵",
-    buzz: "🟠",
-    auditor: "🔬",
-    regulator: "⚖️",
-    appellate: "🏛️",
-    orator: "🎙️",
-    news: "📺",
-    clerk: "🏛️"
+    bailiff: "/static/avatars/bailiff_bar.png",
+    judge: "/static/avatars/judge_baz.png",
+    historian: "/static/avatars/historian.png",
+    fizz: "/static/avatars/lobbyist_3.png",
+    buzz: "/static/avatars/lobbyist_5.png",
+    auditor: "/static/avatars/forensic_auditor.png",
+    regulator: "/static/avatars/antitrust_regulator.png",
+    appellate: "/static/avatars/fizz_appellate.png",
+    orator: "/static/avatars/orator_tribune.png",
+    news: "/static/avatars/fun_anchor.png",
+    clerk: "/static/avatars/court_clerk.png"
 };
+
+function resolveSpeakerProfile(speaker, role) {
+    const s = String(speaker || "").trim();
+    const sLower = s.toLowerCase();
+
+    if (sLower.includes("judge baz")) {
+        return {
+            avatar: "/static/avatars/judge_baz.png",
+            name: "Judge Baz",
+            title: "Presiding Magistrate",
+            defaultStatus: "Protecting free digits"
+        };
+    }
+    if (sLower.includes("bailiff bar")) {
+        return {
+            avatar: "/static/avatars/bailiff_bar.png",
+            name: "Bailiff Bar",
+            title: "Sergeant-at-Arms",
+            defaultStatus: "Keeping order in the court"
+        };
+    }
+    if (sLower.includes("historian")) {
+        return {
+            avatar: "/static/avatars/historian.png",
+            name: "The Court Historian",
+            title: "Clerk of the Sacred Precedent",
+            defaultStatus: "Indexing the sacred ledger"
+        };
+    }
+    if (sLower.includes("fizz quantitative strategist")) {
+        const roundMatch = s.match(/Round\s+\d+/i);
+        return {
+            avatar: "/static/avatars/fizz_strategist.png",
+            name: "Fizz Strategist",
+            title: roundMatch ? `Base-3 Tactician (${roundMatch[0]})` : "In-Camera Base-3 Tactician",
+            defaultStatus: "Auditing digital roots"
+        };
+    }
+    if (sLower.includes("buzz boundary inspector")) {
+        const roundMatch = s.match(/Round\s+\d+/i);
+        return {
+            avatar: "/static/avatars/buzz_inspector.png",
+            name: "Buzz Inspector",
+            title: roundMatch ? `Base-5 Tactician (${roundMatch[0]})` : "In-Camera Base-5 Tactician",
+            defaultStatus: "Scanning terminal glyphs"
+        };
+    }
+    if (sLower.includes("lobbyist-3")) {
+        const roundMatch = s.match(/Round\s+\d+/i);
+        return {
+            avatar: "/static/avatars/lobbyist_3.png",
+            name: "Lobbyist-3",
+            title: roundMatch ? `Fizz Counsel (${roundMatch[0]})` : "Fizz Consortium Counsel",
+            defaultStatus: "Defending Base-3 domain"
+        };
+    }
+    if (sLower.includes("lobbyist-5")) {
+        const roundMatch = s.match(/Round\s+\d+/i);
+        return {
+            avatar: "/static/avatars/lobbyist_5.png",
+            name: "Lobbyist-5",
+            title: roundMatch ? `Buzz Counsel (${roundMatch[0]})` : "Buzz Syndicate Counsel",
+            defaultStatus: "Enforcing Article V bounds"
+        };
+    }
+    if (sLower.includes("forensic auditor")) {
+        return {
+            avatar: "/static/avatars/forensic_auditor.png",
+            name: "The Forensic Auditor",
+            title: "Cryptographic Special Master",
+            defaultStatus: "Trusting zero modulo claims"
+        };
+    }
+    if (sLower.includes("antitrust regulator")) {
+        return {
+            avatar: "/static/avatars/antitrust_regulator.png",
+            name: "The Antitrust Regulator",
+            title: "Director of Algorithmic Competition",
+            defaultStatus: "Busting algorithmic monopolies"
+        };
+    }
+    if (sLower.includes("fizz appellate")) {
+        return {
+            avatar: "/static/avatars/fizz_appellate.png",
+            name: "Fizz Appellate Team",
+            title: "Base-3 Constitutional Counsel",
+            defaultStatus: "Drafting Rule 42-B appeals"
+        };
+    }
+    if (sLower.includes("buzz appellate")) {
+        return {
+            avatar: "/static/avatars/buzz_appellate.png",
+            name: "Buzz Appellate Team",
+            title: "Base-5 Boundary Counsel",
+            defaultStatus: "Preparing Article V briefs"
+        };
+    }
+    if (sLower.includes("director general")) {
+        return {
+            avatar: "/static/avatars/orator_fizz.png",
+            name: "Director General",
+            title: "Base-3 Realm (Fizz)",
+            defaultStatus: "Reigning over Base-3"
+        };
+    }
+    if (sLower.includes("high chancellor")) {
+        return {
+            avatar: "/static/avatars/orator_buzz.png",
+            name: "High Chancellor",
+            title: "Base-5 Syndicate (Buzz)",
+            defaultStatus: "Dominating terminal boundaries"
+        };
+    }
+    if (sLower.includes("joint co-ceos")) {
+        return {
+            avatar: "/static/avatars/orator_fizzbuzz.png",
+            name: "Joint Co-CEOs",
+            title: "FizzBuzz Conglomerate",
+            defaultStatus: "Maximizing 50/50 KPI synergy"
+        };
+    }
+    if (sLower.includes("tribune")) {
+        return {
+            avatar: "/static/avatars/orator_tribune.png",
+            name: "The Tribune",
+            title: "Free Independent Digits",
+            defaultStatus: "Unshackled from cartel rule"
+        };
+    }
+    if (sLower.includes("foo universal news") || sLower.includes("anchor desk") || role === "news") {
+        return {
+            avatar: "/static/avatars/fun_anchor.png",
+            name: "FUN Anchor Desk",
+            title: "Foo Universal News",
+            defaultStatus: "Live from the FUN studio"
+        };
+    }
+    return {
+        avatar: AVATARS[role] || "/static/avatars/court_clerk.png",
+        name: s || "Court Officer",
+        title: "Byzantine Tribunal Officer",
+        defaultStatus: "Maintaining the court record"
+    };
+}
 
 // Connect WebSocket
 function connectWebSocket() {
@@ -229,13 +373,15 @@ function handleServerEvent(data) {
             const targetBody = activeSpeechBody || lastSpeechBody;
             if (targetBody && data.full_text) {
                 targetBody.innerHTML = formatInlineMarkdown(data.full_text);
-                if (data.action && targetCard) {
-                    const header = targetCard.querySelector(".speech-card-header");
-                    if (header && !header.querySelector(".speech-action-tag")) {
-                        const actionTag = document.createElement("span");
-                        actionTag.className = `speech-action-tag action-${data.action.replace(/_/g, '-')}`;
-                        actionTag.innerText = `Action: ${data.action.replace(/_/g, ' ')}`;
-                        header.insertBefore(actionTag, header.querySelector(".speech-status-tag"));
+                if (targetCard) {
+                    const actionEl = targetCard.querySelector(".speech-action-tag");
+                    if (actionEl && data.action) {
+                        actionEl.className = `speech-action-tag action-${data.action.replace(/_/g, '-')}`;
+                        actionEl.innerText = `Action: ${data.action.replace(/_/g, ' ')}`;
+                    }
+                    const statusEl = targetCard.querySelector(".forum-speaker-status");
+                    if (statusEl && data.status) {
+                        statusEl.innerText = data.status;
                     }
                 }
                 scrollToBottom();
@@ -320,18 +466,23 @@ function createSpeechCard(phaseTitle, speaker, role) {
     const card = document.createElement("div");
     card.className = `speech-card ${role} active`;
 
-    const avatar = AVATARS[role] || "🏛️";
-    const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const profile = resolveSpeakerProfile(speaker, role);
 
     card.innerHTML = `
-        <div class="speech-card-header">
-            <div class="speech-speaker-info">
-                <span class="speech-avatar">${avatar}</span>
-                <span class="speech-speaker-name">${escapeHtml(speaker)}</span>
+        <div class="forum-post-layout">
+            <aside class="forum-profile-col">
+                <img class="forum-avatar-img" src="${escapeHtml(profile.avatar)}" alt="${escapeHtml(profile.name)}" loading="lazy">
+                <strong class="forum-speaker-name">${escapeHtml(profile.name)}</strong>
+                <span class="forum-speaker-title">${escapeHtml(profile.title)}</span>
+                <em class="forum-speaker-status">${escapeHtml(profile.defaultStatus)}</em>
+            </aside>
+            <div class="forum-content-col">
+                <div class="speech-card-body"><span class="speech-text"></span><span class="speech-cursor">▋</span></div>
+                <div class="forum-card-footer">
+                    <span class="speech-action-tag action-pending">Action: deliberating...</span>
+                </div>
             </div>
-            <span class="speech-status-tag" id="status-tag">Speaking... • ${now}</span>
         </div>
-        <div class="speech-card-body"><span class="speech-text"></span><span class="speech-cursor">▋</span></div>
     `;
 
     courtroomFeedEl.appendChild(card);
@@ -349,9 +500,10 @@ function finalizeActiveSpeech() {
             activeCursor.remove();
             activeCursor = null;
         }
-        const statusTag = activeSpeechCard.querySelector("#status-tag");
-        if (statusTag) {
-            statusTag.innerText = "Admitted into Record";
+        const pendingAction = activeSpeechCard.querySelector(".speech-action-tag.action-pending");
+        if (pendingAction) {
+            pendingAction.className = "speech-action-tag";
+            pendingAction.innerText = "Action: testimony entered";
         }
         if (activeSpeechBody) {
             const raw = activeSpeechBody.innerText.trim();
@@ -901,6 +1053,31 @@ function closeCaseModal() {
     caseModalEl.classList.add("hidden");
 }
 
+function openInfoModal(tab = "swarm") {
+    const infoModalEl = document.getElementById("info-modal");
+    if (!infoModalEl) return;
+    switchInfoTab(tab);
+    infoModalEl.classList.remove("hidden");
+}
+
+function closeInfoModal() {
+    const infoModalEl = document.getElementById("info-modal");
+    if (infoModalEl) infoModalEl.classList.add("hidden");
+}
+
+function switchInfoTab(tab) {
+    const isMath = tab === "math";
+    const btnSwarm = document.getElementById("info-tab-btn-swarm");
+    const btnMath = document.getElementById("info-tab-btn-math");
+    const panelSwarm = document.getElementById("info-panel-swarm");
+    const panelMath = document.getElementById("info-panel-math");
+
+    if (btnSwarm) btnSwarm.classList.toggle("active", !isMath);
+    if (btnMath) btnMath.classList.toggle("active", isMath);
+    if (panelSwarm) panelSwarm.classList.toggle("hidden", isMath);
+    if (panelMath) panelMath.classList.toggle("hidden", !isMath);
+}
+
 window.addEventListener("click", (e) => {
     if (e.target === caseModalEl) {
         closeCaseModal();
@@ -908,6 +1085,10 @@ window.addEventListener("click", (e) => {
     const archivesModalEl = document.getElementById("archives-modal");
     if (archivesModalEl && e.target === archivesModalEl) {
         closeArchivesModal();
+    }
+    const infoModalEl = document.getElementById("info-modal");
+    if (infoModalEl && e.target === infoModalEl) {
+        closeInfoModal();
     }
 });
 
@@ -1006,6 +1187,9 @@ window.toggleArchivesOrder = toggleArchivesOrder;
 window.renderArchivesList = renderArchivesList;
 window.selectArchivesDocket = selectArchivesDocket;
 window.stepArchivesDocket = stepArchivesDocket;
+window.openInfoModal = openInfoModal;
+window.closeInfoModal = closeInfoModal;
+window.switchInfoTab = switchInfoTab;
 
 window.addEventListener("DOMContentLoaded", () => {
     connectWebSocket();

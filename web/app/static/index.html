@@ -48,7 +48,7 @@
     <meta name="application-name" content="FizzBuzz">
     <meta name="msapplication-TileColor" content="#0b0f19">
 
-    <link rel="stylesheet" href="/static/styles.css?v=20261027-4">
+    <link rel="stylesheet" href="/static/styles.css?v=20261028-1">
 </head>
 <body>
     <div class="court-container">
@@ -56,9 +56,21 @@
         <header class="court-header">
             <div class="header-left">
                 <span class="court-icon">⚖️</span>
-                <div>
-                    <h1 class="court-title">FizzBuzz: The Inquisition</h1>
-                    <div class="court-sub">17 Agent Swarm - No Modulo - No Division</div>
+                <div class="court-title-block">
+                    <div class="court-title-row">
+                        <h1 class="court-title">FizzBuzz: The Inquisition</h1>
+                        <button type="button"
+                                class="btn-help-bubble header-help-btn"
+                                id="header-help-btn"
+                                onclick="openInfoModal('swarm')"
+                                title="Tribunal Guide: 17 Agent Swarm &amp; Modulo-Free Digital Root System"
+                                aria-label="Tribunal Guide">?</button>
+                    </div>
+                    <div class="court-sub">
+                        <a href="#swarm-guide" class="court-sub-link" id="swarm-guide-link" onclick="openInfoModal('swarm'); return false;">17 Agent Swarm</a>
+                        <span class="court-sub-sep">-</span>
+                        <a href="#math-guide" class="court-sub-link" id="math-guide-link" onclick="openInfoModal('math'); return false;">No modulo or division</a>
+                    </div>
                 </div>
             </div>
             <div class="header-metrics">
@@ -280,12 +292,317 @@
         </div>
     </div>
 
-    <script src="/static/app.js?v=20261027-4"></script>
+    <!-- Tribunal Guide Modal: 17 Agent Swarm & No Modulo or Division -->
+    <div class="modal-overlay hidden" id="info-modal">
+        <div class="modal-dialog info-dialog">
+            <div class="modal-header info-modal-header">
+                <div>
+                    <h2 id="info-modal-title">⚖️ Zero-Trust Byzantine Tribunal Guide</h2>
+                    <div class="modal-case-meta">Architectural Dossier: 17 Agent Swarm &amp; Modulo-Free Digital Root System</div>
+                </div>
+                <button class="modal-close-btn" onclick="closeInfoModal()" title="Close Guide">&times;</button>
+            </div>
+
+            <div class="info-modal-tabs">
+                <button type="button" class="info-tab-btn active" id="info-tab-btn-swarm" onclick="switchInfoTab('swarm')">
+                    👥 17 Agent Swarm (Roles &amp; Duties)
+                </button>
+                <button type="button" class="info-tab-btn" id="info-tab-btn-math" onclick="switchInfoTab('math')">
+                    🔢 No modulo or division (Digital Root &amp; Glyph System)
+                </button>
+            </div>
+
+            <!-- Tab 1: 17 Agent Swarm Static Directory -->
+            <div class="modal-body info-tab-panel" id="info-panel-swarm">
+                <div class="info-intro-banner">
+                    Every integer submitted to the docket is adjudicated by a specialized <strong>17-Agent Swarm</strong> operating under a Byzantine Fault-Tolerant consensus workflow. Each role has distinct statutory authority, adversarial incentives, and verification duties:
+                </div>
+
+                <div class="swarm-roles-grid">
+                    <div class="swarm-role-card judge">
+                        <img src="/static/avatars/judge_baz.png" alt="Judge Baz" class="swarm-role-avatar" loading="lazy">
+                        <div class="swarm-role-details">
+                            <div class="swarm-role-header">
+                                <strong>1. Judge Baz</strong>
+                                <span class="swarm-phase-badge">Phase 0C &amp; Phase 7</span>
+                            </div>
+                            <div class="swarm-role-title">Presiding Magistrate</div>
+                            <p>Sovereign Chief Justice of the Byzantine Appellate Board. Orders factions into closed-door chambers, presides over en banc appellate review, overrules or ratifies remand petitions, dissolves stays with prejudice, and orders the final consensus token emitted.</p>
+                        </div>
+                    </div>
+
+                    <div class="swarm-role-card bailiff">
+                        <img src="/static/avatars/bailiff_bar.png" alt="Bailiff Bar" class="swarm-role-avatar" loading="lazy">
+                        <div class="swarm-role-details">
+                            <div class="swarm-role-header">
+                                <strong>2. Bailiff Bar</strong>
+                                <span class="swarm-phase-badge">Phase 0A &amp; Floor Security</span>
+                            </div>
+                            <div class="swarm-role-title">Sergeant-at-Arms</div>
+                            <p>Calls the courtroom to order, enforces the Zero-Trust Modulo-Free Accord, summons factions from private chambers to the adversarial floor, and proclaims an immediate emergency Mistrial if inference quorum is severed.</p>
+                        </div>
+                    </div>
+
+                    <div class="swarm-role-card historian">
+                        <img src="/static/avatars/historian.png" alt="The Court Historian" class="swarm-role-avatar" loading="lazy">
+                        <div class="swarm-role-details">
+                            <div class="swarm-role-header">
+                                <strong>3. The Court Historian</strong>
+                                <span class="swarm-phase-badge">Phase 0B</span>
+                            </div>
+                            <div class="swarm-role-title">Clerk of the Sacred Precedent</div>
+                            <p>Audits the persistent SQLite ledger before arguments begin, reporting total adjudicated dockets, prior proceedings for the current number, and whether the payload is bound by <em>stare decisis</em> or is a Case of First Impression.</p>
+                        </div>
+                    </div>
+
+                    <div class="swarm-role-card historian">
+                        <img src="/static/avatars/court_clerk.png" alt="The Court Clerk" class="swarm-role-avatar" loading="lazy">
+                        <div class="swarm-role-details">
+                            <div class="swarm-role-header">
+                                <strong>4. The Court Clerk</strong>
+                                <span class="swarm-phase-badge">Pre-Trial &amp; Ledger</span>
+                            </div>
+                            <div class="swarm-role-title">Deterministic Zero-Trust Execution Engine</div>
+                            <p>Executes pure string-based arithmetic in <code>primitives.py</code> without <code>%</code> or <code>/</code>, manages the 1-deep priority docket queue and statutory range expansion, and commits certified transcripts to the SQLite database.</p>
+                        </div>
+                    </div>
+
+                    <div class="swarm-role-card fizz">
+                        <img src="/static/avatars/fizz_strategist.png" alt="Fizz Quantitative Strategist" class="swarm-role-avatar" loading="lazy">
+                        <div class="swarm-role-details">
+                            <div class="swarm-role-header">
+                                <strong>5. Fizz Quantitative Strategist</strong>
+                                <span class="swarm-phase-badge">Phase 1A (In-Camera)</span>
+                            </div>
+                            <div class="swarm-role-title">In-Camera Base-3 Tactician</div>
+                            <p>Confers behind closed doors with Lobbyist-3 in the Fizz Private Chamber. Audits the recursive digital root trace and formulates courtroom strategy—either asserting exclusive Rule 42-B domain or crafting a procedural bluff.</p>
+                        </div>
+                    </div>
+
+                    <div class="swarm-role-card fizz">
+                        <img src="/static/avatars/lobbyist_3.png" alt="Lobbyist-3" class="swarm-role-avatar" loading="lazy">
+                        <div class="swarm-role-details">
+                            <div class="swarm-role-header">
+                                <strong>6. Lobbyist-3</strong>
+                                <span class="swarm-phase-badge">Phase 1A, 2 &amp; 6</span>
+                            </div>
+                            <div class="swarm-role-title">Fizz Consortium Floor Counsel</div>
+                            <p>Lead courtroom litigator for the Base-3 Fizz Consortium. Confers in chambers, delivers opening floor petitions and adversarial rebuttals under Rule 42-B, and enters the Fizz Consortium's floor ratification or remand plea.</p>
+                        </div>
+                    </div>
+
+                    <div class="swarm-role-card buzz">
+                        <img src="/static/avatars/buzz_inspector.png" alt="Buzz Boundary Inspector" class="swarm-role-avatar" loading="lazy">
+                        <div class="swarm-role-details">
+                            <div class="swarm-role-header">
+                                <strong>7. Buzz Boundary Inspector</strong>
+                                <span class="swarm-phase-badge">Phase 1B (In-Camera)</span>
+                            </div>
+                            <div class="swarm-role-title">In-Camera Base-5 Tactician</div>
+                            <p>Confers behind closed doors with Lobbyist-5 in the Buzz Private Chamber. Inspects the rightmost terminal character under Article V and locks in the Buzz Syndicate's litigation posture prior to entering open court.</p>
+                        </div>
+                    </div>
+
+                    <div class="swarm-role-card buzz">
+                        <img src="/static/avatars/lobbyist_5.png" alt="Lobbyist-5" class="swarm-role-avatar" loading="lazy">
+                        <div class="swarm-role-details">
+                            <div class="swarm-role-header">
+                                <strong>8. Lobbyist-5</strong>
+                                <span class="swarm-phase-badge">Phase 1B, 2 &amp; 6</span>
+                            </div>
+                            <div class="swarm-role-title">Buzz Syndicate Floor Counsel</div>
+                            <p>Lead courtroom litigator for the Base-5 Buzz Syndicate. Confers in private chambers, argues terminal boundary petitions and rebuttals under Article V, and delivers the Buzz Syndicate's floor ratification or remand plea.</p>
+                        </div>
+                    </div>
+
+                    <div class="swarm-role-card auditor">
+                        <img src="/static/avatars/forensic_auditor.png" alt="The Forensic Auditor" class="swarm-role-avatar" loading="lazy">
+                        <div class="swarm-role-details">
+                            <div class="swarm-role-header">
+                                <strong>9. The Forensic Auditor</strong>
+                                <span class="swarm-phase-badge">Phase 3</span>
+                            </div>
+                            <div class="swarm-role-title">Cryptographic Special Master</div>
+                            <p>Independent zero-trust verifier. Audits the recursive digital root (<code>{3, 6, 9}</code>) and terminal glyph (<code>{'0', '5'}</code>) on the open record, exposes cartel bluffs, and issues binding <code>PASS</code> or <code>REJECT</code> findings for both factions.</p>
+                        </div>
+                    </div>
+
+                    <div class="swarm-role-card regulator">
+                        <img src="/static/avatars/antitrust_regulator.png" alt="The Antitrust Regulator" class="swarm-role-avatar" loading="lazy">
+                        <div class="swarm-role-details">
+                            <div class="swarm-role-header">
+                                <strong>10. The Antitrust Regulator</strong>
+                                <span class="swarm-phase-badge">Phase 4</span>
+                            </div>
+                            <div class="swarm-role-title">Director of Algorithmic Competition</div>
+                            <p>Polices cartel monopoly concentration. When both Fizz and Buzz pass the Forensic Audit on a collision (e.g. <code>15</code>), blocks unilateral monopoly and enters a Merger Consent Decree licensing <code>FizzBuzz</code> with a 50/50 KPI split.</p>
+                        </div>
+                    </div>
+
+                    <div class="swarm-role-card fizz">
+                        <img src="/static/avatars/fizz_appellate.png" alt="Fizz Appellate Team" class="swarm-role-avatar" loading="lazy">
+                        <div class="swarm-role-details">
+                            <div class="swarm-role-header">
+                                <strong>11. Fizz Appellate Litigation Team</strong>
+                                <span class="swarm-phase-badge">Phase 5A</span>
+                            </div>
+                            <div class="swarm-role-title">Base-3 Constitutional Counsel</div>
+                            <p>Advises Lobbyist-3 after the regulatory ruling on whether to ratify an uncontested 100% Fizz award, grudgingly concede an indisputable mathematical loss, or file exceptions demanding appellate remand.</p>
+                        </div>
+                    </div>
+
+                    <div class="swarm-role-card buzz">
+                        <img src="/static/avatars/buzz_appellate.png" alt="Buzz Appellate Team" class="swarm-role-avatar" loading="lazy">
+                        <div class="swarm-role-details">
+                            <div class="swarm-role-header">
+                                <strong>12. Buzz Appellate Litigation Team</strong>
+                                <span class="swarm-phase-badge">Phase 5B</span>
+                            </div>
+                            <div class="swarm-role-title">Base-5 Boundary Counsel</div>
+                            <p>Advises Lobbyist-5 after the regulatory ruling on whether to ratify a 100% Buzz victory, concede a boundary rejection, or contest a 50/50 merger split before Judge Baz.</p>
+                        </div>
+                    </div>
+
+                    <div class="swarm-role-card orator">
+                        <img src="/static/avatars/orator_fizz.png" alt="Director General of the Base-3 Realm" class="swarm-role-avatar" loading="lazy">
+                        <div class="swarm-role-details">
+                            <div class="swarm-role-header">
+                                <strong>13. Director General of the Base-3 Realm</strong>
+                                <span class="swarm-phase-badge">Phase 8 (Fizz Win)</span>
+                            </div>
+                            <div class="swarm-role-title">Fizz Consortium Victory Orator</div>
+                            <p>Takes the podium at the conclusion of any docket won exclusively by <code>Fizz</code> to celebrate Base-3 digital root supremacy over the Buzz Syndicate.</p>
+                        </div>
+                    </div>
+
+                    <div class="swarm-role-card orator">
+                        <img src="/static/avatars/orator_buzz.png" alt="High Chancellor of the Base-5 Syndicate" class="swarm-role-avatar" loading="lazy">
+                        <div class="swarm-role-details">
+                            <div class="swarm-role-header">
+                                <strong>14. High Chancellor of the Base-5 Syndicate</strong>
+                                <span class="swarm-phase-badge">Phase 8 (Buzz Win)</span>
+                            </div>
+                            <div class="swarm-role-title">Buzz Syndicate Victory Orator</div>
+                            <p>Takes the podium at the conclusion of any docket won exclusively by <code>Buzz</code> to proclaim Article V terminal glyph sovereignty.</p>
+                        </div>
+                    </div>
+
+                    <div class="swarm-role-card orator">
+                        <img src="/static/avatars/orator_fizzbuzz.png" alt="Joint Co-CEOs of FizzBuzz Conglomerate" class="swarm-role-avatar" loading="lazy">
+                        <div class="swarm-role-details">
+                            <div class="swarm-role-header">
+                                <strong>15. Joint Co-CEOs of FizzBuzz Conglomerate</strong>
+                                <span class="swarm-phase-badge">Phase 8 (Merger Win)</span>
+                            </div>
+                            <div class="swarm-role-title">Merger Victory Orators</div>
+                            <p>Deliver the joint executive victory address whenever a dual-valid collision (<code>15</code>, <code>30</code>, <code>45</code>...) results in a mandatory <code>FizzBuzz</code> corporate merger.</p>
+                        </div>
+                    </div>
+
+                    <div class="swarm-role-card orator">
+                        <img src="/static/avatars/orator_tribune.png" alt="Tribune of the Free Independent Digits" class="swarm-role-avatar" loading="lazy">
+                        <div class="swarm-role-details">
+                            <div class="swarm-role-header">
+                                <strong>16. Tribune of the Free Independent Digits</strong>
+                                <span class="swarm-phase-badge">Phase 8 (Digit Win)</span>
+                            </div>
+                            <div class="swarm-role-title">Public Domain Victory Orator</div>
+                            <p>Champion of uncaptured numbers. Delivers a defiant victory address whenever an integer (e.g. <code>548</code>) resists both corporate cartels and is emitted unaltered into the public domain.</p>
+                        </div>
+                    </div>
+
+                    <div class="swarm-role-card news">
+                        <img src="/static/avatars/fun_anchor.png" alt="Foo Universal News Anchor Desk" class="swarm-role-avatar" loading="lazy">
+                        <div class="swarm-role-details">
+                            <div class="swarm-role-header">
+                                <strong>17. Foo Universal News (FUN) — Anchor Desk</strong>
+                                <span class="swarm-phase-badge">Phase 9 (Recess)</span>
+                            </div>
+                            <div class="swarm-role-title">Parliamentary Recess Broadcast Desk</div>
+                            <p>Takes the airwaves during the 30-second parliamentary recess at the end of every docket to deliver a live satirical courtroom recap and parody headline.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: No Modulo or Division (Digital Root & Glyph System) -->
+            <div class="modal-body info-tab-panel hidden" id="info-panel-math">
+                <div class="info-intro-banner">
+                    Under the <strong>Zero-Trust Modulo-Free Accord</strong>, hardware division instructions (<code>/</code>, <code>//</code>), modulo operators (<code>%</code>), and <code>divmod()</code> are strictly outlawed. Every inbound integer is adjudicated purely as a sequence of ASCII characters using two deterministic primitives:
+                </div>
+
+                <div class="math-explainer-section fizz">
+                    <h3>1. Rule 42-B: The Recursive Digital Root System (<code>Fizz</code> / Base-3)</h3>
+                    <p>
+                        In base-10 arithmetic, every power of ten satisfies <code>10<sup>k</sup> &equiv; 1 (mod 3)</code>. Consequently, any integer has the exact same divisibility by 3 as the sum of its decimal digits.
+                    </p>
+                    <p>
+                        Instead of dividing by 3, the tribunal repeatedly sums the ASCII digits of the payload using a lookup table until a single-digit <strong>Digital Root</strong> (<code>0</code>&ndash;<code>9</code>) remains:
+                    </p>
+                    <div class="math-example-box">
+                        <div><strong>Certification Set:</strong> <code>FIZZ_ROOTS = {'3', '6', '9', '0'}</code></div>
+                        <div><strong>Example A (Payload <code>'987'</code>):</strong> <code>9 + 8 + 7 = 24</code> &rarr; <code>2 + 4 = 6</code>. Digital Root is <code>'6'</code> &isin; <code>{'3', '6', '9'}</code> &rarr; <span class="token-badge fizz">Fizz PASS</span></div>
+                        <div><strong>Example B (Payload <code>'548'</code>):</strong> <code>5 + 4 + 8 = 17</code> &rarr; <code>1 + 7 = 8</code>. Digital Root is <code>'8'</code> &notin; <code>{'3', '6', '9'}</code> &rarr; <span class="token-badge raw">Fizz REJECT</span></div>
+                    </div>
+                </div>
+
+                <div class="math-explainer-section buzz">
+                    <h3>2. Article V: The Terminal Boundary Glyph System (<code>Buzz</code> / Base-5)</h3>
+                    <p>
+                        Because <code>10 = 2 &times; 5</code>, every tens, hundreds, and higher decimal place is already an exact multiple of 5. Divisibility by 5 therefore depends exclusively on the rightmost character of the string (<code>payload[-1]</code>), known in court as the <strong>Terminal Glyph</strong>.
+                    </p>
+                    <div class="math-example-box">
+                        <div><strong>Certification Set:</strong> <code>BUZZ_GLYPHS = {'0', '5'}</code></div>
+                        <div><strong>Example A (Payload <code>'545'</code>):</strong> Rightmost glyph is <code>'5'</code> &isin; <code>{'0', '5'}</code> &rarr; <span class="token-badge buzz">Buzz PASS</span></div>
+                        <div><strong>Example B (Payload <code>'548'</code>):</strong> Rightmost glyph is <code>'8'</code> &notin; <code>{'0', '5'}</code> &rarr; <span class="token-badge raw">Buzz REJECT</span></div>
+                    </div>
+                </div>
+
+                <div class="math-explainer-section auditor">
+                    <h3>3. Byzantine Consensus Matrix (No Modulo, No Division)</h3>
+                    <div class="math-matrix-grid">
+                        <div class="math-matrix-row header">
+                            <span>Digital Root</span>
+                            <span>Terminal Glyph</span>
+                            <span>Forensic Audit</span>
+                            <span>Emitted Token</span>
+                        </div>
+                        <div class="math-matrix-row">
+                            <span><code>&isin; {'3', '6', '9'}</code></span>
+                            <span><code>&notin; {'0', '5'}</code></span>
+                            <span>Fizz PASS / Buzz REJECT</span>
+                            <span><span class="token-badge fizz">Fizz</span></span>
+                        </div>
+                        <div class="math-matrix-row">
+                            <span><code>&notin; {'3', '6', '9'}</code></span>
+                            <span><span><code>&isin; {'0', '5'}</code></span></span>
+                            <span>Fizz REJECT / Buzz PASS</span>
+                            <span><span class="token-badge buzz">Buzz</span></span>
+                        </div>
+                        <div class="math-matrix-row">
+                            <span><code>&isin; {'3', '6', '9'}</code></span>
+                            <span><code>&isin; {'0', '5'}</code></span>
+                            <span>Dual Collision (Antitrust Merger)</span>
+                            <span><span class="token-badge fizzbuzz">FizzBuzz</span></span>
+                        </div>
+                        <div class="math-matrix-row">
+                            <span><code>&notin; {'3', '6', '9'}</code></span>
+                            <span><code>&notin; {'0', '5'}</code></span>
+                            <span>Both Cartels Rejected</span>
+                            <span><span class="token-badge raw">Raw Digit (e.g. '548')</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/app.js?v=20261028-1"></script>
     <script>
         // PWA Service Worker Registration with immediate update check
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js?v=20261027-4', { scope: '/' })
+                navigator.serviceWorker.register('/sw.js?v=20261028-1', { scope: '/' })
                     .then((reg) => {
                         reg.update();
                         console.log('[PWA] Service Worker registered successfully. Scope:', reg.scope);

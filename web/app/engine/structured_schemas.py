@@ -1,8 +1,9 @@
 """
 Pydantic schemas for structured LLM outputs in Byzantine FizzBuzz.
-Enforces typed JSON output from Ollama with explicit action choices and metadata.
-All properties exported to Ollama's JSON Schema are marked 'required' with 'speech' first
-and 'action' last, ensuring the LLM reasons through its speech before emitting its decision enum.
+Enforces typed JSON output from Ollama with explicit action choices and public social media status.
+All properties exported to Ollama's JSON Schema are marked 'required' with 'speech' first,
+then 'action', and finally 'status' (public social media status), ensuring the LLM reasons
+through its main speech first, selects its formal action, and finishes with its public status.
 """
 
 from typing import Literal, Dict, Any, ClassVar, Set
@@ -13,8 +14,8 @@ class StrictStructuredModel(BaseModel):
     """
     Base model for Ollama structured outputs.
     Ensures that all exported schema properties are listed in 'required' in declaration order
-    (starting with 'speech' and ending with 'action') so Ollama's GBNF grammar forces the LLM
-    to emit every field rather than stopping early after 'speech'.
+    (starting with 'speech', followed by 'action', and ending with 'status') so Ollama's GBNF
+    grammar forces the LLM to emit every field rather than stopping early after 'speech'.
     Redundant derived fields in `_ollama_excluded_fields` are kept on the Python model for
     compatibility and telemetry, but excluded from the GBNF grammar to prevent LLM self-contradiction.
     """
@@ -44,6 +45,29 @@ class BailiffAnnouncement(StrictStructuredModel):
         default="call_to_order",
         description="Formal action taken by the bailiff"
     )
+    status: str = Field(
+        default="Keeping order in the court",
+        description="Short 2-to-5 word public social media status for Bailiff Bar"
+    )
+
+
+class HistorianPrecedentReport(StrictStructuredModel):
+    """The Court Historian reports archival precedent status."""
+    speech: str = Field(
+        description="Two formal sentences reporting total archive records, prior proceedings for the current payload, and precedent status"
+    )
+    action: Literal[
+        "enter_case_of_first_impression",
+        "cite_binding_precedent",
+        "schedule_mistrial_retrial"
+    ] = Field(
+        default="enter_case_of_first_impression",
+        description="Formal archival action recorded by the Court Historian"
+    )
+    status: str = Field(
+        default="Indexing the sacred ledger",
+        description="Short 2-to-5 word public social media status for The Court Historian"
+    )
 
 
 class JudgeBazChamberOrder(StrictStructuredModel):
@@ -58,6 +82,10 @@ class JudgeBazChamberOrder(StrictStructuredModel):
     action: Literal["release_to_private_deliberations", "order_private_caucus"] = Field(
         default="release_to_private_deliberations",
         description="Formal judicial action releasing parties to private chambers"
+    )
+    status: str = Field(
+        default="Gavel polished and ready",
+        description="Short 2-to-5 word public social media status for Judge Baz"
     )
 
 
@@ -89,6 +117,10 @@ class StrategyConferralTurn(StrictStructuredModel):
         default="confer_further",
         description="Action choice: 'confer_further' to ask your chamber counterpart for input, or 'proceed_to_court' to conclude private deliberations and enter open court"
     )
+    status: str = Field(
+        default="Plotting behind closed doors",
+        description="Short 2-to-5 word public social media status for the chamber strategist or counsel"
+    )
 
     @model_validator(mode="after")
     def _sync_readiness_and_confidence(self) -> "StrategyConferralTurn":
@@ -117,6 +149,10 @@ class FloorPetition(StrictStructuredModel):
         default="petition_claim",
         description="Action taken on the court floor"
     )
+    status: str = Field(
+        default="Litigating for cartel dominance",
+        description="Short 2-to-5 word public social media status for the floor lobbyist"
+    )
 
 
 class ForensicAuditReport(StrictStructuredModel):
@@ -141,6 +177,10 @@ class ForensicAuditReport(StrictStructuredModel):
         default="reject_all_claims",
         description="Formal forensic certification action"
     )
+    status: str = Field(
+        default="Trusting zero modulo claims",
+        description="Short 2-to-5 word public social media status for The Forensic Auditor"
+    )
 
 
 class AntitrustDetermination(StrictStructuredModel):
@@ -164,6 +204,10 @@ class AntitrustDetermination(StrictStructuredModel):
         default="clear_independent_payload",
         description="Formal regulatory action issued by the Antitrust Regulator"
     )
+    status: str = Field(
+        default="Busting algorithmic monopolies",
+        description="Short 2-to-5 word public social media status for The Antitrust Regulator"
+    )
 
 
 class AppellateBriefing(StrictStructuredModel):
@@ -183,6 +227,10 @@ class AppellateBriefing(StrictStructuredModel):
         default="advise_ratification",
         description="Formal appellate counsel directive"
     )
+    status: str = Field(
+        default="Drafting appellate exceptions",
+        description="Short 2-to-5 word public social media status for the Appellate Litigation Team"
+    )
 
 
 class RatificationPlea(StrictStructuredModel):
@@ -199,6 +247,10 @@ class RatificationPlea(StrictStructuredModel):
     action: Literal["accept", "decline_and_demand_remand"] = Field(
         default="accept",
         description="Ratification decision: 'accept' to ratify/concede the outcome, or 'decline_and_demand_remand' to file exceptions and demand remand"
+    )
+    status: str = Field(
+        default="Filing floor ratification plea",
+        description="Short 2-to-5 word public social media status for the floor lobbyist"
     )
 
     @model_validator(mode="after")
@@ -225,4 +277,28 @@ class JudgeBazRuling(StrictStructuredModel):
     action: Literal["ratify_uncontested", "order_remand_and_emit", "dissolve_stays_and_emit"] = Field(
         default="dissolve_stays_and_emit",
         description="Final judicial order issued by Judge Baz"
+    )
+    status: str = Field(
+        default="Protecting free digits",
+        description="Short 2-to-5 word public social media status for Judge Baz"
+    )
+
+
+class VictoryAddressReport(StrictStructuredModel):
+    """Constituent Orator victory address."""
+    speech: str = Field(
+        description="Two grandiose or defiant sentences celebrating the certified consensus emission"
+    )
+    action: Literal[
+        "celebrate_fizz_supremacy",
+        "celebrate_buzz_supremacy",
+        "celebrate_synergistic_merger",
+        "proclaim_digital_independence"
+    ] = Field(
+        default="proclaim_digital_independence",
+        description="Formal constituent victory action"
+    )
+    status: str = Field(
+        default="Protecting free digits",
+        description="Short 2-to-5 word public social media status for the Constituent Orator"
     )

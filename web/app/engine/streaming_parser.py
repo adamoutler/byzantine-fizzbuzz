@@ -269,6 +269,7 @@ class ResilientParser:
         # Attempt 3: Regex heuristic extraction of key fields
         speech_match = re.search(r'"speech":\s*"((?:[^"\\]|\\.)*)"', cleaned)
         action_match = re.search(r'"action":\s*"([^"]+)"', cleaned)
+        status_match = re.search(r'"status":\s*"((?:[^"\\]|\\.)*)"', cleaned)
         ready_match = re.search(r'"ready_for_court":\s*(true|false)', cleaned, re.IGNORECASE)
 
         extracted_speech = ""
@@ -286,6 +287,11 @@ class ResilientParser:
         }
         if action_match:
             synth_dict["action"] = action_match.group(1)
+        if status_match:
+            try:
+                synth_dict["status"] = json.loads(f'"{status_match.group(1)}"')
+            except Exception:
+                synth_dict["status"] = status_match.group(1)
         if ready_match:
             synth_dict["ready_for_court"] = ready_match.group(1).lower() == "true"
 

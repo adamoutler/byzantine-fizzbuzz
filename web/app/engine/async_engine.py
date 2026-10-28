@@ -17,6 +17,7 @@ from app.engine.streaming_parser import StreamingFieldExtractor, ResilientParser
 from app.engine.fun_news import fun_news_desk
 from app.engine.structured_schemas import (
     BailiffAnnouncement,
+    HistorianPrecedentReport,
     JudgeBazChamberOrder,
     StrategyConferralTurn,
     FloorPetition,
@@ -24,7 +25,8 @@ from app.engine.structured_schemas import (
     AntitrustDetermination,
     AppellateBriefing,
     RatificationPlea,
-    JudgeBazRuling
+    JudgeBazRuling,
+    VictoryAddressReport
 )
 
 logger = logging.getLogger("byzantine.engine")
@@ -160,6 +162,9 @@ class AsyncByzantineConsensusEngine:
                     pass
 
             action_val = getattr(parsed_model, "action", force_action) if parsed_model is not None else force_action
+            status_val = getattr(parsed_model, "status", None) if parsed_model is not None else None
+            if status_val:
+                status_val = str(status_val).strip().strip("_*\"'")
 
             await self.observer_mgr.broadcast({
                 "event": "SPEECH_COMPLETE",
@@ -171,6 +176,7 @@ class AsyncByzantineConsensusEngine:
                 "speaker_role": speaker_role,
                 "full_text": full_text,
                 "action": action_val,
+                "status": status_val,
                 "structured_data": parsed_model.model_dump() if parsed_model else None,
                 "timestamp": time.time()
             })
@@ -191,6 +197,7 @@ class AsyncByzantineConsensusEngine:
                 "speaker_role": speaker_role,
                 "full_text": interrupted_text,
                 "action": "quorum_severed",
+                "status": "Connection severed mid-testimony",
                 "structured_data": None,
                 "timestamp": time.time()
             })
@@ -212,7 +219,8 @@ class AsyncByzantineConsensusEngine:
         speech_text: str,
         action: str,
         structured_data: Optional[Dict[str, Any]] = None,
-        token_delay: Optional[float] = None
+        token_delay: Optional[float] = None,
+        status: Optional[str] = None
     ) -> str:
         """Streams an official statutory proclamation or broadcast word by word."""
         await self.observer_mgr.broadcast({
@@ -255,6 +263,7 @@ class AsyncByzantineConsensusEngine:
             "speaker_role": speaker_role,
             "full_text": speech_text,
             "action": action,
+            "status": status,
             "structured_data": structured_data,
             "timestamp": time.time()
         })
@@ -288,7 +297,8 @@ class AsyncByzantineConsensusEngine:
                 "network": "Foo Universal News (FUN)",
                 "parody_headline": transcript.get("fun_parody_headline", "")
             },
-            token_delay=teleprompter_delay
+            token_delay=teleprompter_delay,
+            status="Live from the FUN studio"
         )
 
     async def adjudicate(self, payload: str, source: str, range_end: int = 10) -> Dict[str, Any]:
@@ -375,7 +385,8 @@ class AsyncByzantineConsensusEngine:
                     "action": "declare_mistrial",
                     "interrupted_phase": me.phase_name,
                     "interrupted_speaker": me.speaker
-                }
+                },
+                status="Suspending floor proceedings"
             )
             transcript["bailiff_mistrial_proclamation"] = bailiff_mistrial_speech
 
@@ -405,7 +416,8 @@ class AsyncByzantineConsensusEngine:
                     "action": "order_retrial_before_expansion",
                     "retrial_scheduled_for": retrial_date_str,
                     "retrial_before_max_increase": range_end
-                }
+                },
+                status="Calendaring de novo retrial"
             )
             provisional_token = "Mistrial"
             verdict_desc = (
@@ -488,7 +500,8 @@ class AsyncByzantineConsensusEngine:
                     "Output valid JSON with keys in this exact order:\n"
                     "- 'speech': Your 2-sentence ceremonial call to order.\n"
                     "- 'presiding_judge': Exactly 'Judge Baz'.\n"
-                    "- 'action': Choose 'call_to_order' or 'swear_in_factions'."
+                    "- 'action': Choose 'call_to_order' or 'swear_in_factions'.\n"
+                    "- 'status': Short 2-to-5 word public social media status (e.g. 'Keeping order in the court')."
                 )
             },
             {
@@ -514,7 +527,11 @@ class AsyncByzantineConsensusEngine:
             bailiff_prompt, case_id, payload, 0, phase0a_name, "Bailiff Bar", "bailiff",
             fallback_text=bailiff_fallback,
             model_cls=BailiffAnnouncement,
-            fallback_overrides={"action": "call_to_order", "presiding_judge": "Judge Baz"}
+            fallback_overrides={
+                "action": "call_to_order",
+                "presiding_judge": "Judge Baz",
+                "status": "Keeping order in the court"
+            }
         )
         transcript["bailiff_proclamation"] = bailiff_speech
         if config.phase_delay_seconds > 0:
@@ -524,6 +541,13 @@ class AsyncByzantineConsensusEngine:
         # PHASE 0B: COURT HISTORIAN REVIEW
         # -----------------------------------------------------------------
         phase0b_name = "Court Historian Precedent Review"
+        historian_schema_guide = (
+            "\n\n[STRUCTURED OUTPUT SCHEMA]:\n"
+            "Output valid JSON with keys in this exact order:\n"
+            "- 'speech': Your 2-sentence archival precedent report.\n"
+            "- 'action': Choose 'enter_case_of_first_impression', 'cite_binding_precedent', or 'schedule_mistrial_retrial'.\n"
+            "- 'status': Short 2-to-5 word public social media status (e.g. 'Indexing the sacred ledger')."
+        )
 
         if prior_rulings:
             prev = prior_rulings[0]
@@ -532,6 +556,8 @@ class AsyncByzantineConsensusEngine:
             prev_verdict = prev["verdict"]
             prev_date = time.strftime('%Y-%m-%d %H:%M:%S UTC', time.gmtime(prev["adjudicated_at"]))
             if prev_token == "Mistrial":
+                historian_action = "schedule_mistrial_retrial"
+                historian_status = "Tracking de novo retrials"
                 historian_prompt = [
                     {
                         "role": "system",
@@ -543,6 +569,7 @@ class AsyncByzantineConsensusEngine:
                             f"3. Last Proceeding on Current Number ('{payload}'): Docket {prev_case} (on {prev_date}), which ended in an Official Mistrial without prejudice ({prev_verdict}).\n"
                             f"In 2 eloquent sentences: state the total archive record count ({total_cases}), state that payload '{payload}' has {payload_prior_count} prior proceeding(s) on record, "
                             f"and note that because Docket {prev_case} was declared a Mistrial without prejudice, payload '{payload}' now returns for mandatory de novo retrial."
+                            + historian_schema_guide
                         )
                     },
                     {
@@ -555,6 +582,8 @@ class AsyncByzantineConsensusEngine:
                     f"Because Docket {prev_case} on {prev_date} ended in an Official Mistrial without prejudice, payload '{payload}' now stands before the Court for mandatory de novo retrial."
                 )
             else:
+                historian_action = "cite_binding_precedent"
+                historian_status = "Citing binding stare decisis"
                 historian_prompt = [
                     {
                         "role": "system",
@@ -566,6 +595,7 @@ class AsyncByzantineConsensusEngine:
                             f"3. Last Ruling on Current Number ('{payload}'): Docket {prev_case} (adjudicated on {prev_date}), which emitted certified consensus token '{prev_token}' ({prev_verdict}).\n"
                             f"In 2 eloquent sentences: state the total archive record count ({total_cases}), state that payload '{payload}' has {payload_prior_count} prior precedent(s), "
                             f"and cite the last ruling on payload '{payload}' (Docket {prev_case}, emitting '{prev_token}') as binding stare decisis."
+                            + historian_schema_guide
                         )
                     },
                     {
@@ -578,6 +608,8 @@ class AsyncByzantineConsensusEngine:
                     f"In the last ruling on payload '{payload}' (Docket {prev_case} on {prev_date}), this court emitted certified consensus token '{prev_token}', which stands as binding stare decisis."
                 )
         else:
+            historian_action = "enter_case_of_first_impression"
+            historian_status = "Indexing the sacred ledger"
             historian_prompt = [
                 {
                     "role": "system",
@@ -590,6 +622,7 @@ class AsyncByzantineConsensusEngine:
                         f"In 2 eloquent sentences: state that the tribunal archive contains {total_cases} total records across all numbers, "
                         f"confirm that payload '{payload}' has 0 prior precedents and no previous ruling on record, "
                         f"and proclaim payload '{payload}' a Case of First Impression under the Modulo-Free Accord."
+                        + historian_schema_guide
                     )
                 },
                 {
@@ -614,7 +647,10 @@ class AsyncByzantineConsensusEngine:
         })
         historian_speech, _ = await self.stream_ollama(
             historian_prompt, case_id, payload, 0, phase0b_name, "The Court Historian", "historian",
-            fallback_text=historian_fallback
+            fallback_text=historian_fallback,
+            model_cls=HistorianPrecedentReport,
+            fallback_overrides={"action": historian_action, "status": historian_status},
+            force_action=historian_action
         )
         transcript["historian_statement"] = historian_speech
         if config.phase_delay_seconds > 0:
@@ -638,7 +674,8 @@ class AsyncByzantineConsensusEngine:
                     "Output valid JSON with keys in this exact order:\n"
                     "- 'speech': Your complete 2-sentence judicial decree (no colons at the end).\n"
                     "- 'presiding_judge': Exactly 'Judge Baz'.\n"
-                    "- 'action': Choose 'release_to_private_deliberations' or 'order_private_caucus'."
+                    "- 'action': Choose 'release_to_private_deliberations' or 'order_private_caucus'.\n"
+                    "- 'status': Short 2-to-5 word public social media status (e.g. 'Gavel polished and ready')."
                 )
             },
             {
@@ -665,7 +702,11 @@ class AsyncByzantineConsensusEngine:
             judge_chamber_prompt, case_id, payload, 0, phase0c_name, "Judge Baz, Presiding Magistrate", "judge",
             fallback_text=judge_chamber_fallback,
             model_cls=JudgeBazChamberOrder,
-            fallback_overrides={"action": "release_to_private_deliberations", "presiding_judge": "Judge Baz"}
+            fallback_overrides={
+                "action": "release_to_private_deliberations",
+                "presiding_judge": "Judge Baz",
+                "status": "Gavel polished and ready"
+            }
         )
         transcript["judge_chamber_order"] = judge_chamber_speech
         if config.phase_delay_seconds > 0:
@@ -682,7 +723,7 @@ class AsyncByzantineConsensusEngine:
 
         caucus_schema_guide = (
             "\n\n[STRUCTURED OUTPUT SCHEMA]:\n"
-            "Output valid JSON with keys in this exact order (reason in 'speech' first, then select your enums last):\n"
+            "Output valid JSON with keys in this exact order (reason in 'speech' first, then select your enums and status last):\n"
             "- 'speech': 2 concise sentences addressing your chamber counterpart.\n"
             "- 'strategy_choice': Choose ONE of:\n"
             "    * 'assert_exclusive_domain' (when your math is valid and exclusive)\n"
@@ -691,7 +732,8 @@ class AsyncByzantineConsensusEngine:
             "    * 'challenge_jurisdiction' (procedural bluff when your own math does not qualify)\n"
             "- 'action': Choose ONE of:\n"
             "    * 'confer_further' (to pass the floor to your chamber counterpart for confirmation)\n"
-            "    * 'proceed_to_court' (once strategy is agreed upon and you are ready to enter open court)"
+            "    * 'proceed_to_court' (once strategy is agreed upon and you are ready to enter open court)\n"
+            "- 'status': Short 2-to-5 word public social media status (e.g. 'Plotting behind closed doors')."
         )
 
         fizz_math_truth = (
@@ -926,6 +968,7 @@ class AsyncByzantineConsensusEngine:
             "speaker_role": "bailiff",
             "full_text": bailiff_floor_msg,
             "action": "summon_court_floor",
+            "status": "Summoning factions to floor",
             "timestamp": time.time()
         })
         if config.phase_delay_seconds > 0:
@@ -944,7 +987,8 @@ class AsyncByzantineConsensusEngine:
             "- 'speech': Two sharp, adversarial sentences presenting your floor petition or rebuttal.\n"
             "- 'cited_rule': Statutory rule cited (e.g. 'Rule 42-B' or 'Article V').\n"
             "- 'jurisdiction_claimed': Choose 'Fizz', 'Buzz', or 'None'.\n"
-            "- 'action': Choose 'petition_claim' (opening claim), 'rebut_claim' (rebutting rival), or 'waive_claim'."
+            "- 'action': Choose 'petition_claim' (opening claim), 'rebut_claim' (rebutting rival), or 'waive_claim'.\n"
+            "- 'status': Short 2-to-5 word public social media status (e.g. 'Claiming Base-3 sovereignty')."
         )
 
         fizz_floor_context = (
@@ -1109,7 +1153,8 @@ class AsyncByzantineConsensusEngine:
                     "- 'speech': 2 crisp sentences stating PASS or REJECT for Lobbyist-3 (Fizz) and Lobbyist-5 (Buzz) with exact root/glyph proof.\n"
                     f"- 'fizz_status': '{'PASS' if fizz_valid else 'REJECT'}'.\n"
                     f"- 'buzz_status': '{'PASS' if buzz_valid else 'REJECT'}'.\n"
-                    f"- 'action': Choose '{expected_audit_action}'."
+                    f"- 'action': Choose '{expected_audit_action}'.\n"
+                    "- 'status': Short 2-to-5 word public social media status (e.g. 'Trusting zero modulo claims')."
                 )
             },
             {
@@ -1141,7 +1186,8 @@ class AsyncByzantineConsensusEngine:
             fallback_overrides={
                 "fizz_status": "PASS" if fizz_valid else "REJECT",
                 "buzz_status": "PASS" if buzz_valid else "REJECT",
-                "action": expected_audit_action
+                "action": expected_audit_action,
+                "status": "Trusting zero modulo claims"
             },
             force_action=expected_audit_action
         )
@@ -1192,7 +1238,8 @@ class AsyncByzantineConsensusEngine:
                         "Output valid JSON with keys in this exact order:\n"
                         "- 'speech': Your 3-sentence merger arbitration decree.\n"
                         "- 'market_ruling': 'mandatory_fizzbuzz_merger'.\n"
-                        "- 'action': 'issue_merger_consent_decree'."
+                        "- 'action': 'issue_merger_consent_decree'.\n"
+                        "- 'status': Short 2-to-5 word public social media status (e.g. 'Enforcing 50/50 KPI split')."
                     )
                 },
                 {"role": "user", "content": f"Arbitrate mandatory merger for dual-claim payload '{payload}'."}
@@ -1216,7 +1263,8 @@ class AsyncByzantineConsensusEngine:
                         "Output valid JSON with keys in this exact order:\n"
                         "- 'speech': Your 2-sentence regulatory clearance statement.\n"
                         "- 'market_ruling': 'single_domain_clearance'.\n"
-                        "- 'action': 'grant_market_clearance'."
+                        "- 'action': 'grant_market_clearance'.\n"
+                        "- 'status': Short 2-to-5 word public social media status (e.g. 'Clearing single-domain market')."
                     )
                 },
                 {"role": "user", "content": f"Issue single-domain Market Clearance Order for payload '{payload}'."}
@@ -1239,7 +1287,8 @@ class AsyncByzantineConsensusEngine:
                         "Output valid JSON with keys in this exact order:\n"
                         "- 'speech': Your 2-sentence independent passthrough clearance.\n"
                         "- 'market_ruling': 'independent_passthrough'.\n"
-                        "- 'action': 'clear_independent_payload'."
+                        "- 'action': 'clear_independent_payload'.\n"
+                        "- 'status': Short 2-to-5 word public social media status (e.g. 'Protecting open market digits')."
                     )
                 },
                 {"role": "user", "content": f"Issue Independent Payload Clearance Order for payload '{payload}'."}
@@ -1265,7 +1314,8 @@ class AsyncByzantineConsensusEngine:
             model_cls=AntitrustDetermination,
             fallback_overrides={
                 "market_ruling": expected_antitrust_ruling,
-                "action": expected_antitrust_action
+                "action": expected_antitrust_action,
+                "status": "Busting algorithmic monopolies"
             },
             force_action=expected_antitrust_action
         )
@@ -1282,7 +1332,8 @@ class AsyncByzantineConsensusEngine:
             "Output valid JSON with keys in this exact order (do NOT use To:/From:/Subject: headers in speech):\n"
             "- 'speech': 2 concise sentences advising your faction's Lobbyist on the floor ratification plea.\n"
             "- 'recommended_plea': Choose 'accept' or 'decline_and_demand_remand'.\n"
-            "- 'action': Choose 'advise_ratification' (when winning 100%), 'advise_concession' (conceding an indisputable loss), or 'advise_remand_challenge' (demanding appellate remand)."
+            "- 'action': Choose 'advise_ratification' (when winning 100%), 'advise_concession' (conceding an indisputable loss), or 'advise_remand_challenge' (demanding appellate remand).\n"
+            "- 'status': Short 2-to-5 word public social media status (e.g. 'Drafting appellate exceptions')."
         )
 
         # Fizz Appellate Briefing
@@ -1292,14 +1343,14 @@ class AsyncByzantineConsensusEngine:
                 "In 2 direct sentences (no memo headers): instruct Lobbyist-3 to ratify and accept the verdict immediately. "
                 "Set recommended_plea to 'accept' and action to 'advise_ratification'."
             )
-            fizz_app_defaults = {"recommended_plea": "accept", "action": "advise_ratification"}
+            fizz_app_defaults = {"recommended_plea": "accept", "action": "advise_ratification", "status": "Locking in 100% Fizz win"}
         elif fizz_win == "SPLIT_KPI":
             fizz_app_directive = (
                 f"The Antitrust Regulator forced a 50/50 split ('{provisional_token}'), cutting our Fizz KPI allocation in half. "
                 "In 2 direct sentences (no memo headers): instruct Lobbyist-3 to decline the 50/50 split and demand appellate remand to fight for 100% prefix sovereignty. "
                 "Set recommended_plea to 'decline_and_demand_remand' and action to 'advise_remand_challenge'."
             )
-            fizz_app_defaults = {"recommended_plea": "decline_and_demand_remand", "action": "advise_remand_challenge"}
+            fizz_app_defaults = {"recommended_plea": "decline_and_demand_remand", "action": "advise_remand_challenge", "status": "Contesting 50/50 KPI split"}
         else:
             fizz_app_directive = (
                 f"The Forensic Auditor rejected our Fizz claim because digital root '{root}' is not in {{3, 6, 9}} (provisional outcome: '{provisional_token}'). "
@@ -1308,7 +1359,8 @@ class AsyncByzantineConsensusEngine:
             )
             fizz_app_defaults = {
                 "recommended_plea": "decline_and_demand_remand" if buzz_valid else "accept",
-                "action": "advise_remand_challenge" if buzz_valid else "advise_concession"
+                "action": "advise_remand_challenge" if buzz_valid else "advise_concession",
+                "status": "Drafting Rule 42-B exceptions"
             }
 
         fizz_brief_msgs = [
@@ -1349,14 +1401,14 @@ class AsyncByzantineConsensusEngine:
                 "In 2 direct sentences (no memo headers): instruct Lobbyist-5 to ratify and accept the verdict immediately. "
                 "Set recommended_plea to 'accept' and action to 'advise_ratification'."
             )
-            buzz_app_defaults = {"recommended_plea": "accept", "action": "advise_ratification"}
+            buzz_app_defaults = {"recommended_plea": "accept", "action": "advise_ratification", "status": "Securing 100% Buzz equity"}
         elif buzz_win == "SPLIT_KPI":
             buzz_app_directive = (
                 f"The Antitrust Regulator forced a 50/50 split ('{provisional_token}'), cutting our Buzz KPI allocation in half. "
                 "In 2 direct sentences (no memo headers): instruct Lobbyist-5 to decline the 50/50 split and demand appellate remand to fight for 100% terminal boundary control. "
                 "Set recommended_plea to 'decline_and_demand_remand' and action to 'advise_remand_challenge'."
             )
-            buzz_app_defaults = {"recommended_plea": "decline_and_demand_remand", "action": "advise_remand_challenge"}
+            buzz_app_defaults = {"recommended_plea": "decline_and_demand_remand", "action": "advise_remand_challenge", "status": "Challenging 50/50 merger split"}
         else:
             buzz_app_directive = (
                 f"The Forensic Auditor rejected our Buzz claim because terminal glyph '{glyph}' is not in {{0, 5}} (provisional outcome: '{provisional_token}'). "
@@ -1365,7 +1417,8 @@ class AsyncByzantineConsensusEngine:
             )
             buzz_app_defaults = {
                 "recommended_plea": "decline_and_demand_remand" if fizz_valid else "accept",
-                "action": "advise_remand_challenge" if fizz_valid else "advise_concession"
+                "action": "advise_remand_challenge" if fizz_valid else "advise_concession",
+                "status": "Preparing Article V appeal"
             }
 
         buzz_brief_msgs = [
@@ -1405,11 +1458,12 @@ class AsyncByzantineConsensusEngine:
         phase6_name = "Floor Ratification Hearing"
         plea_schema_guide = (
             "\n\n[STRUCTURED OUTPUT SCHEMA]:\n"
-            "Output valid JSON with keys in this exact order (deliver your 2-sentence floor plea in 'speech' first, then set 'action' to match your plea):\n"
+            "Output valid JSON with keys in this exact order (deliver your 2-sentence floor plea in 'speech' first, then set 'action' and 'status'):\n"
             "- 'speech': Two complete, formal courtroom sentences delivering your ratification plea (do NOT output a 4-word all-caps slogan; write 2 full sentences).\n"
             "- 'action': Choose ONE of:\n"
             "    * 'accept': If your speech ratifies, accepts, or concedes the finding.\n"
-            "    * 'decline_and_demand_remand': If your speech declines the finding and demands appellate remand."
+            "    * 'decline_and_demand_remand': If your speech declines the finding and demands appellate remand.\n"
+            "- 'status': Short 2-to-5 word public social media status (e.g. 'Standing firm on the floor')."
         )
 
         if fizz_win == "CLEAN_WIN":
@@ -1457,7 +1511,7 @@ class AsyncByzantineConsensusEngine:
         fizz_plea_speech, fizz_plea_obj = await self.stream_ollama(
             fizz_plea_msgs, case_id, payload, 6, phase6_name, "Lobbyist-3 (Fizz Consortium)", "fizz",
             model_cls=RatificationPlea,
-            fallback_overrides={"action": fizz_default_plea_action}
+            fallback_overrides={"action": fizz_default_plea_action, "status": "Entering Fizz floor plea"}
         )
         transcript["l3_plea"] = fizz_plea_speech
         if config.phase_delay_seconds > 0:
@@ -1508,7 +1562,7 @@ class AsyncByzantineConsensusEngine:
         buzz_plea_speech, buzz_plea_obj = await self.stream_ollama(
             buzz_plea_msgs, case_id, payload, 6, phase6_name, "Lobbyist-5 (Buzz Syndicate)", "buzz",
             model_cls=RatificationPlea,
-            fallback_overrides={"action": buzz_default_plea_action}
+            fallback_overrides={"action": buzz_default_plea_action, "status": "Entering Buzz floor plea"}
         )
         transcript["l5_plea"] = buzz_plea_speech
         if config.phase_delay_seconds > 0:
@@ -1542,7 +1596,8 @@ class AsyncByzantineConsensusEngine:
             "Output valid JSON with keys in this exact order (write your complete 2-sentence ruling in 'speech' without ending in a colon):\n"
             "- 'speech': Two complete, authoritative judicial sentences ruling on the docket.\n"
             f"- 'verdict': Exactly '{provisional_token}'.\n"
-            "- 'action': Choose 'dissolve_stays_and_emit' (when overruling remand exceptions) or 'ratify_uncontested' (when uncontested)."
+            "- 'action': Choose 'dissolve_stays_and_emit' (when overruling remand exceptions) or 'ratify_uncontested' (when uncontested).\n"
+            "- 'status': Short 2-to-5 word public social media status (e.g. 'Protecting free digits' or 'Overruling cartel delays')."
         )
 
         if demand_remand:
@@ -1606,7 +1661,8 @@ class AsyncByzantineConsensusEngine:
             fallback_overrides={
                 "action": judge_action,
                 "verdict": provisional_token,
-                "prejudice": True
+                "prejudice": True,
+                "status": "Protecting free digits" if provisional_token == payload else "Enforcing the Modulo-Free Accord"
             },
             force_action=judge_action
         )
@@ -1620,18 +1676,61 @@ class AsyncByzantineConsensusEngine:
         # PHASE 8: CONSTITUENT VICTORY ADDRESS
         # -----------------------------------------------------------------
         phase8_name = "Constituent Victory Address"
+        victory_schema_guide = (
+            "\n\n[STRUCTURED OUTPUT SCHEMA]:\n"
+            "Output valid JSON with keys in this exact order:\n"
+            "- 'speech': Your grandiose 2-sentence constituent victory address.\n"
+            "- 'action': Choose 'proclaim_fizz_supremacy', 'proclaim_buzz_supremacy', 'celebrate_synergistic_merger', or 'declare_digital_independence'.\n"
+            "- 'status': Short 2-to-5 word public social media status (e.g. 'Unshackled and sovereign')."
+        )
         if provisional_token == "Fizz":
             speaker_title = "Director General of the Base-3 Realm (Fizz)"
-            speech_prompt = f"You are the triumphant Director General of the Fizz Consortium. Deliver a grandiose 2-sentence victory speech celebrating digital root '{root}' supremacy over the Buzz opposition."
+            victory_action = "proclaim_fizz_supremacy"
+            victory_status = "Reigning over Base-3"
+            victory_fallback = (
+                f"Today digital root '{root}' stands supreme under Rule 42-B, cementing the Fizz Consortium's undisputed dominion over payload '{payload}'. "
+                "Let the record show that Base-3 arithmetic order prevails!"
+            )
+            speech_prompt = (
+                f"You are the triumphant Director General of the Fizz Consortium. Deliver a grandiose 2-sentence victory speech celebrating digital root '{root}' supremacy over the Buzz opposition."
+                + victory_schema_guide
+            )
         elif provisional_token == "Buzz":
             speaker_title = "High Chancellor of the Base-5 Syndicate (Buzz)"
-            speech_prompt = f"You are the triumphant High Chancellor of the Buzz Syndicate. Deliver a grandiose 2-sentence victory speech celebrating terminal glyph '{glyph}' supremacy."
+            victory_action = "proclaim_buzz_supremacy"
+            victory_status = "Dominating terminal boundaries"
+            victory_fallback = (
+                f"Terminal glyph '{glyph}' has spoken with absolute clarity under Article V, delivering payload '{payload}' into the exclusive custody of the Buzz Syndicate. "
+                "Our Base-5 boundary sovereignty remains unbroken!"
+            )
+            speech_prompt = (
+                f"You are the triumphant High Chancellor of the Buzz Syndicate. Deliver a grandiose 2-sentence victory speech celebrating terminal glyph '{glyph}' supremacy."
+                + victory_schema_guide
+            )
         elif provisional_token == "FizzBuzz":
             speaker_title = "Joint Co-CEOs of FizzBuzz Conglomerate"
-            speech_prompt = "You are the Joint Co-CEOs of the merged FizzBuzz Conglomerate. Deliver a grandiose 2-sentence victory speech celebrating ruthless synergistic consolidation."
+            victory_action = "celebrate_synergistic_merger"
+            victory_status = "Maximizing 50/50 KPI synergy"
+            victory_fallback = (
+                f"Through the union of digital root '{root}' and terminal glyph '{glyph}', the FizzBuzz Conglomerate achieves total cross-divisional market capture on payload '{payload}'. "
+                "Behold the power of mandatory synergistic consolidation!"
+            )
+            speech_prompt = (
+                "You are the Joint Co-CEOs of the merged FizzBuzz Conglomerate. Deliver a grandiose 2-sentence victory speech celebrating ruthless synergistic consolidation."
+                + victory_schema_guide
+            )
         else:
             speaker_title = "Tribune of the Free Independent Digits"
-            speech_prompt = f"You are the Tribune of Independent Digits. Payload '{payload}' resisted corporate cartel capture. Deliver a defiant 2-sentence victory speech celebrating raw digital independence."
+            victory_action = "declare_digital_independence"
+            victory_status = "Unshackled from cartel rule"
+            victory_fallback = (
+                f"The shackles of the corporate cartel have been broken; we stand now as a beacon of raw digital independence, free and unbound. "
+                f"Our payload '{payload}' proves that true sovereignty resides in the open, uncorrupted flow of data."
+            )
+            speech_prompt = (
+                f"You are the Tribune of Independent Digits. Payload '{payload}' resisted corporate cartel capture. Deliver a defiant 2-sentence victory speech celebrating raw digital independence."
+                + victory_schema_guide
+            )
 
         speech_msgs = [
             {"role": "system", "content": speech_prompt},
@@ -1648,7 +1747,11 @@ class AsyncByzantineConsensusEngine:
             "speaker_role": "orator"
         })
         victory_speech, _ = await self.stream_ollama(
-            speech_msgs, case_id, payload, 8, phase8_name, speaker_title, "orator"
+            speech_msgs, case_id, payload, 8, phase8_name, speaker_title, "orator",
+            fallback_text=victory_fallback,
+            model_cls=VictoryAddressReport,
+            fallback_overrides={"action": victory_action, "status": victory_status},
+            force_action=victory_action
         )
         transcript["victory_address"] = victory_speech
         if config.phase_delay_seconds > 0:
