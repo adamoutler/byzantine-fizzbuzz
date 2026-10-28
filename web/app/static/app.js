@@ -249,16 +249,25 @@ setInterval(() => {
     }
 }, 5000);
 
-// Detect User Scroll in the Feed
+// Detect User Scroll in the Feed (ignore programmatic auto-scroll events)
+let isProgrammaticScroll = false;
+let lastFeedScrollTop = 0;
+
 courtroomFeedEl.addEventListener("scroll", () => {
-    const distanceToBottom = courtroomFeedEl.scrollHeight - courtroomFeedEl.scrollTop - courtroomFeedEl.clientHeight;
-    if (distanceToBottom > 80) {
-        userScrolledUp = true;
-        jumpLatestBtnEl.classList.remove("hidden");
-    } else {
+    const currentTop = courtroomFeedEl.scrollTop;
+    const distanceToBottom = courtroomFeedEl.scrollHeight - currentTop - courtroomFeedEl.clientHeight;
+    if (isProgrammaticScroll) {
+        lastFeedScrollTop = currentTop;
+        return;
+    }
+    if (distanceToBottom <= 60) {
         userScrolledUp = false;
         jumpLatestBtnEl.classList.add("hidden");
+    } else if (currentTop < lastFeedScrollTop - 5) {
+        userScrolledUp = true;
+        jumpLatestBtnEl.classList.remove("hidden");
     }
+    lastFeedScrollTop = currentTop;
 });
 
 function toggleAutoScroll(enabled) {
@@ -270,11 +279,16 @@ function toggleAutoScroll(enabled) {
 
 function scrollToBottom(force = false) {
     if (force || (autoScroll && !userScrolledUp)) {
+        isProgrammaticScroll = true;
         courtroomFeedEl.scrollTop = courtroomFeedEl.scrollHeight;
+        lastFeedScrollTop = courtroomFeedEl.scrollTop;
         if (force) {
             userScrolledUp = false;
             jumpLatestBtnEl.classList.add("hidden");
         }
+        requestAnimationFrame(() => {
+            isProgrammaticScroll = false;
+        });
     }
 }
 

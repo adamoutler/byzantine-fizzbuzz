@@ -158,13 +158,15 @@ body {
 /* Main Courtroom Layout */
 .court-main {
     display: flex;
-    flex: 1;
+    flex: 1 1 0;
+    min-height: 0;
     overflow: hidden;
 }
 
 /* Left Proceedings Panel */
 .proceedings-panel {
     flex: 0 0 68%;
+    min-height: 0;
     display: flex;
     flex-direction: column;
     background-color: var(--bg-dark);
@@ -341,17 +343,23 @@ body {
 
 /* Continuous Feed (Text is NEVER wiped) */
 .courtroom-feed {
-    flex: 1;
-    overflow-y: auto;
+    flex: 1 1 0;
+    min-height: 360px;
+    overflow-y: scroll;
     padding: 18px;
     display: flex;
     flex-direction: column;
     gap: 16px;
-    scroll-behavior: smooth;
+    scrollbar-gutter: stable;
+}
+
+.courtroom-feed > * {
+    flex-shrink: 0;
 }
 
 /* Welcome banner inside feed */
 .feed-welcome-banner {
+    flex-shrink: 0;
     background-color: var(--bg-panel);
     border: 1px dashed var(--border-color);
     border-radius: 8px;
@@ -377,6 +385,7 @@ body {
 
 /* New Docket Notification Banner in Feed */
 .docket-divider {
+    flex-shrink: 0;
     background: linear-gradient(135deg, rgba(16, 185, 129, 0.22), rgba(59, 130, 246, 0.26), rgba(139, 92, 246, 0.22));
     border: 2px solid var(--color-historian);
     border-left: 6px solid var(--color-historian);
@@ -470,6 +479,8 @@ body {
 
 /* Forum-Post Speech Card in Feed */
 .speech-card {
+    flex-shrink: 0;
+    min-height: 142px;
     background-color: var(--bg-card);
     border: 1px solid var(--border-color);
     border-left: 4px solid var(--border-highlight);
@@ -672,6 +683,7 @@ body {
 
 /* Verdict / Consensus Emission Card in Feed */
 .docket-verdict-card {
+    flex-shrink: 0;
     background: linear-gradient(135deg, #1e1b4b, #2e1065);
     border: 2px solid var(--color-appellate);
     border-radius: 8px;
@@ -1632,6 +1644,7 @@ body {
     .court-container { height: auto; overflow: visible; }
     .court-main { flex-direction: column; overflow: visible; }
     .proceedings-panel, .sidebar-panel { flex: 1 1 100%; border-right: none; overflow: visible; }
+    .courtroom-feed { min-height: 420px; max-height: 68vh; overflow-y: scroll; }
     .sidebar-card.ledger-card { max-height: 360px; }
     .archives-split-body { flex-direction: column; }
     .archives-list-pane { flex: 0 0 180px; border-right: none; border-bottom: 1px solid var(--border-color); }
