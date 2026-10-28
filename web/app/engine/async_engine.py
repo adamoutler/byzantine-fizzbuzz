@@ -273,8 +273,8 @@ class AsyncByzantineConsensusEngine:
             transcript["fun_recap"] = recap_script
             transcript["fun_parody_headline"] = recap_data["parody_headline"]
 
-        # Stream at teleprompter pace during the recess countdown (or 0.0 during unit tests)
-        teleprompter_delay = 0.0 if config.token_stream_delay == 0 else max(config.token_stream_delay, 0.08)
+        # Stream at brisk teleprompter pace during the recess window (or 0.0 during unit tests)
+        teleprompter_delay = 0.0 if config.token_stream_delay == 0 else max(config.token_stream_delay, 0.035)
         return await self._stream_statutory_proclamation(
             docket_id=case_id,
             payload=payload,

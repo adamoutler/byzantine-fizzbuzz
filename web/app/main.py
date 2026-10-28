@@ -51,20 +51,29 @@ async def background_adjudication_loop():
 
             # 4. Parliamentary Recess & Foo Universal News (FUN) Recap Broadcast at the END of each session
             logger.info(f"Court in recess for {config.recess_seconds} seconds (airing Foo Universal News recap).")
+            recess_start = asyncio.get_event_loop().time()
 
-            async def _run_recess_countdown() -> None:
-                for remaining in range(config.recess_seconds, 0, -1):
-                    await observer_mgr.broadcast({
-                        "event": "RECESS_TICK",
-                        "seconds_remaining": remaining,
-                        "queue_status": scheduler.get_status()
-                    })
-                    await asyncio.sleep(1.0)
+            # Show the recess countdown banner immediately, then stream the full FUN broadcast uninterrupted
+            # before ticking the remaining recess seconds (prevents any legacy client RECESS_TICK handler
+            # from prematurely finalizing the active speech card mid-broadcast).
+            await observer_mgr.broadcast({
+                "event": "RECESS_TICK",
+                "seconds_remaining": config.recess_seconds,
+                "queue_status": scheduler.get_status()
+            })
+            await asyncio.sleep(0.05)
 
-            await asyncio.gather(
-                _run_recess_countdown(),
-                engine.stream_fun_recap(transcript)
-            )
+            await engine.stream_fun_recap(transcript)
+
+            elapsed_sec = max(1, int(asyncio.get_event_loop().time() - recess_start))
+            remaining_start = max(1, config.recess_seconds - elapsed_sec)
+            for remaining in range(remaining_start, 0, -1):
+                await observer_mgr.broadcast({
+                    "event": "RECESS_TICK",
+                    "seconds_remaining": remaining,
+                    "queue_status": scheduler.get_status()
+                })
+                await asyncio.sleep(1.0)
 
             # 5. If the docket ended in a Mistrial, hold in extended recess until the inference server is back online
             if was_mistrial:

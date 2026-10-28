@@ -8,6 +8,8 @@ let currentDocketId = null;
 let currentPhaseIndex = null;
 let activeSpeechCard = null;
 let activeSpeechBody = null;
+let lastSpeechCard = null;
+let lastSpeechBody = null;
 let activeCursor = null;
 
 // DOM Elements
@@ -215,17 +217,20 @@ function handleServerEvent(data) {
             break;
 
         case "TOKEN_STREAM":
-            if (activeSpeechBody) {
-                activeSpeechBody.innerText += data.token;
+            const targetStreamBody = activeSpeechBody || lastSpeechBody;
+            if (targetStreamBody) {
+                targetStreamBody.innerText += data.token;
                 scrollToBottom();
             }
             break;
 
         case "SPEECH_COMPLETE":
-            if (activeSpeechBody && data.full_text) {
-                activeSpeechBody.innerHTML = formatInlineMarkdown(data.full_text);
-                if (data.action && activeSpeechCard) {
-                    const header = activeSpeechCard.querySelector(".speech-card-header");
+            const targetCard = activeSpeechCard || lastSpeechCard;
+            const targetBody = activeSpeechBody || lastSpeechBody;
+            if (targetBody && data.full_text) {
+                targetBody.innerHTML = formatInlineMarkdown(data.full_text);
+                if (data.action && targetCard) {
+                    const header = targetCard.querySelector(".speech-card-header");
                     if (header && !header.querySelector(".speech-action-tag")) {
                         const actionTag = document.createElement("span");
                         actionTag.className = `speech-action-tag action-${data.action.replace(/_/g, '-')}`;
@@ -332,6 +337,8 @@ function createSpeechCard(phaseTitle, speaker, role) {
     courtroomFeedEl.appendChild(card);
     activeSpeechCard = card;
     activeSpeechBody = card.querySelector(".speech-text");
+    lastSpeechCard = card;
+    lastSpeechBody = activeSpeechBody;
     activeCursor = card.querySelector(".speech-cursor");
 }
 
