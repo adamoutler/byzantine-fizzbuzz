@@ -48,7 +48,7 @@
     <meta name="application-name" content="FizzBuzz">
     <meta name="msapplication-TileColor" content="#0b0f19">
 
-    <link rel="stylesheet" href="/static/styles.css?v=20261028-5">
+    <link rel="stylesheet" href="/static/styles.css?v=20261028-6">
 </head>
 <body>
     <div class="court-container">
@@ -528,16 +528,13 @@
             <!-- Tab 2: No Modulo or Division (Digital Root & Glyph System) -->
             <div class="modal-body info-tab-panel hidden" id="info-panel-math">
                 <div class="info-intro-banner">
-                    Under the <strong>Zero-Trust Modulo-Free Accord</strong>, hardware division instructions (<code>/</code>, <code>//</code>), modulo operators (<code>%</code>), and <code>divmod()</code> are strictly outlawed. Every inbound integer is adjudicated purely as a sequence of ASCII characters using two deterministic primitives:
+                    Under the <strong>Zero-Trust Modulo-Free Accord</strong>, division (<code>/</code>, <code>//</code>) and modulo (<code>%</code>) are strictly outlawed. Instead of dividing numbers, the 17-agent tribunal uses two grade-school rules on the text of the number:
                 </div>
 
                 <div class="math-explainer-section fizz">
-                    <h3>1. Rule 42-B: The Recursive Digital Root System (<code>Fizz</code> / Base-3)</h3>
+                    <h3>1. Rule 42-B: The Digital Root System (<code>Fizz</code> / Base-3)</h3>
                     <p>
-                        To get the <strong>Digital Root</strong>, simply repeatedly add all digits together (for example, <code>24</code> is <code>2 + 4 = 6</code>). In the event we are left with more than one digit, add those digits together again until only a single digit (<code>0</code>-<code>9</code>) remains. Because every power of ten (<code>10</code>, <code>100</code>, <code>1000</code>...) leaves a remainder of <code>1</code> when grouped by 3s, any integer has the exact same divisibility by 3 as the sum of its digits. This is the classic <strong>Digital Root</strong> system (used since ancient Vedic and 9th-century Islamic mathematics as <em>casting out nines</em>, and later formalized in modular arithmetic by Carl Friedrich Gauss).
-                    </p>
-                    <p>
-                        Instead of dividing by 3, the tribunal repeatedly sums the ASCII digits of the payload using a lookup table until a single-digit <strong>Digital Root</strong> (<code>0</code>-<code>9</code>) remains:
+                        To get the <strong>Digital Root</strong>, simply repeatedly add all digits together (for example, <code>24</code> is <code>2 + 4 = 6</code>). In the event we are left with more than one digit, add those together again until only a single digit (<code>0</code>-<code>9</code>) remains. If that final single digit is <code>3</code>, <code>6</code>, or <code>9</code>, the number is divisible by 3! This is the classic <strong>Digital Root</strong> system (known since ancient Vedic mathematics as <em>casting out nines</em> and formalized by Carl Friedrich Gauss):
                     </p>
                     <div class="math-example-box">
                         <div><strong>Certification Set:</strong> <code>FIZZ_ROOTS = {'3', '6', '9', '0'}</code></div>
@@ -547,14 +544,14 @@
                 </div>
 
                 <div class="math-explainer-section buzz">
-                    <h3>2. Article V: The Terminal Boundary Glyph System (<code>Buzz</code> / Base-5)</h3>
+                    <h3>2. Article V: The Terminal Glyph System (<code>Buzz</code> / Base-5)</h3>
                     <p>
-                        Because <code>10 = 2 &times; 5</code>, every tens, hundreds, and higher decimal place is already an exact multiple of 5. Divisibility by 5 therefore depends exclusively on the rightmost character of the string (<code>payload[-1]</code>), known in court as the <strong>Terminal Glyph</strong>.
+                        Divisibility by 5 always requires the last digit (known in court as the <strong>Terminal Glyph</strong>) to be <code>0</code> or <code>5</code>. Simply looking at the last number on the right (<code>payload[-1]</code>) tells the court if it is a <code>Buzz</code> (no math required):
                     </p>
                     <div class="math-example-box">
                         <div><strong>Certification Set:</strong> <code>BUZZ_GLYPHS = {'0', '5'}</code></div>
-                        <div><strong>Example A (Payload <code>'545'</code>):</strong> Rightmost char is <code>'5'</code>, which matches the Terminal Glyphs (<code>'5' = {'0', '5'}</code>) &rarr; <span class="token-badge buzz">Buzz PASS</span></div>
-                        <div><strong>Example B (Payload <code>'548'</code>):</strong> Rightmost char is <code>'8'</code>, which does not match the Terminal Glyphs (<code>'8' &ne; {'0', '5'}</code>) &rarr; <span class="token-badge raw">Buzz REJECT</span></div>
+                        <div><strong>Example A (Payload <code>'545'</code>):</strong> Last digit is <code>'5'</code>, which matches the Terminal Glyphs (<code>'5' = {'0', '5'}</code>) &rarr; <span class="token-badge buzz">Buzz PASS</span></div>
+                        <div><strong>Example B (Payload <code>'548'</code>):</strong> Last digit is <code>'8'</code>, which does not match the Terminal Glyphs (<code>'8' &ne; {'0', '5'}</code>) &rarr; <span class="token-badge raw">Buzz REJECT</span></div>
                     </div>
                 </div>
 
@@ -597,12 +594,12 @@
         </div>
     </div>
 
-    <script src="/static/app.js?v=20261028-5"></script>
+    <script src="/static/app.js?v=20261028-6"></script>
     <script>
         // PWA Service Worker Registration with immediate update check
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js?v=20261028-5', { scope: '/' })
+                navigator.serviceWorker.register('/sw.js?v=20261028-6', { scope: '/' })
                     .then((reg) => {
                         reg.update();
                         console.log('[PWA] Service Worker registered successfully. Scope:', reg.scope);
