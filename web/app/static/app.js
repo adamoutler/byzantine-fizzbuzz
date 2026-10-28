@@ -511,6 +511,17 @@ function buildTranscriptHtml(data) {
     const t = data.transcript || {};
     const dateStr = new Date(data.adjudicated_at * 1000).toLocaleString();
     const isMistrial = Boolean(t.mistrial || String(data.emitted_token || "").toLowerCase() === "mistrial");
+    const traceStr = Array.isArray(t.trace) && t.trace.length > 0 ? ` (Reduction Trace: ${t.trace.join(" → ")})` : "";
+
+    const renderOptionalSection = (cls, title, text) => {
+        if (!text) return "";
+        return `
+            <div class="modal-section ${cls}">
+                <div class="modal-section-title">${title}</div>
+                <div class="modal-section-text">${escapeHtml(text)}</div>
+            </div>
+        `;
+    };
 
     if (isMistrial) {
         const retrialInfo = t.retrial_scheduled_for
@@ -520,13 +531,28 @@ function buildTranscriptHtml(data) {
             <div class="archive-case-banner">
                 <div>
                     <div class="archive-case-title">${escapeHtml(data.case_id)} — Inbound Payload '${escapeHtml(data.payload)}'</div>
-                    <div class="archive-case-sub">Digital Root: ${escapeHtml(data.digital_root)} • Terminal Glyph: '${escapeHtml(data.terminal_glyph)}' • Adjudicated: ${escapeHtml(dateStr)}</div>
+                    <div class="archive-case-sub">Digital Root: ${escapeHtml(data.digital_root)}${escapeHtml(traceStr)} • Terminal Glyph: '${escapeHtml(data.terminal_glyph)}' • Adjudicated: ${escapeHtml(dateStr)}</div>
                 </div>
                 <span class="token-badge mistrial" style="font-size:0.9rem;padding:4px 10px;">${escapeHtml(data.emitted_token)}</span>
             </div>
 
+            ${renderOptionalSection("bailiff", "Phase 0A: Bailiff Bar Docket Proclamation", t.bailiff_proclamation)}
+            ${renderOptionalSection("historian", "Phase 0B: Court Historian Precedent Entry", t.historian_statement)}
+            ${renderOptionalSection("judge", "Phase 0C: Judge Baz Chamber Release Order", t.judge_chamber_order)}
+            ${renderOptionalSection("fizz", "Phase 1A: Fizz Private Chamber (Behind Closed Doors)", t.fizz_caucus_memo)}
+            ${renderOptionalSection("buzz", "Phase 1B: Buzz Private Chamber (Behind Closed Doors)", t.buzz_caucus_memo)}
+            ${renderOptionalSection("fizz", "Phase 2A: Lobbyist-3 Floor Petition", t.l3_claim)}
+            ${renderOptionalSection("buzz", "Phase 2B: Lobbyist-5 Floor Petition", t.l5_claim)}
+            ${renderOptionalSection("auditor", "Phase 3: Forensic Zero-Trust Audit", t.audit_verdict)}
+            ${t.provisional_token && t.provisional_token !== "Mistrial" ? renderOptionalSection("auditor", "Provisional Byzantine Consensus Determination", `Provisional Token '${t.provisional_token}': ${t.verdict_desc || ""}`) : ""}
+            ${renderOptionalSection("regulator", "Phase 4: Antitrust Market Determination", t.antitrust_ruling)}
+            ${renderOptionalSection("fizz", "Phase 5A: Fizz Appellate Litigation Briefing", t.fizz_appellate_briefing)}
+            ${renderOptionalSection("buzz", "Phase 5B: Buzz Appellate Litigation Briefing", t.buzz_appellate_briefing)}
+            ${renderOptionalSection("fizz", "Phase 6A: Lobbyist-3 Floor Ratification Plea", t.l3_plea)}
+            ${renderOptionalSection("buzz", "Phase 6B: Lobbyist-5 Floor Ratification Plea", t.l5_plea)}
+
             <div class="modal-section bailiff">
-                <div class="modal-section-title">Bailiff Bar Emergency Mistrial Proclamation</div>
+                <div class="modal-section-title">Bailiff Bar Emergency Mistrial Proclamation (Interrupted at: ${escapeHtml(t.interrupted_phase || "Floor Deliberations")})</div>
                 <div class="modal-section-text">${escapeHtml(t.bailiff_mistrial_proclamation || "Judicial inference quorum severed during floor testimony; Mistrial escalated to Judge Baz.")}</div>
             </div>
 
@@ -558,73 +584,83 @@ function buildTranscriptHtml(data) {
         <div class="archive-case-banner">
             <div>
                 <div class="archive-case-title">${escapeHtml(data.case_id)} — Inbound Payload '${escapeHtml(data.payload)}'</div>
-                <div class="archive-case-sub">Digital Root: ${escapeHtml(data.digital_root)} • Terminal Glyph: '${escapeHtml(data.terminal_glyph)}' • Adjudicated: ${escapeHtml(dateStr)}</div>
+                <div class="archive-case-sub">Digital Root: ${escapeHtml(data.digital_root)}${escapeHtml(traceStr)} • Terminal Glyph: '${escapeHtml(data.terminal_glyph)}' • Adjudicated: ${escapeHtml(dateStr)}</div>
             </div>
             <span class="token-badge ${getBadgeClass(data.emitted_token)}" style="font-size:0.9rem;padding:4px 10px;">${escapeHtml(data.emitted_token)}</span>
         </div>
 
         <div class="modal-section bailiff">
-            <div class="modal-section-title">Bailiff Bar Docket Proclamation</div>
+            <div class="modal-section-title">Phase 0A: Bailiff Bar Docket Proclamation</div>
             <div class="modal-section-text">${escapeHtml(t.bailiff_proclamation || "Court called to order.")}</div>
         </div>
 
         <div class="modal-section historian">
-            <div class="modal-section-title">Court Historian Precedent Entry</div>
+            <div class="modal-section-title">Phase 0B: Court Historian Precedent Entry</div>
             <div class="modal-section-text">${escapeHtml(t.historian_statement || "Record entered.")}</div>
         </div>
 
         <div class="modal-section judge">
-            <div class="modal-section-title">Judge Baz Chamber Release Order</div>
+            <div class="modal-section-title">Phase 0C: Judge Baz Chamber Release Order</div>
             <div class="modal-section-text">${escapeHtml(t.judge_chamber_order || "Chambers ordered.")}</div>
         </div>
 
         <div class="modal-section fizz">
-            <div class="modal-section-title">Fizz Private Chamber (Behind Closed Doors)</div>
+            <div class="modal-section-title">Phase 1A: Fizz Private Chamber (Behind Closed Doors)</div>
             <div class="modal-section-text">${escapeHtml(t.fizz_caucus_memo || "No memo filed.")}</div>
         </div>
 
         <div class="modal-section buzz">
-            <div class="modal-section-title">Buzz Private Chamber (Behind Closed Doors)</div>
+            <div class="modal-section-title">Phase 1B: Buzz Private Chamber (Behind Closed Doors)</div>
             <div class="modal-section-text">${escapeHtml(t.buzz_caucus_memo || "No memo filed.")}</div>
         </div>
 
         <div class="modal-section fizz">
-            <div class="modal-section-title">Lobbyist-3 Floor Petition</div>
+            <div class="modal-section-title">Phase 2A: Lobbyist-3 Floor Petition</div>
             <div class="modal-section-text">${escapeHtml(t.l3_claim || "No petition filed.")}</div>
         </div>
 
         <div class="modal-section buzz">
-            <div class="modal-section-title">Lobbyist-5 Floor Petition</div>
+            <div class="modal-section-title">Phase 2B: Lobbyist-5 Floor Petition</div>
             <div class="modal-section-text">${escapeHtml(t.l5_claim || "No petition filed.")}</div>
         </div>
 
         <div class="modal-section auditor">
-            <div class="modal-section-title">Forensic Zero-Trust Audit</div>
-            <div class="modal-section-text">${escapeHtml(t.audit_verdict || "No audit memo.")}</div>
+            <div class="modal-section-title">Phase 3: Forensic Zero-Trust Audit &amp; Provisional Byzantine Consensus</div>
+            <div class="modal-section-text">${escapeHtml(t.audit_verdict || "No audit memo.")}${t.provisional_token ? `<br><br><strong>Provisional Consensus Determination ('${escapeHtml(t.provisional_token)}'):</strong> ${escapeHtml(t.verdict_desc || data.verdict)}` : ""}</div>
         </div>
 
         <div class="modal-section regulator">
-            <div class="modal-section-title">Antitrust Market Determination</div>
+            <div class="modal-section-title">Phase 4: Antitrust Market Determination</div>
             <div class="modal-section-text">${escapeHtml(t.antitrust_ruling || "No ruling filed.")}</div>
         </div>
 
         <div class="modal-section fizz">
-            <div class="modal-section-title">Lobbyist-3 Floor Ratification Plea</div>
+            <div class="modal-section-title">Phase 5A: Fizz Appellate Litigation Briefing (Appeals Process)</div>
+            <div class="modal-section-text">${escapeHtml(t.fizz_appellate_briefing || "No appellate briefing filed.")}</div>
+        </div>
+
+        <div class="modal-section buzz">
+            <div class="modal-section-title">Phase 5B: Buzz Appellate Litigation Briefing (Appeals Process)</div>
+            <div class="modal-section-text">${escapeHtml(t.buzz_appellate_briefing || "No appellate briefing filed.")}</div>
+        </div>
+
+        <div class="modal-section fizz">
+            <div class="modal-section-title">Phase 6A: Lobbyist-3 Floor Ratification &amp; Appellate Plea</div>
             <div class="modal-section-text">${escapeHtml(t.l3_plea || "No plea recorded.")}</div>
         </div>
 
         <div class="modal-section buzz">
-            <div class="modal-section-title">Lobbyist-5 Floor Ratification Plea</div>
+            <div class="modal-section-title">Phase 6B: Lobbyist-5 Floor Ratification &amp; Appellate Plea</div>
             <div class="modal-section-text">${escapeHtml(t.l5_plea || "No plea recorded.")}</div>
         </div>
 
         <div class="modal-section judge">
-            <div class="modal-section-title">Judge Baz, Presiding Magistrate Ruling</div>
+            <div class="modal-section-title">Phase 7: Judge Baz En Banc Appellate &amp; Final Byzantine Consensus Ruling</div>
             <div class="modal-section-text">${escapeHtml(t.judge_baz_order || t.appellate_order || "No decree filed.")}</div>
         </div>
 
         <div class="modal-section orator">
-            <div class="modal-section-title">Constituent Victory Address</div>
+            <div class="modal-section-title">Phase 8: Constituent Victory Address</div>
             <div class="modal-section-text">${escapeHtml(t.victory_address || "No address delivered.")}</div>
         </div>
 
