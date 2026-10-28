@@ -4,11 +4,11 @@
  * while maintaining offline cache fallback.
  */
 
-const CACHE_NAME = 'fizzbuzz-inquisition-v18';
+const CACHE_NAME = 'fizzbuzz-inquisition-v19';
 const PRECACHE_ASSETS = [
   '/',
-  '/static/styles.css?v=20261028-8',
-  '/static/app.js?v=20261028-8',
+  '/static/styles.css?v=20261028-9',
+  '/static/app.js?v=20261028-9',
   '/static/manifest.json',
   '/static/icons/favicon.svg',
   '/static/icons/favicon.ico',
