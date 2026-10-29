@@ -15,8 +15,13 @@ from app.engine.primitives import (
 )
 from app.engine.streaming_parser import StreamingFieldExtractor, ResilientParser, check_court_readiness
 from app.engine.fun_news import fun_news_desk
+from app.engine.courtroom_interludes import (
+    build_post_chambers_interlude_prompt,
+    build_post_appellate_interlude_prompt,
+)
 from app.engine.structured_schemas import (
     BailiffAnnouncement,
+    CourtroomInterlude,
     HistorianPrecedentReport,
     JudgeBazChamberOrder,
     StrategyConferralTurn,
@@ -948,34 +953,69 @@ class AsyncByzantineConsensusEngine:
         transcript["fizz_caucus_memo"] = " | ".join(f"[{item['speaker']}]: {item['speech']}" for item in fizz_history)
         transcript["buzz_caucus_memo"] = " | ".join(f"[{item['speaker']}]: {item['speech']}" for item in buzz_history)
 
-        # Bailiff Bar summons the court floor
-        bailiff_floor_msg = (
-            f"Private chamber deliberations concluded ({len(fizz_history)} Fizz round(s), {len(buzz_history)} Buzz round(s)). "
-            "Both factions have exited their closed-door chambers with strategy locked. All rise for the adversarial floor petitions!"
+        # Extended "Meanwhile, in the courtroom..." interlude while factions were locked in private chambers
+        chambers_interlude_phase = "Meanwhile, in the Courtroom (Extended Chamber Recess)"
+        chambers_interlude_msgs, chambers_interlude_fallback, chambers_sampled = (
+            build_post_chambers_interlude_prompt(
+                case_id=case_id,
+                payload=payload,
+                fizz_rounds=len(fizz_history),
+                buzz_rounds=len(buzz_history),
+            )
         )
         await self.observer_mgr.broadcast({
             "event": "PHASE_TRANSITION",
             "docket_id": case_id,
             "phase_index": 1,
-            "phase_name": "Caucus Concluded - Floor Summoned",
+            "phase_name": chambers_interlude_phase,
             "stage_index": 1,
-            "stage_name": "Caucus Concluded",
-            "speaker": "Bailiff Bar",
-            "speaker_role": "bailiff"
+            "stage_name": "Meanwhile, in the Courtroom",
+            "speaker": "The Court Clerk (Meanwhile, in the Courtroom)",
+            "speaker_role": "historian"
         })
-        await self.observer_mgr.broadcast({
-            "event": "SPEECH_COMPLETE",
-            "docket_id": case_id,
-            "payload": payload,
-            "phase_index": 1,
-            "phase_name": "Caucus Concluded - Floor Summoned",
-            "speaker": "Bailiff Bar",
-            "speaker_role": "bailiff",
-            "full_text": bailiff_floor_msg,
-            "action": "summon_court_floor",
-            "status": "Summoning factions to floor",
-            "timestamp": time.time()
-        })
+        chambers_interlude_speech, _ = await self.stream_ollama(
+            chambers_interlude_msgs,
+            case_id,
+            payload,
+            1,
+            chambers_interlude_phase,
+            "The Court Clerk (Meanwhile, in the Courtroom)",
+            "historian",
+            fallback_text=chambers_interlude_fallback,
+            model_cls=CourtroomInterlude,
+            fallback_overrides={
+                "action": "log_extended_recess_commotion",
+                "status": "Logging courtroom commotion"
+            },
+            temperature=0.55,
+            force_action="log_extended_recess_commotion"
+        )
+        transcript["courtroom_interlude_chambers"] = chambers_interlude_speech
+
+        # ZERO 5-second pause between the courtroom interlude and Bailiff Bar calling deliberations back to order
+        bailiff_floor_msg = (
+            f"Order in the court! Private chamber deliberations on Inbound Payload '{payload}' are concluded "
+            f"({len(fizz_history)} Fizz round(s), {len(buzz_history)} Buzz round(s)). "
+            "Both factions have returned to the courtroom floor with their strategies locked—all deliberations are called back to order for the adversarial floor petitions!"
+        )
+        await self._stream_statutory_proclamation(
+            docket_id=case_id,
+            payload=payload,
+            phase_idx=1,
+            phase_name="Caucus Concluded - Floor Summoned",
+            speaker="Bailiff Bar",
+            speaker_role="bailiff",
+            speech_text=bailiff_floor_msg,
+            action="summon_court_floor",
+            structured_data={
+                "presiding_judge": "Judge Baz",
+                "action": "summon_court_floor",
+                "fizz_rounds": len(fizz_history),
+                "buzz_rounds": len(buzz_history)
+            },
+            status="Calling court back to order"
+        )
+        transcript["bailiff_floor_summons"] = bailiff_floor_msg
         if config.phase_delay_seconds > 0:
             await asyncio.sleep(config.phase_delay_seconds)
 
@@ -1453,6 +1493,68 @@ class AsyncByzantineConsensusEngine:
         )
         transcript["buzz_appellate_briefing"] = buzz_brief_speech
         buzz_rec_plea = getattr(buzz_brief_obj, "recommended_plea", buzz_app_defaults["recommended_plea"])
+        if config.phase_delay_seconds > 0:
+            await asyncio.sleep(config.phase_delay_seconds)
+
+        # Brief "Meanwhile, in the courtroom..." interlude right after the Appellate Litigation Team huddle
+        appellate_interlude_phase = "Meanwhile, in the Courtroom (Appellate Sidebar)"
+        appellate_interlude_msgs, appellate_interlude_fallback, _ = (
+            build_post_appellate_interlude_prompt(
+                case_id=case_id,
+                payload=payload,
+                exclude_examples=chambers_sampled,
+            )
+        )
+        await self.observer_mgr.broadcast({
+            "event": "PHASE_TRANSITION",
+            "docket_id": case_id,
+            "phase_index": 5,
+            "phase_name": appellate_interlude_phase,
+            "stage_index": 5,
+            "stage_name": "Meanwhile, in the Courtroom",
+            "speaker": "The Court Clerk (Meanwhile, in the Courtroom)",
+            "speaker_role": "historian"
+        })
+        appellate_interlude_speech, _ = await self.stream_ollama(
+            appellate_interlude_msgs,
+            case_id,
+            payload,
+            5,
+            appellate_interlude_phase,
+            "The Court Clerk (Meanwhile, in the Courtroom)",
+            "historian",
+            fallback_text=appellate_interlude_fallback,
+            model_cls=CourtroomInterlude,
+            fallback_overrides={
+                "action": "log_brief_sidebar_activity",
+                "status": "Stamping appellate sidebar notes"
+            },
+            temperature=0.55,
+            force_action="log_brief_sidebar_activity"
+        )
+        transcript["courtroom_interlude_appellate"] = appellate_interlude_speech
+
+        # ZERO 5-second pause between the courtroom interlude and Bailiff Bar calling deliberations back to order
+        bailiff_ratification_msg = (
+            f"Order in the court! Appellate counsel conferences on Inbound Payload '{payload}' are concluded. "
+            "All deliberations are hereby called back to order—Lobbyist-3 and Lobbyist-5 will now step to the lectern and enter their binding Floor Ratification Pleas!"
+        )
+        await self._stream_statutory_proclamation(
+            docket_id=case_id,
+            payload=payload,
+            phase_idx=5,
+            phase_name="Appellate Sidebar Concluded - Deliberations Back to Order",
+            speaker="Bailiff Bar",
+            speaker_role="bailiff",
+            speech_text=bailiff_ratification_msg,
+            action="reconvene_for_ratification",
+            structured_data={
+                "presiding_judge": "Judge Baz",
+                "action": "reconvene_for_ratification"
+            },
+            status="Calling court back to order"
+        )
+        transcript["bailiff_ratification_summons"] = bailiff_ratification_msg
         if config.phase_delay_seconds > 0:
             await asyncio.sleep(config.phase_delay_seconds)
 

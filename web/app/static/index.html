@@ -48,7 +48,7 @@
     <meta name="application-name" content="FizzBuzz">
     <meta name="msapplication-TileColor" content="#0b0f19">
 
-    <link rel="stylesheet" href="/static/styles.css?v=20261028-11">
+    <link rel="stylesheet" href="/static/styles.css?v=20261029-1">
 </head>
 <body>
     <div class="court-container">
@@ -422,10 +422,10 @@
                         <div class="swarm-role-details">
                             <div class="swarm-role-header">
                                 <strong>2. Bailiff Bar</strong>
-                                <span class="swarm-phase-badge">Phase 0A &amp; Floor Security</span>
+                                <span class="swarm-phase-badge">Phase 0A, 1 &amp; 5</span>
                             </div>
                             <div class="swarm-role-title">Sergeant-at-Arms</div>
-                            <p>Calls the courtroom to order, enforces the Zero-Trust Modulo-Free Accord, summons factions from private chambers to the adversarial floor, and proclaims an immediate emergency Mistrial if inference quorum is severed.</p>
+                            <p>Calls the courtroom to order, enforces the Zero-Trust Modulo-Free Accord, immediately calls deliberations back to order after both private chambers and appellate team conferences, and proclaims an emergency Mistrial if inference quorum is severed.</p>
                         </div>
                     </div>
 
@@ -446,10 +446,10 @@
                         <div class="swarm-role-details">
                             <div class="swarm-role-header">
                                 <strong>4. The Court Clerk</strong>
-                                <span class="swarm-phase-badge">Pre-Trial &amp; Ledger</span>
+                                <span class="swarm-phase-badge">Courtroom Interludes &amp; Ledger</span>
                             </div>
-                            <div class="swarm-role-title">Deterministic Zero-Trust Execution Engine</div>
-                            <p>Executes pure string-based arithmetic in <code>primitives.py</code> without <code>%</code> or <code>/</code>, manages the 1-deep priority docket queue and statutory range expansion, and commits certified transcripts to the SQLite database.</p>
+                            <div class="swarm-role-title">Custodian of Writs, Seals &amp; Courtroom Logs</div>
+                            <p>Logs live <em>"Meanwhile, in the courtroom..."</em> observations right before Bailiff Bar calls deliberations back to order (extended after private chambers, brief after appellate conferences), executes modulo-free arithmetic in <code>primitives.py</code>, and commits transcripts to SQLite.</p>
                         </div>
                     </div>
 
@@ -680,12 +680,12 @@
         </div>
     </div>
 
-    <script src="/static/app.js?v=20261028-11"></script>
+    <script src="/static/app.js?v=20261029-1"></script>
     <script>
         // PWA Service Worker Registration with immediate update check
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js?v=20261028-11', { scope: '/' })
+                navigator.serviceWorker.register('/sw.js?v=20261029-1', { scope: '/' })
                     .then((reg) => {
                         reg.update();
                         console.log('[PWA] Service Worker registered successfully. Scope:', reg.scope);

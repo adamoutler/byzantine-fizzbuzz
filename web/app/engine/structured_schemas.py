@@ -41,13 +41,36 @@ class BailiffAnnouncement(StrictStructuredModel):
         default="Judge Baz",
         description="The ultimate presiding magistrate presiding over the docket"
     )
-    action: Literal["call_to_order", "swear_in_factions"] = Field(
+    action: Literal[
+        "call_to_order",
+        "swear_in_factions",
+        "summon_court_floor",
+        "reconvene_for_ratification"
+    ] = Field(
         default="call_to_order",
         description="Formal action taken by the bailiff"
     )
     status: str = Field(
         default="Keeping order in the court",
         description="Short 2-to-5 word public social media status for Bailiff Bar"
+    )
+
+
+class CourtroomInterlude(StrictStructuredModel):
+    """'Meanwhile, in the courtroom...' observational interlude recorded by The Court Clerk while factions confer."""
+    speech: str = Field(
+        description="Deadpan comedic 'Meanwhile, in the courtroom,' observation describing courtroom activity right before Bailiff Bar calls deliberations back to order"
+    )
+    action: Literal[
+        "log_extended_recess_commotion",
+        "log_brief_sidebar_activity"
+    ] = Field(
+        default="log_extended_recess_commotion",
+        description="Chancery log classification for courtroom recess activity"
+    )
+    status: str = Field(
+        default="Logging courtroom commotion",
+        description="Short 2-to-5 word public social media status for The Court Clerk"
     )
 
 

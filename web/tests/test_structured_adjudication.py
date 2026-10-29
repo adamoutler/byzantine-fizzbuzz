@@ -36,7 +36,25 @@ async def test_structured_adjudication_flow(tmp_path):
         messages = json_data.get("messages", [])
         sys_msg = messages[0]["content"] if messages else ""
 
-        if "Bailiff Bar" in sys_msg:
+        if "You are The Court Clerk" in sys_msg and "log_extended_recess_commotion" in sys_msg:
+            payload_dict = {
+                "speech": (
+                    "Meanwhile, in the courtroom, Judge Baz is methodically polishing his solid mahogany gavel with artisanal beeswax. "
+                    "At the chancery desk, The Court Clerk is stamping RECEIVED IN TRIPLICATE onto blank manila folders. "
+                    "In the back row of the gallery, three K-Street interns are playing rock-paper-scissors over a fifty-pound briefcase."
+                ),
+                "action": "log_extended_recess_commotion",
+                "status": "Logging courtroom commotion"
+            }
+        elif "You are The Court Clerk" in sys_msg and "log_brief_sidebar_activity" in sys_msg:
+            payload_dict = {
+                "speech": (
+                    "Meanwhile, in the courtroom, Brother Eusebius is frantically dusting a 14th-century vellum scroll with a peacock feather."
+                ),
+                "action": "log_brief_sidebar_activity",
+                "status": "Stamping appellate sidebar notes"
+            }
+        elif "Bailiff Bar" in sys_msg:
             payload_dict = {
                 "speech": "All rise! The Zero-Trust Court is now in session for Payload 3. Judge Baz is presiding.",
                 "presiding_judge": "Judge Baz",
@@ -164,8 +182,29 @@ async def test_structured_adjudication_flow(tmp_path):
     assert len(transcript["conferring_rounds"]["buzz"]) == 2
     assert transcript["conferring_rounds"]["buzz"][0]["action"] == "confer_further"
     assert transcript["conferring_rounds"]["buzz"][1]["action"] == "proceed_to_court"
+    # Verify "Meanwhile, in the courtroom..." interludes & Bailiff Bar calls back to order
+    assert "Meanwhile, in the courtroom," in transcript["courtroom_interlude_chambers"]
+    assert "called back to order" in transcript["bailiff_floor_summons"]
+    assert "Meanwhile, in the courtroom," in transcript["courtroom_interlude_appellate"]
+    assert "called back to order" in transcript["bailiff_ratification_summons"]
+    assert len(transcript["courtroom_interlude_chambers"]) > len(transcript["courtroom_interlude_appellate"])
     assert transcript["final_token"] == "Fizz"
     assert "Buzz Syndicate" in transcript["judge_baz_order"]
+
+    # Verify event ordering: each "Meanwhile, in the Courtroom" SPEECH_COMPLETE is immediately followed by Bailiff Bar PHASE_TRANSITION
+    sent_events = [json.loads(call.args[0]) for call in mock_ws.send_text.call_args_list]
+    speech_and_transition = [
+        ev for ev in sent_events if ev.get("event") in ("PHASE_TRANSITION", "SPEECH_COMPLETE")
+    ]
+    interlude_complete_indices = [
+        idx for idx, ev in enumerate(speech_and_transition)
+        if ev.get("event") == "SPEECH_COMPLETE" and "Meanwhile, in the Courtroom" in ev.get("speaker", "")
+    ]
+    assert len(interlude_complete_indices) == 2
+    for idx in interlude_complete_indices:
+        next_ev = speech_and_transition[idx + 1]
+        assert next_ev["event"] == "PHASE_TRANSITION"
+        assert next_ev["speaker"] == "Bailiff Bar"
 
     # Verify ledger recorded docket
     total = await ledger.get_total_cases()

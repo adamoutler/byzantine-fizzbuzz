@@ -653,6 +653,8 @@ body {
 
 .speech-action-tag.action-accept,
 .speech-action-tag.action-proceed-to-court,
+.speech-action-tag.action-summon-court-floor,
+.speech-action-tag.action-reconvene-for-ratification,
 .speech-action-tag.action-advise-ratification,
 .speech-action-tag.action-certify-fizz,
 .speech-action-tag.action-certify-buzz,
@@ -671,7 +673,9 @@ body {
 .speech-action-tag.action-confer-further,
 .speech-action-tag.action-advise-concession,
 .speech-action-tag.action-refer-collision-to-antitrust,
-.speech-action-tag.action-issue-merger-consent-decree {
+.speech-action-tag.action-issue-merger-consent-decree,
+.speech-action-tag.action-log-extended-recess-commotion,
+.speech-action-tag.action-log-brief-sidebar-activity {
     background-color: rgba(245, 158, 11, 0.18);
     border-color: rgba(245, 158, 11, 0.5);
     color: #fde68a;

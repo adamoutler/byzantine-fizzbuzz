@@ -84,6 +84,7 @@ def test_schema_property_ordering_speech_first_enums_last():
     """Verify that speech (reasoning) is first, action is second-to-last, and status is last in all structured schemas."""
     from app.engine.structured_schemas import (
         BailiffAnnouncement,
+        CourtroomInterlude,
         HistorianPrecedentReport,
         JudgeBazChamberOrder,
         StrategyConferralTurn,
@@ -98,6 +99,7 @@ def test_schema_property_ordering_speech_first_enums_last():
 
     models = [
         BailiffAnnouncement,
+        CourtroomInterlude,
         HistorianPrecedentReport,
         JudgeBazChamberOrder,
         StrategyConferralTurn,
@@ -175,6 +177,41 @@ def test_ratification_plea_harmonization():
     parsed4 = ResilientParser.parse(raw_concede, RatificationPlea)
     assert parsed4.action == "accept"
     assert parsed4.demands_remand is False
+
+
+def test_courtroom_meanwhile_examples_pool_and_prompts():
+    """Verify the 50+ courtroom antics pool and that post-chambers has more going on than post-appellate."""
+    from app.engine.courtroom_interludes import (
+        COURTROOM_MEANWHILE_EXAMPLES,
+        build_post_chambers_interlude_prompt,
+        build_post_appellate_interlude_prompt,
+    )
+
+    assert len(COURTROOM_MEANWHILE_EXAMPLES) >= 50
+    assert len(set(COURTROOM_MEANWHILE_EXAMPLES)) == len(COURTROOM_MEANWHILE_EXAMPLES)
+
+    chambers_msgs, chambers_fb, chambers_sampled = build_post_chambers_interlude_prompt(
+        case_id="BZ-2026-0015",
+        payload="15",
+        fizz_rounds=2,
+        buzz_rounds=2,
+    )
+    appellate_msgs, appellate_fb, appellate_sampled = build_post_appellate_interlude_prompt(
+        case_id="BZ-2026-0015",
+        payload="15",
+        exclude_examples=chambers_sampled,
+    )
+
+    # More examples and longer scene after private chambers (6 examples, 3 sentences) vs appellate (3 examples, 1 sentence)
+    assert len(chambers_sampled) == 6
+    assert len(appellate_sampled) == 3
+    assert set(chambers_sampled).isdisjoint(set(appellate_sampled))
+    assert "3 vivid, hilarious, deadpan sentences" in chambers_msgs[0]["content"]
+    assert "1 crisp, deadpan comedic sentence" in appellate_msgs[0]["content"]
+    assert chambers_fb.startswith("Meanwhile, in the courtroom,")
+    assert appellate_fb.startswith("Meanwhile, in the courtroom,")
+    assert len(chambers_fb) > len(appellate_fb)
+
 
 
 

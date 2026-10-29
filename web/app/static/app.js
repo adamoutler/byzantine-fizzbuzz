@@ -511,13 +511,13 @@ function resolveSpeakerProfile(speaker, role) {
             defaultStatus: "Live from the FUN studio"
         };
     }
-    if (sLower.includes("clerk")) {
+    if (sLower.includes("clerk") || sLower.includes("meanwhile")) {
         return {
             id: "court_clerk",
             avatar: "/static/avatars/court_clerk.png",
             name: "The Court Clerk",
-            title: "Custodian of Writs and Seals",
-            defaultStatus: "Maintaining the court record"
+            title: sLower.includes("meanwhile") ? "Meanwhile, in the Courtroom..." : "Custodian of Writs and Seals",
+            defaultStatus: sLower.includes("meanwhile") ? "Logging courtroom commotion" : "Maintaining the court record"
         };
     }
     return {
@@ -1050,6 +1050,8 @@ function buildTranscriptHtml(data) {
             ${renderOptionalSection("judge", "Phase 0C: Judge Baz Chamber Release Order", t.judge_chamber_order)}
             ${renderOptionalSection("fizz", "Phase 1A: Fizz Private Chamber (Behind Closed Doors)", t.fizz_caucus_memo)}
             ${renderOptionalSection("buzz", "Phase 1B: Buzz Private Chamber (Behind Closed Doors)", t.buzz_caucus_memo)}
+            ${renderOptionalSection("historian", "Meanwhile, in the Courtroom (Post-Chambers Log)", t.courtroom_interlude_chambers)}
+            ${renderOptionalSection("bailiff", "Bailiff Bar: Call to Order After Chambers", t.bailiff_floor_summons)}
             ${renderOptionalSection("fizz", "Phase 2A: Lobbyist-3 Floor Petition", t.l3_claim)}
             ${renderOptionalSection("buzz", "Phase 2B: Lobbyist-5 Floor Petition", t.l5_claim)}
             ${renderOptionalSection("auditor", "Phase 3: Forensic Zero-Trust Audit", t.audit_verdict)}
@@ -1057,6 +1059,8 @@ function buildTranscriptHtml(data) {
             ${renderOptionalSection("regulator", "Phase 4: Antitrust Market Determination", t.antitrust_ruling)}
             ${renderOptionalSection("fizz", "Phase 5A: Fizz Appellate Litigation Briefing", t.fizz_appellate_briefing)}
             ${renderOptionalSection("buzz", "Phase 5B: Buzz Appellate Litigation Briefing", t.buzz_appellate_briefing)}
+            ${renderOptionalSection("historian", "Meanwhile, in the Courtroom (Post-Appellate Log)", t.courtroom_interlude_appellate)}
+            ${renderOptionalSection("bailiff", "Bailiff Bar: Call to Order After Appellate Conference", t.bailiff_ratification_summons)}
             ${renderOptionalSection("fizz", "Phase 6A: Lobbyist-3 Floor Ratification Plea", t.l3_plea)}
             ${renderOptionalSection("buzz", "Phase 6B: Lobbyist-5 Floor Ratification Plea", t.l5_plea)}
 
@@ -1123,6 +1127,9 @@ function buildTranscriptHtml(data) {
             <div class="modal-section-text">${escapeHtml(t.buzz_caucus_memo || "No memo filed.")}</div>
         </div>
 
+        ${renderOptionalSection("historian", "Meanwhile, in the Courtroom (Post-Chambers Log)", t.courtroom_interlude_chambers)}
+        ${renderOptionalSection("bailiff", "Bailiff Bar: Call to Order After Chambers", t.bailiff_floor_summons)}
+
         <div class="modal-section fizz">
             <div class="modal-section-title">Phase 2A: Lobbyist-3 Floor Petition</div>
             <div class="modal-section-text">${escapeHtml(t.l3_claim || "No petition filed.")}</div>
@@ -1152,6 +1159,9 @@ function buildTranscriptHtml(data) {
             <div class="modal-section-title">Phase 5B: Buzz Appellate Litigation Briefing (Appeals Process)</div>
             <div class="modal-section-text">${escapeHtml(t.buzz_appellate_briefing || "No appellate briefing filed.")}</div>
         </div>
+
+        ${renderOptionalSection("historian", "Meanwhile, in the Courtroom (Post-Appellate Log)", t.courtroom_interlude_appellate)}
+        ${renderOptionalSection("bailiff", "Bailiff Bar: Call to Order After Appellate Conference", t.bailiff_ratification_summons)}
 
         <div class="modal-section fizz">
             <div class="modal-section-title">Phase 6A: Lobbyist-3 Floor Ratification &amp; Appellate Plea</div>
