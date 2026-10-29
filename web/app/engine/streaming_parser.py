@@ -160,22 +160,61 @@ class ResilientParser:
 
         # 1. Ratification Pleas (Phase 6): Harmonize accept vs decline_and_demand_remand
         if hasattr(model_inst, "action") and hasattr(model_inst, "demands_remand"):
-            if any(term in speech_upper for term in ["DECLINE", "REMAND", "CONTEST", "REJECT THE", "FILE EXCEPTION", "DEMAND REMAND"]):
-                try:
-                    return model_inst.model_copy(update={"action": "decline_and_demand_remand", "demands_remand": True})
-                except Exception:
-                    try:
-                        setattr(model_inst, "action", "decline_and_demand_remand")
-                        setattr(model_inst, "demands_remand", True)
-                    except Exception:
-                        pass
-            elif any(term in speech_upper for term in ["ACCEPT", "PRAISE", "RATIFY", "APPROVE", "CONCEDE", "ACQUIESCE"]):
+            negated_remand = any(
+                neg in speech_lower
+                for neg in (
+                    "without requesting appellate remand",
+                    "without demanding remand",
+                    "without demanding appellate remand",
+                    "without requesting remand",
+                    "do not demand remand",
+                )
+            )
+            has_decline = any(
+                term in speech_upper
+                for term in (
+                    "DECLINE",
+                    "CONTEST",
+                    "REJECT THE",
+                    "FILE EXCEPTION",
+                    "FILE A FORMAL EXCEPTION",
+                    "FILE A FORMAL BOUNDARY EXCEPTION",
+                )
+            ) or (
+                any(
+                    term in speech_upper
+                    for term in (
+                        "DEMAND REMAND",
+                        "DEMAND APPELLATE REMAND",
+                        "DEMAND IMMEDIATE APPELLATE REMAND",
+                    )
+                )
+                and not negated_remand
+            )
+            has_accept = (
+                negated_remand
+                or any(
+                    term in speech_upper
+                    for term in ("ACCEPT", "PRAISE", "RATIFY", "APPROVE", "CONCEDE", "ACQUIESCE")
+                )
+            )
+
+            if has_accept and not has_decline:
                 try:
                     return model_inst.model_copy(update={"action": "accept", "demands_remand": False})
                 except Exception:
                     try:
                         setattr(model_inst, "action", "accept")
                         setattr(model_inst, "demands_remand", False)
+                    except Exception:
+                        pass
+            elif has_decline:
+                try:
+                    return model_inst.model_copy(update={"action": "decline_and_demand_remand", "demands_remand": True})
+                except Exception:
+                    try:
+                        setattr(model_inst, "action", "decline_and_demand_remand")
+                        setattr(model_inst, "demands_remand", True)
                     except Exception:
                         pass
 

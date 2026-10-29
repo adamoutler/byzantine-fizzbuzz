@@ -162,5 +162,19 @@ def test_ratification_plea_harmonization():
     assert parsed3.action == "accept"
     assert parsed3.demands_remand is False
 
+    # 4. Concession mentioning "without requesting appellate remand" (Docket BZ-2026-0680 regression)
+    raw_concede = json.dumps({
+        "speech": (
+            "While the Fizz Consortium reserves all future statutory rights pertaining to this matter, "
+            "we hereby accept and concede the forensic finding regarding payload '680' without requesting appellate remand. "
+            "This concession is made solely to avoid further expenditure on a calculation already determined by the underlying mathematical audit."
+        ),
+        "action": "accept",
+        "status": "Finding accepted; moving forward."
+    })
+    parsed4 = ResilientParser.parse(raw_concede, RatificationPlea)
+    assert parsed4.action == "accept"
+    assert parsed4.demands_remand is False
+
 
 

@@ -212,8 +212,10 @@ class AntitrustDetermination(StrictStructuredModel):
 
 class AppellateBriefing(StrictStructuredModel):
     """Appellate Litigation Team briefing to faction Lobbyist."""
+    _ollama_excluded_fields: ClassVar[Set[str]] = {"recommended_plea"}
+
     speech: str = Field(
-        description="Two concise sentences (no markdown headers) advising your faction's Lobbyist on whether to ratify the verdict or demand appellate remand"
+        description="Two concise sentences (no markdown headers) advising your faction's Lobbyist on whether to ratify the verdict, concede the loss, or demand appellate remand"
     )
     recommended_plea: Literal["accept", "decline_and_demand_remand"] = Field(
         default="accept",
@@ -231,6 +233,41 @@ class AppellateBriefing(StrictStructuredModel):
         default="Drafting appellate exceptions",
         description="Short 2-to-5 word public social media status for the Appellate Litigation Team"
     )
+
+    @model_validator(mode="after")
+    def _sync_recommended_plea(self) -> "AppellateBriefing":
+        s = (self.speech or "").lower()
+        if any(m in s for m in (
+            "grudgingly accept",
+            "grudgingly concede",
+            "conceding the",
+            "concede the",
+            "wasting resources",
+            "avoid further expenditure",
+            "do not demand remand",
+            "without requesting remand",
+        )) and not any(m in s for m in ("must demand remand", "demand appellate remand", "file a hostile")):
+            self.action = "advise_concession"
+        elif any(m in s for m in (
+            "ratify and accept",
+            "accept this outcome immediately",
+            "100% exclusive",
+        )) and "decline" not in s:
+            self.action = "advise_ratification"
+        elif any(m in s for m in (
+            "demand appellate remand",
+            "demand immediate appellate remand",
+            "decline the",
+            "contest the",
+            "challenge the",
+        )) and "wasting resources" not in s:
+            self.action = "advise_remand_challenge"
+
+        if self.action == "advise_remand_challenge":
+            self.recommended_plea = "decline_and_demand_remand"
+        else:
+            self.recommended_plea = "accept"
+        return self
 
 
 class RatificationPlea(StrictStructuredModel):
@@ -255,6 +292,42 @@ class RatificationPlea(StrictStructuredModel):
 
     @model_validator(mode="after")
     def _sync_demands_remand(self) -> "RatificationPlea":
+        s = (self.speech or "").lower()
+        st = (self.status or "").lower()
+        accept_markers = (
+            "accept and concede",
+            "accepts and ratifies",
+            "accept and ratify",
+            "ratify and accept",
+            "without requesting appellate remand",
+            "without demanding remand",
+            "without demanding appellate remand",
+            "hereby accept",
+            "formally accepts",
+            "grudgingly accept",
+            "concede the forensic",
+            "concede the mathematical",
+            "concede the boundary",
+            "this concession is made",
+        )
+        decline_markers = (
+            "formally decline",
+            "hereby decline",
+            "decline ratification",
+            "declines ratification",
+            "demand immediate appellate remand",
+            "demand appellate remand",
+            "demands appellate remand",
+        )
+        if (
+            any(m in s for m in accept_markers)
+            or "finding accepted" in st
+            or "conceding" in st
+        ) and not any(m in s for m in ("formally decline", "hereby decline", "decline ratification")):
+            self.action = "accept"
+        elif any(m in s for m in decline_markers) and "without" not in s:
+            self.action = "decline_and_demand_remand"
+
         self.demands_remand = (self.action == "decline_and_demand_remand")
         return self
 

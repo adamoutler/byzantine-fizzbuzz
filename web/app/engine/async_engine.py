@@ -90,7 +90,10 @@ class AsyncByzantineConsensusEngine:
             }
         }
         if model_cls is not None:
-            req_data["format"] = model_cls.model_json_schema()
+            schema = model_cls.model_json_schema()
+            if force_action and "properties" in schema and "action" in schema["properties"]:
+                schema["properties"]["action"]["enum"] = [force_action]
+            req_data["format"] = schema
 
         extractor = StreamingFieldExtractor("speech") if model_cls is not None else None
         accumulated_raw: List[str] = []
@@ -158,6 +161,8 @@ class AsyncByzantineConsensusEngine:
                     setattr(parsed_model, "action", force_action)
                     if hasattr(parsed_model, "ready_for_court"):
                         setattr(parsed_model, "ready_for_court", force_action == "proceed_to_court")
+                    if hasattr(parsed_model, "_sync_demands_remand"):
+                        parsed_model._sync_demands_remand()
                 except Exception:
                     pass
 
@@ -1331,7 +1336,6 @@ class AsyncByzantineConsensusEngine:
             "\n\n[STRUCTURED OUTPUT SCHEMA]:\n"
             "Output valid JSON with keys in this exact order (do NOT use To:/From:/Subject: headers in speech):\n"
             "- 'speech': 2 concise sentences advising your faction's Lobbyist on the floor ratification plea.\n"
-            "- 'recommended_plea': Choose 'accept' or 'decline_and_demand_remand'.\n"
             "- 'action': Choose 'advise_ratification' (when winning 100%), 'advise_concession' (conceding an indisputable loss), or 'advise_remand_challenge' (demanding appellate remand).\n"
             "- 'status': Short 2-to-5 word public social media status (e.g. 'Drafting appellate exceptions')."
         )
@@ -1511,7 +1515,8 @@ class AsyncByzantineConsensusEngine:
         fizz_plea_speech, fizz_plea_obj = await self.stream_ollama(
             fizz_plea_msgs, case_id, payload, 6, phase6_name, "Lobbyist-3 (Fizz Consortium)", "fizz",
             model_cls=RatificationPlea,
-            fallback_overrides={"action": fizz_default_plea_action, "status": "Entering Fizz floor plea"}
+            fallback_overrides={"action": fizz_default_plea_action, "status": "Entering Fizz floor plea"},
+            force_action=fizz_default_plea_action
         )
         transcript["l3_plea"] = fizz_plea_speech
         if config.phase_delay_seconds > 0:
@@ -1562,7 +1567,8 @@ class AsyncByzantineConsensusEngine:
         buzz_plea_speech, buzz_plea_obj = await self.stream_ollama(
             buzz_plea_msgs, case_id, payload, 6, phase6_name, "Lobbyist-5 (Buzz Syndicate)", "buzz",
             model_cls=RatificationPlea,
-            fallback_overrides={"action": buzz_default_plea_action, "status": "Entering Buzz floor plea"}
+            fallback_overrides={"action": buzz_default_plea_action, "status": "Entering Buzz floor plea"},
+            force_action=buzz_default_plea_action
         )
         transcript["l5_plea"] = buzz_plea_speech
         if config.phase_delay_seconds > 0:
