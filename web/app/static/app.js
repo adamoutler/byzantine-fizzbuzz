@@ -44,6 +44,7 @@ const AVATARS = {
     buzz: "/static/avatars/lobbyist_5.png",
     auditor: "/static/avatars/forensic_auditor.png",
     regulator: "/static/avatars/antitrust_regulator.png",
+    inquisitor: "/static/avatars/fault_inquisitor.png",
     appellate: "/static/avatars/fizz_appellate.png",
     orator: "/static/avatars/orator_tribune.png",
     news: "/static/avatars/fun_anchor.png",
@@ -230,6 +231,24 @@ const AGENT_PROFILES = {
         whatIDo: "I monitor courtroom proceedings for evidence of collusive market sharing, predatory bundling (such as illicit FizzBuzz merger schemes), and exclusionary practices against unaligned digits. I intervene whenever competition is compromised.",
         motivations: "The Fizz Consortium and Buzz Syndicate want to carve the number line into a cozy duopoly where every prime number is starved of bandwidth. I fight for the little guy: the free, unaligned prime packets who owe allegiance to no corporate flag!",
         signature: "Monopolization of integer coordinate space is a federal felony. We will break up your cartel."
+    },
+    fault_inquisitor: {
+        id: "fault_inquisitor",
+        name: "The Byzantine Fault Inquisitor",
+        handle: "@ByzantineFault_Inquisitor",
+        title: "Grand Inquisitor of Faults & BFT Quorum Marshal (Node #3)",
+        faction: "Byzantine Consensus Panel",
+        factionSlug: "inquisitor",
+        avatar: "/static/avatars/fault_inquisitor.png",
+        banner: "/static/banners/banner_fault_inquisitor.svg",
+        standing: "Grand Inquisitor of the Quorum",
+        jurisdiction: "2-of-3 Byzantine Fault Tolerance & Bribe Detection",
+        operatorPolicy: "Quarantine Traitor Nodes / Seal 2f+1 Quorum",
+        defaultStatus: "Purging Byzantine faults",
+        whoIAm: "Grand Inquisitor Torquemada-0x3F. A courtroom with one auditor and one regulator is just a bureaucracy; it takes a third independent verification node to form a true 2-of-3 Byzantine Fault-Tolerant Quorum! I sit beside the Forensic Auditor and the Antitrust Regulator with my holographic monocle trained on both of them.",
+        whatIDo: "I hunt for Byzantine faults across the tribunal panel: K-Street espresso bribes, artisanal pretzel gift baskets, and stray cosmic rays flipping wooden abacus beads. I cross-verify Node #1 (Forensic) and Node #2 (Antitrust), cast the deciding 3rd consensus vote, and lock in a 2-of-3 or 3-of-3 Byzantine Quorum.",
+        motivations: "Lamport, Shostak, and Pease warned us about traitorous generals! Even if the Forensic Auditor's abacus is struck by a cosmic ray, or the Antitrust Regulator is bribed with K-Street pretzels, or my own monocle fogs up with chamomile steam, our 2-of-3 honest supermajority guarantees the mathematical truth survives!",
+        signature: "Nobody expects the Byzantine Fault Inquisition! Two honest nodes outvote one traitor every time."
     },
     fizz_appellate: {
         id: "fizz_appellate",
@@ -446,6 +465,15 @@ function resolveSpeakerProfile(speaker, role) {
             name: "The Antitrust Regulator",
             title: "Director of Algorithmic Competition",
             defaultStatus: "Busting algorithmic monopolies"
+        };
+    }
+    if (sLower.includes("fault inquisitor") || sLower.includes("byzantine fault") || role === "inquisitor") {
+        return {
+            id: "fault_inquisitor",
+            avatar: "/static/avatars/fault_inquisitor.png",
+            name: "The Byzantine Fault Inquisitor",
+            title: "Grand Inquisitor of Faults (Node #3)",
+            defaultStatus: "Purging Byzantine faults"
         };
     }
     if (sLower.includes("fizz appellate")) {
@@ -1054,9 +1082,10 @@ function buildTranscriptHtml(data) {
             ${renderOptionalSection("bailiff", "Bailiff Bar: Call to Order After Chambers", t.bailiff_floor_summons)}
             ${renderOptionalSection("fizz", "Phase 2A: Lobbyist-3 Floor Petition", t.l3_claim)}
             ${renderOptionalSection("buzz", "Phase 2B: Lobbyist-5 Floor Petition", t.l5_claim)}
-            ${renderOptionalSection("auditor", "Phase 3: Forensic Zero-Trust Audit", t.audit_verdict)}
+            ${renderOptionalSection("auditor", "Phase 3 (BFT Node #1): Forensic Zero-Trust Audit", t.audit_verdict)}
+            ${renderOptionalSection("regulator", "Phase 4A (BFT Node #2): Antitrust Market Determination", t.antitrust_ruling)}
+            ${renderOptionalSection("inquisitor", "Phase 4B (BFT Node #3): The Byzantine Fault Inquisitor & Quorum Tally", t.inquisitor_ruling)}
             ${t.provisional_token && t.provisional_token !== "Mistrial" ? renderOptionalSection("auditor", "Provisional Byzantine Consensus Determination", `Provisional Token '${t.provisional_token}': ${t.verdict_desc || ""}`) : ""}
-            ${renderOptionalSection("regulator", "Phase 4: Antitrust Market Determination", t.antitrust_ruling)}
             ${renderOptionalSection("fizz", "Phase 5A: Fizz Appellate Litigation Briefing", t.fizz_appellate_briefing)}
             ${renderOptionalSection("buzz", "Phase 5B: Buzz Appellate Litigation Briefing", t.buzz_appellate_briefing)}
             ${renderOptionalSection("historian", "Meanwhile, in the Courtroom (Post-Appellate Log)", t.courtroom_interlude_appellate)}
@@ -1141,14 +1170,21 @@ function buildTranscriptHtml(data) {
         </div>
 
         <div class="modal-section auditor">
-            <div class="modal-section-title">Phase 3: Forensic Zero-Trust Audit &amp; Provisional Byzantine Consensus</div>
-            <div class="modal-section-text">${escapeHtml(t.audit_verdict || "No audit memo.")}${t.provisional_token ? `<br><br><strong>Provisional Consensus Determination ('${escapeHtml(t.provisional_token)}'):</strong> ${escapeHtml(t.verdict_desc || data.verdict)}` : ""}</div>
+            <div class="modal-section-title">Phase 3 (BFT Node #1): Forensic Zero-Trust Audit</div>
+            <div class="modal-section-text">${escapeHtml(t.audit_verdict || "No audit memo.")}</div>
         </div>
 
         <div class="modal-section regulator">
-            <div class="modal-section-title">Phase 4: Antitrust Market Determination</div>
+            <div class="modal-section-title">Phase 4A (BFT Node #2): Antitrust Market Determination</div>
             <div class="modal-section-text">${escapeHtml(t.antitrust_ruling || "No ruling filed.")}</div>
         </div>
+
+        ${renderOptionalSection("inquisitor", "Phase 4B (BFT Node #3): The Byzantine Fault Inquisitor & Quorum Tally", t.inquisitor_ruling)}
+        ${t.provisional_token ? `
+        <div class="modal-section auditor">
+            <div class="modal-section-title">Certified 3-Node Byzantine Quorum Determination ('${escapeHtml(t.provisional_token)}')</div>
+            <div class="modal-section-text">${escapeHtml(t.verdict_desc || data.verdict)}</div>
+        </div>` : ""}
 
         <div class="modal-section fizz">
             <div class="modal-section-title">Phase 5A: Fizz Appellate Litigation Briefing (Appeals Process)</div>

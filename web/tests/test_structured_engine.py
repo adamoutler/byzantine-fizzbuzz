@@ -91,6 +91,7 @@ def test_schema_property_ordering_speech_first_enums_last():
         FloorPetition,
         ForensicAuditReport,
         AntitrustDetermination,
+        ByzantineInquisitorReport,
         AppellateBriefing,
         RatificationPlea,
         JudgeBazRuling,
@@ -106,6 +107,7 @@ def test_schema_property_ordering_speech_first_enums_last():
         FloorPetition,
         ForensicAuditReport,
         AntitrustDetermination,
+        ByzantineInquisitorReport,
         AppellateBriefing,
         RatificationPlea,
         JudgeBazRuling,
@@ -211,6 +213,47 @@ def test_courtroom_meanwhile_examples_pool_and_prompts():
     assert chambers_fb.startswith("Meanwhile, in the courtroom,")
     assert appellate_fb.startswith("Meanwhile, in the courtroom,")
     assert len(chambers_fb) > len(appellate_fb)
+
+
+def test_byzantine_quorum_fault_tolerance():
+    """Verify 3-node Byzantine Consensus Panel quorum planning and 2-of-3 fault containment."""
+    from app.engine.byzantine_quorum import plan_byzantine_quorum, build_inquisitor_prompt
+
+    # 1. Unanimous 3-of-3 quorum
+    plan_unanimous = plan_byzantine_quorum(fizz_valid=True, buzz_valid=False, force_fault_node="none")
+    assert plan_unanimous["honest_vote"] == "Fizz"
+    assert plan_unanimous["auditor_vote"] == "Fizz"
+    assert plan_unanimous["regulator_vote"] == "Fizz"
+    assert plan_unanimous["inquisitor_vote"] == "Fizz"
+    assert plan_unanimous["quorum_tally"] == "3_of_3_unanimous"
+    assert plan_unanimous["inquisitor_action"] == "seal_unanimous_quorum"
+
+    # 2. Faulty Node #1 (Forensic Auditor): Regulator + Inquisitor outvote 2-to-1
+    plan_aud_fault = plan_byzantine_quorum(fizz_valid=True, buzz_valid=False, force_fault_node="auditor")
+    assert plan_aud_fault["auditor_vote"] != "Fizz"
+    assert plan_aud_fault["regulator_vote"] == "Fizz"
+    assert plan_aud_fault["inquisitor_vote"] == "Fizz"
+    assert plan_aud_fault["quorum_tally"] == "2_of_3_fault_contained"
+    assert plan_aud_fault["inquisitor_action"] == "outvote_byzantine_traitor"
+    msgs, fb = build_inquisitor_prompt("BZ-2026-0003", "3", "3", "3", True, False, "Fizz", plan_aud_fault, "Rogue audit", "Honest antitrust")
+    assert "2-of-3" in fb
+
+    # 3. Faulty Node #2 (Antitrust Regulator): Auditor + Inquisitor outvote 2-to-1
+    plan_reg_fault = plan_byzantine_quorum(fizz_valid=False, buzz_valid=True, force_fault_node="regulator")
+    assert plan_reg_fault["auditor_vote"] == "Buzz"
+    assert plan_reg_fault["regulator_vote"] != "Buzz"
+    assert plan_reg_fault["inquisitor_vote"] == "Buzz"
+    assert plan_reg_fault["quorum_tally"] == "2_of_3_fault_contained"
+    assert plan_reg_fault["inquisitor_action"] == "outvote_byzantine_traitor"
+
+    # 4. Faulty Node #3 (Inquisitor self-dissent): Auditor + Regulator outvote 2-to-1
+    plan_inq_fault = plan_byzantine_quorum(fizz_valid=True, buzz_valid=True, force_fault_node="inquisitor")
+    assert plan_inq_fault["auditor_vote"] == "FizzBuzz"
+    assert plan_inq_fault["regulator_vote"] == "FizzBuzz"
+    assert plan_inq_fault["inquisitor_vote"] != "FizzBuzz"
+    assert plan_inq_fault["quorum_tally"] == "2_of_3_fault_contained"
+    assert plan_inq_fault["inquisitor_action"] == "concede_to_honest_supermajority"
+
 
 
 

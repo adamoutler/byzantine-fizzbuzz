@@ -179,9 +179,9 @@ class FloorPetition(StrictStructuredModel):
 
 
 class ForensicAuditReport(StrictStructuredModel):
-    """Zero-Trust Forensic Auditor verification report."""
+    """Zero-Trust Forensic Auditor verification report (Node #1 of the Byzantine Consensus Panel)."""
     speech: str = Field(
-        description="Two concise bullet points or sentences stating PASS or REJECT for Lobbyist-3 (Fizz) and Lobbyist-5 (Buzz) based strictly on recursive digital root and terminal glyph inspection"
+        description="Two concise bullet points or sentences stating PASS or REJECT for Lobbyist-3 (Fizz) and Lobbyist-5 (Buzz) based on recursive digital root and terminal glyph inspection, and casting Node #1's Byzantine quorum vote"
     )
     fizz_status: Literal["PASS", "REJECT"] = Field(
         default="REJECT",
@@ -191,11 +191,16 @@ class ForensicAuditReport(StrictStructuredModel):
         default="REJECT",
         description="Forensic audit determination for Buzz Syndicate base-5 claim"
     )
+    consensus_vote: Literal["Fizz", "Buzz", "FizzBuzz", "Digit"] = Field(
+        default="Digit",
+        description="Node #1 Byzantine Consensus Panel vote ('Fizz', 'Buzz', 'FizzBuzz', or 'Digit')"
+    )
     action: Literal[
         "certify_fizz",
         "certify_buzz",
         "refer_collision_to_antitrust",
-        "reject_all_claims"
+        "reject_all_claims",
+        "byzantine_fault_dissent"
     ] = Field(
         default="reject_all_claims",
         description="Formal forensic certification action"
@@ -207,22 +212,28 @@ class ForensicAuditReport(StrictStructuredModel):
 
 
 class AntitrustDetermination(StrictStructuredModel):
-    """Algorithmic Antitrust Regulator market concentration determination."""
+    """Algorithmic Antitrust Regulator market concentration determination (Node #2 of the Byzantine Consensus Panel)."""
     speech: str = Field(
-        description="Formal regulatory ruling either arbitrating a 3-round FizzBuzz merger with a 50/50 KPI split or granting market clearance without injunction"
+        description="Formal regulatory ruling either arbitrating a 3-round FizzBuzz merger with a 50/50 KPI split or granting market clearance, and casting Node #2's Byzantine quorum vote"
     )
     market_ruling: Literal[
         "single_domain_clearance",
         "mandatory_fizzbuzz_merger",
-        "independent_passthrough"
+        "independent_passthrough",
+        "byzantine_fault_injunction"
     ] = Field(
         default="independent_passthrough",
         description="Antitrust market structure classification"
     )
+    consensus_vote: Literal["Fizz", "Buzz", "FizzBuzz", "Digit"] = Field(
+        default="Digit",
+        description="Node #2 Byzantine Consensus Panel vote ('Fizz', 'Buzz', 'FizzBuzz', or 'Digit')"
+    )
     action: Literal[
         "grant_market_clearance",
         "issue_merger_consent_decree",
-        "clear_independent_payload"
+        "clear_independent_payload",
+        "byzantine_fault_dissent"
     ] = Field(
         default="clear_independent_payload",
         description="Formal regulatory action issued by the Antitrust Regulator"
@@ -230,6 +241,45 @@ class AntitrustDetermination(StrictStructuredModel):
     status: str = Field(
         default="Busting algorithmic monopolies",
         description="Short 2-to-5 word public social media status for The Antitrust Regulator"
+    )
+
+
+class ByzantineInquisitorReport(StrictStructuredModel):
+    """The Byzantine Fault Inquisitor verification & 3-node BFT quorum tally (Node #3 of the Byzantine Consensus Panel)."""
+    speech: str = Field(
+        description="Two dramatic, deadpan inquisitorial sentences auditing the panel for Byzantine faults (bribes, cosmic bit-flips, or rogue dissents), casting Node #3's vote, and certifying the 2-of-3 or 3-of-3 Byzantine Quorum outcome"
+    )
+    quorum_tally: Literal[
+        "3_of_3_unanimous",
+        "2_of_3_fault_contained"
+    ] = Field(
+        default="3_of_3_unanimous",
+        description="Final 3-node Byzantine Consensus Panel tally"
+    )
+    fault_detected: Literal[
+        "none",
+        "forensic_auditor_fault",
+        "antitrust_regulator_fault",
+        "inquisitor_self_dissent"
+    ] = Field(
+        default="none",
+        description="Whether any panel node suffered a Byzantine fault"
+    )
+    consensus_vote: Literal["Fizz", "Buzz", "FizzBuzz", "Digit"] = Field(
+        default="Digit",
+        description="Node #3 Byzantine Consensus Panel vote ('Fizz', 'Buzz', 'FizzBuzz', or 'Digit')"
+    )
+    action: Literal[
+        "seal_unanimous_quorum",
+        "outvote_byzantine_traitor",
+        "concede_to_honest_supermajority"
+    ] = Field(
+        default="seal_unanimous_quorum",
+        description="Formal Byzantine Quorum certification action"
+    )
+    status: str = Field(
+        default="Purging Byzantine faults",
+        description="Short 2-to-5 word public social media status for The Byzantine Fault Inquisitor"
     )
 
 

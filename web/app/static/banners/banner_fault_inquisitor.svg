@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 225" width="900" height="225">
+  <defs>
+    <linearGradient id="inq_bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2a0814"/>
+      <stop offset="50%" stop-color="#4c0519"/>
+      <stop offset="100%" stop-color="#18040c"/>
+    </linearGradient>
+    <pattern id="inq_grid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(244,63,94,0.1)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="900" height="225" fill="url(#inq_bg)"/>
+  <rect width="900" height="225" fill="url(#inq_grid)"/>
+
+  <!-- 3-Node BFT Quorum Triangle (2 Honest Nodes vs 1 Traitor Node) on right -->
+  <g transform="translate(705, 38)" opacity="0.9">
+    <line x1="65" y1="20" x2="20" y2="105" stroke="#10b981" stroke-width="3" stroke-dasharray="5 3"/>
+    <line x1="65" y1="20" x2="115" y2="105" stroke="#f43f5e" stroke-width="3" stroke-dasharray="5 3"/>
+    <line x1="20" y1="105" x2="115" y2="105" stroke="#10b981" stroke-width="3"/>
+    <circle cx="65" cy="20" r="18" fill="#064e3b" stroke="#10b981" stroke-width="3"/>
+    <text x="65" y="25" font-family="monospace" font-size="11" font-weight="bold" fill="#6ee7b7" text-anchor="middle">N1</text>
+    <circle cx="20" cy="105" r="18" fill="#064e3b" stroke="#10b981" stroke-width="3"/>
+    <text x="20" y="110" font-family="monospace" font-size="11" font-weight="bold" fill="#6ee7b7" text-anchor="middle">N2</text>
+    <circle cx="115" cy="105" r="18" fill="#881337" stroke="#f43f5e" stroke-width="3"/>
+    <text x="115" y="110" font-family="monospace" font-size="11" font-weight="bold" fill="#fda4af" text-anchor="middle">FAULT</text>
+    <text x="68" y="142" font-family="monospace" font-size="12" font-weight="bold" fill="#fda4af" text-anchor="middle">2-OF-3 QUORUM LOCKED</text>
+  </g>
+
+  <!-- Big Crimson Inquisitorial Stamp -->
+  <g transform="translate(545, 36) rotate(-10)" opacity="0.9">
+    <rect x="0" y="0" width="142" height="52" rx="4" fill="none" stroke="#f43f5e" stroke-width="3" stroke-dasharray="6 3"/>
+    <text x="71" y="24" font-family="'Impact', sans-serif" font-size="14" fill="#fda4af" text-anchor="middle">BYZANTINE FAULT</text>
+    <text x="71" y="42" font-family="'Impact', sans-serif" font-size="15" fill="#f43f5e" text-anchor="middle">2/3 SUPERMAJORITY</text>
+  </g>
+
+  <g transform="translate(50, 30)">
+    <rect x="0" y="0" width="470" height="28" rx="4" fill="rgba(244, 63, 94, 0.16)" stroke="#f43f5e" stroke-width="1.2"/>
+    <text x="15" y="19" font-family="monospace" font-size="12" font-weight="bold" fill="#fda4af" letter-spacing="2">GRAND INQUISITOR OF FAULTS • BFT QUORUM NODE #3</text>
+
+    <text x="0" y="74" font-family="'Trebuchet MS', Arial, sans-serif" font-size="31" font-weight="900" fill="#fff1f2" letter-spacing="1">BYZANTINE FAULT INQUISITOR</text>
+    <text x="0" y="104" font-family="monospace" font-size="14" font-weight="bold" fill="#fb7185">"NOBODY EXPECTS THE BYZANTINE FAULT INQUISITION"</text>
+
+    <!-- Badges -->
+    <g transform="translate(0, 122)">
+      <rect x="0" y="0" width="150" height="26" rx="4" fill="#881337" stroke="#f43f5e" stroke-width="1"/>
+      <text x="12" y="17" font-family="monospace" font-size="11" font-weight="bold" fill="#ffe4e6">2-OF-3 BFT QUORUM</text>
+
+      <rect x="160" y="0" width="155" height="26" rx="4" fill="#881337" stroke="#f43f5e" stroke-width="1"/>
+      <text x="172" y="17" font-family="monospace" font-size="11" font-weight="bold" fill="#ffe4e6">BRIBE &amp; BIT-FLIP HUNTER</text>
+
+      <rect x="325" y="0" width="155" height="26" rx="4" fill="#064e3b" stroke="#10b981" stroke-width="1"/>
+      <text x="337" y="17" font-family="monospace" font-size="11" font-weight="bold" fill="#d1fae5">TRAITOR OUTVOTED</text>
+    </g>
+  </g>
+</svg>

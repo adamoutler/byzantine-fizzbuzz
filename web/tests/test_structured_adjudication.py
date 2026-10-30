@@ -89,13 +89,24 @@ async def test_structured_adjudication_flow(tmp_path):
                 "speech": "Forensic inspection confirms digital root '3' -> Lobbyist-3 (Fizz): PASS, and terminal glyph '3' -> Lobbyist-5 (Buzz): REJECT.",
                 "fizz_status": "PASS",
                 "buzz_status": "REJECT",
+                "consensus_vote": "Fizz",
                 "action": "certify_fizz"
             }
         elif "Algorithmic Antitrust Regulator" in sys_msg:
             payload_dict = {
                 "speech": "No concurrent valid dual claims exist on payload '3'. Single-domain market clearance is granted to Fizz Consortium.",
                 "market_ruling": "single_domain_clearance",
+                "consensus_vote": "Fizz",
                 "action": "grant_market_clearance"
+            }
+        elif "You are The Byzantine Fault Inquisitor" in sys_msg:
+            payload_dict = {
+                "speech": "Inquisitorial sweep detects K-Street bribery on the rogue node, but our 2-of-3 Byzantine Fault-Tolerant Supermajority locks in token 'Fizz'!",
+                "quorum_tally": "2_of_3_fault_contained",
+                "fault_detected": "forensic_auditor_fault",
+                "consensus_vote": "Fizz",
+                "action": "outvote_byzantine_traitor",
+                "status": "Purging Byzantine faults"
             }
         elif "Fizz Appellate Litigation Team" in sys_msg:
             payload_dict = {
@@ -168,6 +179,7 @@ async def test_structured_adjudication_flow(tmp_path):
         return MockStreamContext(resp)
 
     engine.client.stream = mock_stream
+    engine.force_fault_node = "auditor"
 
     # Execute adjudication for payload 3
     transcript = await engine.adjudicate("3", "Unit Test")
@@ -175,6 +187,9 @@ async def test_structured_adjudication_flow(tmp_path):
     assert transcript["payload"] == "3"
     assert "Judge Baz" in transcript["bailiff_proclamation"]
     assert "Judge Baz" in transcript["judge_chamber_order"]
+    assert "inquisitor_ruling" in transcript
+    assert transcript["byzantine_quorum"]["faulty_node"] == "auditor"
+    assert transcript["byzantine_quorum"]["quorum_tally"] == "2_of_3_fault_contained"
     # Verify 2-round counterpart exchange in both chambers (Strategist/Inspector -> Lobbyist)
     assert len(transcript["conferring_rounds"]["fizz"]) == 2
     assert transcript["conferring_rounds"]["fizz"][0]["action"] == "confer_further"

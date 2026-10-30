@@ -61,6 +61,9 @@ COURTROOM_MEANWHILE_EXAMPLES: List[str] = [
     "The Forensic Auditor is testing the acoustic resonance of the witness stand to make sure no hidden modulo frequencies can echo off the marble walls.",
     "The Antitrust Regulator is measuring the exact square footage of the Fizz and Buzz counsel tables with a laser level to prevent territorial monopoly.",
     "The Forensic Auditor is sealing a suspect pocket calculator inside an electrostatic evidence bag labeled 'EXHIBIT X: CONTRABAND ALU'.",
+    "The Byzantine Fault Inquisitor is scanning the Forensic Auditor's espresso mug through a glowing holographic monocle to check for K-Street bribery residue.",
+    "The Byzantine Fault Inquisitor is interrogating a potted fern near the jury box on suspicion of acting as a rogue fourth consensus node.",
+    "The Byzantine Fault Inquisitor is polishing his crimson 2-of-3 Supermajority stamp while muttering 'Nobody expects the Byzantine Fault Inquisition.'",
 
     # 41-52: Bailiff Bar, Gallery Spectators, Interns & FUN-TV Crew
     "Near the magnetometer checkpoint, Bailiff Bar is confiscating a contraband slide rule from a nervous math graduate student in the visitor gallery.",

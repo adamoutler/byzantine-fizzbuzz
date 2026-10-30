@@ -18,6 +18,7 @@
     --color-orator: #fbbf24;
     --color-bailiff: #06b6d4;
     --color-judge: #a855f7;
+    --color-inquisitor: #f43f5e;
     --color-danger: #ef4444;
 }
 
@@ -502,6 +503,7 @@ body {
 .speech-card.buzz { border-left-color: var(--color-buzz); }
 .speech-card.auditor { border-left-color: var(--color-auditor); }
 .speech-card.regulator, .speech-card.appellate { border-left-color: var(--color-appellate); }
+.speech-card.inquisitor { border-left-color: var(--color-inquisitor); }
 .speech-card.orator { border-left-color: var(--color-orator); }
 .speech-card.news {
     border-left-color: #06b6d4;
@@ -563,6 +565,7 @@ body {
 .speech-card.auditor .forum-avatar-img { border-color: var(--color-auditor); }
 .speech-card.regulator .forum-avatar-img,
 .speech-card.appellate .forum-avatar-img { border-color: var(--color-appellate); }
+.speech-card.inquisitor .forum-avatar-img { border-color: var(--color-inquisitor); }
 .speech-card.orator .forum-avatar-img { border-color: var(--color-orator); }
 .speech-card.news .forum-avatar-img { border-color: #06b6d4; }
 
@@ -645,7 +648,9 @@ body {
 .speech-action-tag.action-rebut-claim,
 .speech-action-tag.action-declare-mistrial,
 .speech-action-tag.action-order-retrial-before-expansion,
-.speech-action-tag.action-quorum-severed {
+.speech-action-tag.action-quorum-severed,
+.speech-action-tag.action-byzantine-fault-dissent,
+.speech-action-tag.action-concede-to-honest-supermajority {
     background-color: rgba(239, 68, 68, 0.18);
     border-color: rgba(239, 68, 68, 0.5);
     color: #fca5a5;
@@ -659,6 +664,8 @@ body {
 .speech-action-tag.action-certify-fizz,
 .speech-action-tag.action-certify-buzz,
 .speech-action-tag.action-grant-market-clearance,
+.speech-action-tag.action-seal-unanimous-quorum,
+.speech-action-tag.action-outvote-byzantine-traitor,
 .speech-action-tag.action-ratify-uncontested,
 .speech-action-tag.action-dissolve-stays-and-emit,
 .speech-action-tag.action-declare-digital-independence,
@@ -1221,6 +1228,7 @@ body {
 .modal-section.buzz { border-left-color: var(--color-buzz); }
 .modal-section.auditor { border-left-color: var(--color-auditor); }
 .modal-section.regulator { border-left-color: var(--color-appellate); }
+.modal-section.inquisitor { border-left-color: var(--color-inquisitor); }
 .modal-section.orator { border-left-color: var(--color-orator); }
 
 .modal-section-title {
@@ -1537,6 +1545,7 @@ body {
 .swarm-role-card.buzz { border-left-color: var(--color-buzz); }
 .swarm-role-card.auditor { border-left-color: var(--color-auditor); }
 .swarm-role-card.regulator { border-left-color: var(--color-appellate); }
+.swarm-role-card.inquisitor { border-left-color: var(--color-inquisitor); }
 .swarm-role-card.orator { border-left-color: var(--color-orator); }
 .swarm-role-card.news { border-left-color: #06b6d4; }
 
@@ -2001,6 +2010,7 @@ body {
 .profile-faction-pill.faction-buzz { border-color: var(--color-buzz); color: #fb923c; background: rgba(249, 115, 22, 0.12); }
 .profile-faction-pill.faction-auditor { border-color: var(--color-auditor); color: #34d399; background: rgba(16, 185, 129, 0.12); }
 .profile-faction-pill.faction-regulator { border-color: var(--color-appellate); color: #f472b6; background: rgba(236, 72, 153, 0.12); }
+.profile-faction-pill.faction-inquisitor { border-color: var(--color-inquisitor); color: #fda4af; background: rgba(244, 63, 94, 0.15); }
 .profile-faction-pill.faction-appellate { border-color: var(--color-appellate); color: #c084fc; background: rgba(192, 132, 252, 0.12); }
 .profile-faction-pill.faction-orator { border-color: var(--color-orator); color: #38bdf8; background: rgba(56, 189, 248, 0.12); }
 .profile-faction-pill.faction-news { border-color: #06b6d4; color: #22d3ee; background: rgba(6, 182, 212, 0.12); }

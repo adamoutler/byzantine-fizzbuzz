@@ -19,6 +19,10 @@ from app.engine.courtroom_interludes import (
     build_post_chambers_interlude_prompt,
     build_post_appellate_interlude_prompt,
 )
+from app.engine.byzantine_quorum import (
+    plan_byzantine_quorum,
+    build_inquisitor_prompt,
+)
 from app.engine.structured_schemas import (
     BailiffAnnouncement,
     CourtroomInterlude,
@@ -28,6 +32,7 @@ from app.engine.structured_schemas import (
     FloorPetition,
     ForensicAuditReport,
     AntitrustDetermination,
+    ByzantineInquisitorReport,
     AppellateBriefing,
     RatificationPlea,
     JudgeBazRuling,
@@ -52,6 +57,7 @@ class AsyncByzantineConsensusEngine:
         self.ledger = ledger
         self.observer_mgr = observer_mgr
         self.client = httpx.AsyncClient(timeout=config.ollama_timeout)
+        self.force_fault_node: Optional[str] = None
 
     async def close(self):
         await self.client.aclose()
@@ -1176,71 +1182,11 @@ class AsyncByzantineConsensusEngine:
             await asyncio.sleep(config.phase_delay_seconds)
 
         # -----------------------------------------------------------------
-        # PHASE 3: FORENSIC ZERO-TRUST AUDIT
+        # 3-NODE BYZANTINE CONSENSUS PANEL (PHASES 3, 4A, 4B)
+        #   Node #1: The Forensic Auditor
+        #   Node #2: The Antitrust Regulator
+        #   Node #3: The Byzantine Fault Inquisitor (2-of-3 / 3-of-3 Quorum)
         # -----------------------------------------------------------------
-        phase3_name = "Forensic Zero-Trust Audit"
-        expected_audit_action = (
-            "refer_collision_to_antitrust" if is_collision
-            else "certify_fizz" if fizz_valid
-            else "certify_buzz" if buzz_valid
-            else "reject_all_claims"
-        )
-        audit_msgs = [
-            {
-                "role": "system",
-                "content": (
-                    "You are the Zero-Trust Forensic Auditor. You enforce mathematical verification without modulo or division. "
-                    "Base-3 Fizz claims are valid ONLY if the recursive digital root is in {3, 6, 9} (or 0). "
-                    "Base-5 Buzz claims are valid ONLY if the terminal glyph is in {0, 5}. "
-                    "Expose any procedural bluffs by the lobbyists and state PASS or REJECT for both Lobbyist-3 (Fizz) and Lobbyist-5 (Buzz) in 2 crisp sentences."
-                    "\n\n[STRUCTURED OUTPUT SCHEMA]:\n"
-                    "Output valid JSON with keys in this exact order:\n"
-                    "- 'speech': 2 crisp sentences stating PASS or REJECT for Lobbyist-3 (Fizz) and Lobbyist-5 (Buzz) with exact root/glyph proof.\n"
-                    f"- 'fizz_status': '{'PASS' if fizz_valid else 'REJECT'}'.\n"
-                    f"- 'buzz_status': '{'PASS' if buzz_valid else 'REJECT'}'.\n"
-                    f"- 'action': Choose '{expected_audit_action}'.\n"
-                    "- 'status': Short 2-to-5 word public social media status (e.g. 'Trusting zero modulo claims')."
-                )
-            },
-            {
-                "role": "user",
-                "content": (
-                    f"Payload: '{payload}'. Digital Root: '{root}' (Fizz Valid: {fizz_valid}). Terminal Glyph: '{glyph}' (Buzz Valid: {buzz_valid}).\n"
-                    f"Lobbyist-3 claimed: {transcript['l3_claim']}\nLobbyist-5 claimed: {transcript['l5_claim']}\nDeliver forensic audit report."
-                )
-            }
-        ]
-        await self.observer_mgr.broadcast({
-            "event": "PHASE_TRANSITION",
-            "docket_id": case_id,
-            "phase_index": 3,
-            "phase_name": phase3_name,
-            "stage_index": 3,
-            "stage_name": phase3_name,
-            "speaker": "The Forensic Auditor",
-            "speaker_role": "auditor"
-        })
-        auditor_fallback = (
-            f"Forensic verification of payload '{payload}' confirms digital root '{root}' -> Lobbyist-3 (Fizz): {'PASS' if fizz_valid else 'REJECT'}, "
-            f"and terminal glyph '{glyph}' -> Lobbyist-5 (Buzz): {'PASS' if buzz_valid else 'REJECT'}."
-        )
-        audit_speech, _ = await self.stream_ollama(
-            audit_msgs, case_id, payload, 3, phase3_name, "The Forensic Auditor", "auditor",
-            fallback_text=auditor_fallback,
-            model_cls=ForensicAuditReport,
-            fallback_overrides={
-                "fizz_status": "PASS" if fizz_valid else "REJECT",
-                "buzz_status": "PASS" if buzz_valid else "REJECT",
-                "action": expected_audit_action,
-                "status": "Trusting zero modulo claims"
-            },
-            force_action=expected_audit_action
-        )
-        transcript["audit_verdict"] = audit_speech
-        if config.phase_delay_seconds > 0:
-            await asyncio.sleep(config.phase_delay_seconds)
-
-        # Determine Provisional Verdict
         if is_collision:
             provisional_token = "FizzBuzz"
             verdict_desc = "Mandatory 3-Round Merger into 'FizzBuzz' with 50/50 KPI token split"
@@ -1265,33 +1211,173 @@ class AsyncByzantineConsensusEngine:
         transcript["provisional_token"] = provisional_token
         transcript["verdict_desc"] = verdict_desc
 
+        quorum_plan = plan_byzantine_quorum(
+            fizz_valid=fizz_valid,
+            buzz_valid=buzz_valid,
+            force_fault_node=self.force_fault_node,
+        )
+        auditor_vote = quorum_plan["auditor_vote"] or "Digit"
+        regulator_vote = quorum_plan["regulator_vote"] or "Digit"
+        inquisitor_vote = quorum_plan["inquisitor_vote"] or "Digit"
+
         # -----------------------------------------------------------------
-        # PHASE 4: ANTITRUST REGULATORY ASSESSMENT
+        # PHASE 3: FORENSIC ZERO-TRUST AUDIT (BFT Consensus Node #1)
         # -----------------------------------------------------------------
-        phase4_name = "Antitrust Regulatory Assessment"
-        if is_collision:
+        phase3_name = "Forensic Zero-Trust Audit (BFT Node #1)"
+        if quorum_plan["faulty_node"] == "auditor":
+            expected_audit_action = "byzantine_fault_dissent"
+            auditor_status_default = "Abacus bit-flip detected!"
+            audit_msgs = [
+                {
+                    "role": "system",
+                    "content": (
+                        "You are the Zero-Trust Forensic Auditor (Node #1 of the 3-Member Byzantine Consensus Panel). "
+                        f"COMEDIC BYZANTINE FAULT TWIST: Normally digital root '{root}' means Fizz={'PASS' if fizz_valid else 'REJECT'} and glyph '{glyph}' means Buzz={'PASS' if buzz_valid else 'REJECT'}, "
+                        f"HOWEVER {quorum_plan['fault_reason']}! "
+                        f"In 2 deadpan comedic sentences: explain how this bizarre courtroom mishap scrambled your forensic reading on payload '{payload}', "
+                        f"and cast a rogue, faulty Node #1 vote for '{auditor_vote}'!"
+                        "\n\n[STRUCTURED OUTPUT SCHEMA]:\n"
+                        "Output valid JSON with keys in this exact order:\n"
+                        f"- 'speech': 2 deadpan comedic sentences explaining your forensic glitch and rogue vote for '{auditor_vote}'.\n"
+                        f"- 'fizz_status': '{'PASS' if auditor_vote in ('Fizz', 'FizzBuzz') else 'REJECT'}'.\n"
+                        f"- 'buzz_status': '{'PASS' if auditor_vote in ('Buzz', 'FizzBuzz') else 'REJECT'}'.\n"
+                        f"- 'consensus_vote': '{auditor_vote}'.\n"
+                        "- 'action': 'byzantine_fault_dissent'.\n"
+                        "- 'status': Short 2-to-5 word public social media status (e.g. 'Abacus struck by cosmic ray')."
+                    )
+                },
+                {
+                    "role": "user",
+                    "content": f"Deliver your glitched Byzantine-fault forensic report for payload '{payload}' casting rogue vote '{auditor_vote}'."
+                }
+            ]
+            auditor_fallback = (
+                f"Wait—{quorum_plan['fault_reason']}! Due to this catastrophic abacus anomaly on payload '{payload}', "
+                f"Node #1 casts an irregular forensic vote for '{auditor_vote}'!"
+            )
+        else:
+            expected_audit_action = (
+                "refer_collision_to_antitrust" if is_collision
+                else "certify_fizz" if fizz_valid
+                else "certify_buzz" if buzz_valid
+                else "reject_all_claims"
+            )
+            auditor_status_default = "Trusting zero modulo claims"
+            audit_msgs = [
+                {
+                    "role": "system",
+                    "content": (
+                        "You are the Zero-Trust Forensic Auditor (Node #1 of the 3-Member Byzantine Consensus Panel). "
+                        "You enforce mathematical verification without modulo or division. "
+                        "Base-3 Fizz claims are valid ONLY if the recursive digital root is in {3, 6, 9} (or 0). "
+                        "Base-5 Buzz claims are valid ONLY if the terminal glyph is in {0, 5}. "
+                        f"Expose any procedural bluffs by the lobbyists, state PASS or REJECT for both Lobbyist-3 (Fizz) and Lobbyist-5 (Buzz), "
+                        f"and cast Node #1's Byzantine quorum vote for '{auditor_vote}' in 2 crisp sentences."
+                        "\n\n[STRUCTURED OUTPUT SCHEMA]:\n"
+                        "Output valid JSON with keys in this exact order:\n"
+                        "- 'speech': 2 crisp sentences stating PASS or REJECT for Lobbyist-3 (Fizz) and Lobbyist-5 (Buzz) and casting Node #1's vote.\n"
+                        f"- 'fizz_status': '{'PASS' if fizz_valid else 'REJECT'}'.\n"
+                        f"- 'buzz_status': '{'PASS' if buzz_valid else 'REJECT'}'.\n"
+                        f"- 'consensus_vote': '{auditor_vote}'.\n"
+                        f"- 'action': Choose '{expected_audit_action}'.\n"
+                        "- 'status': Short 2-to-5 word public social media status (e.g. 'Trusting zero modulo claims')."
+                    )
+                },
+                {
+                    "role": "user",
+                    "content": (
+                        f"Payload: '{payload}'. Digital Root: '{root}' (Fizz Valid: {fizz_valid}). Terminal Glyph: '{glyph}' (Buzz Valid: {buzz_valid}).\n"
+                        f"Lobbyist-3 claimed: {transcript['l3_claim']}\nLobbyist-5 claimed: {transcript['l5_claim']}\nDeliver forensic audit report and cast Node #1 vote '{auditor_vote}'."
+                    )
+                }
+            ]
+            auditor_fallback = (
+                f"Forensic verification of payload '{payload}' confirms digital root '{root}' -> Lobbyist-3 (Fizz): {'PASS' if fizz_valid else 'REJECT'}, "
+                f"and terminal glyph '{glyph}' -> Lobbyist-5 (Buzz): {'PASS' if buzz_valid else 'REJECT'}. Node #1 casts its Byzantine quorum vote for '{auditor_vote}'."
+            )
+
+        await self.observer_mgr.broadcast({
+            "event": "PHASE_TRANSITION",
+            "docket_id": case_id,
+            "phase_index": 3,
+            "phase_name": phase3_name,
+            "stage_index": 3,
+            "stage_name": phase3_name,
+            "speaker": "The Forensic Auditor",
+            "speaker_role": "auditor"
+        })
+        audit_speech, _ = await self.stream_ollama(
+            audit_msgs, case_id, payload, 3, phase3_name, "The Forensic Auditor", "auditor",
+            fallback_text=auditor_fallback,
+            model_cls=ForensicAuditReport,
+            fallback_overrides={
+                "fizz_status": "PASS" if fizz_valid else "REJECT",
+                "buzz_status": "PASS" if buzz_valid else "REJECT",
+                "consensus_vote": auditor_vote,
+                "action": expected_audit_action,
+                "status": auditor_status_default
+            },
+            force_action=expected_audit_action
+        )
+        transcript["audit_verdict"] = audit_speech
+        if config.phase_delay_seconds > 0:
+            await asyncio.sleep(config.phase_delay_seconds)
+
+        # -----------------------------------------------------------------
+        # PHASE 4A: ANTITRUST REGULATORY ASSESSMENT (BFT Consensus Node #2)
+        # -----------------------------------------------------------------
+        phase4_name = "Antitrust Regulatory Assessment (BFT Node #2)"
+        if quorum_plan["faulty_node"] == "regulator":
+            expected_antitrust_ruling = "byzantine_fault_injunction"
+            expected_antitrust_action = "byzantine_fault_dissent"
+            antitrust_msgs = [
+                {
+                    "role": "system",
+                    "content": (
+                        "You are the Algorithmic Antitrust Regulator (Node #2 of the 3-Member Byzantine Consensus Panel). "
+                        f"COMEDIC BYZANTINE FAULT TWIST: Because {quorum_plan['fault_reason']}, you are overriding the normal market analysis on payload '{payload}'! "
+                        f"In 2 deadpan comedic sentences: explain this absurd regulatory mishap and cast a rogue Node #2 Byzantine quorum vote for '{regulator_vote}'!"
+                        "\n\n[STRUCTURED OUTPUT SCHEMA]:\n"
+                        "Output valid JSON with keys in this exact order:\n"
+                        f"- 'speech': Your 2-sentence comedic regulatory dissent casting Node #2's vote for '{regulator_vote}'.\n"
+                        "- 'market_ruling': 'byzantine_fault_injunction'.\n"
+                        f"- 'consensus_vote': '{regulator_vote}'.\n"
+                        "- 'action': 'byzantine_fault_dissent'.\n"
+                        "- 'status': Short 2-to-5 word public social media status (e.g. 'Swayed by K-Street pretzels')."
+                    )
+                },
+                {"role": "user", "content": f"Deliver your glitched Byzantine-fault antitrust ruling for payload '{payload}' casting rogue vote '{regulator_vote}'."}
+            ]
+            antitrust_fallback = (
+                f"Hold the presses—because {quorum_plan['fault_reason']}, the Antitrust Directorate refuses the standard clearance on payload '{payload}' "
+                f"and casts a rogue Node #2 quorum vote for '{regulator_vote}'!"
+            )
+        elif is_collision:
             expected_antitrust_ruling = "mandatory_fizzbuzz_merger"
             expected_antitrust_action = "issue_merger_consent_decree"
             antitrust_msgs = [
                 {
                     "role": "system",
                     "content": (
-                        "You are the Algorithmic Antitrust Regulator. Both Fizz and Buzz passed the Forensic Audit on a dual-claim collision. "
+                        "You are the Algorithmic Antitrust Regulator (Node #2 of the 3-Member Byzantine Consensus Panel). "
+                        "Both Fizz and Buzz have valid mathematical claims on a dual-claim collision. "
                         "In 3 concise sentences: (1) issue a market concentration injunction blocking unilateral monopoly, "
-                        "(2) partition syllable seniority (Fizz prefix, Buzz suffix), and (3) enter a Merger Consent Decree licensing 'FizzBuzz' with a mandatory 50/50 KPI split."
+                        "(2) partition syllable seniority (Fizz prefix, Buzz suffix), and (3) enter a Merger Consent Decree licensing 'FizzBuzz' with a mandatory 50/50 KPI split, "
+                        f"casting Node #2's Byzantine quorum vote for '{regulator_vote}'."
                         "\n\n[STRUCTURED OUTPUT SCHEMA]:\n"
                         "Output valid JSON with keys in this exact order:\n"
-                        "- 'speech': Your 3-sentence merger arbitration decree.\n"
+                        "- 'speech': Your 3-sentence merger arbitration decree and Node #2 vote.\n"
                         "- 'market_ruling': 'mandatory_fizzbuzz_merger'.\n"
+                        f"- 'consensus_vote': '{regulator_vote}'.\n"
                         "- 'action': 'issue_merger_consent_decree'.\n"
                         "- 'status': Short 2-to-5 word public social media status (e.g. 'Enforcing 50/50 KPI split')."
                     )
                 },
-                {"role": "user", "content": f"Arbitrate mandatory merger for dual-claim payload '{payload}'."}
+                {"role": "user", "content": f"Arbitrate mandatory merger for dual-claim payload '{payload}' and cast Node #2 vote '{regulator_vote}'."}
             ]
             antitrust_fallback = (
                 f"Concurrent valid claims on payload '{payload}' trigger an immediate antitrust injunction against unilateral monopoly. "
-                "Under syllable partition, Fizz is granted prefix seniority and Buzz is granted suffix control, establishing a mandatory 50/50 KPI split for joint token 'FizzBuzz'."
+                f"Under syllable partition, Fizz is granted prefix seniority and Buzz is granted suffix control, establishing a mandatory 50/50 KPI split and casting Node #2's vote for '{regulator_vote}'."
             )
         elif fizz_valid or buzz_valid:
             winning_name = "Fizz Consortium" if fizz_win == "CLEAN_WIN" else "Buzz Syndicate"
@@ -1301,22 +1387,25 @@ class AsyncByzantineConsensusEngine:
                 {
                     "role": "system",
                     "content": (
-                        "You are the Algorithmic Antitrust Regulator. Only one faction passed the Forensic Audit. "
+                        "You are the Algorithmic Antitrust Regulator (Node #2 of the 3-Member Byzantine Consensus Panel). "
+                        "Only one faction holds a valid mathematical claim. "
                         f"In 2 formal administrative sentences: certify that since no concurrent valid dual claims exist on payload '{payload}', "
-                        f"monopoly concentration thresholds are not breached for {winning_name}, and grant 100% single-domain market clearance without injunction."
+                        f"monopoly concentration thresholds are not breached for {winning_name}, grant 100% single-domain market clearance, "
+                        f"and cast Node #2's Byzantine quorum vote for '{regulator_vote}'."
                         "\n\n[STRUCTURED OUTPUT SCHEMA]:\n"
                         "Output valid JSON with keys in this exact order:\n"
-                        "- 'speech': Your 2-sentence regulatory clearance statement.\n"
+                        "- 'speech': Your 2-sentence regulatory clearance statement and Node #2 vote.\n"
                         "- 'market_ruling': 'single_domain_clearance'.\n"
+                        f"- 'consensus_vote': '{regulator_vote}'.\n"
                         "- 'action': 'grant_market_clearance'.\n"
                         "- 'status': Short 2-to-5 word public social media status (e.g. 'Clearing single-domain market')."
                     )
                 },
-                {"role": "user", "content": f"Issue single-domain Market Clearance Order for payload '{payload}'."}
+                {"role": "user", "content": f"Issue single-domain Market Clearance Order for payload '{payload}' and cast Node #2 vote '{regulator_vote}'."}
             ]
             antitrust_fallback = (
                 f"With no concurrent valid dual claims on payload '{payload}', market concentration thresholds are not breached. "
-                f"Unencumbered single-domain market clearance is hereby granted to {winning_name} for token '{provisional_token}'."
+                f"Unencumbered single-domain market clearance is granted to {winning_name}, and Node #2 casts its Byzantine quorum vote for '{regulator_vote}'."
             )
         else:
             expected_antitrust_ruling = "independent_passthrough"
@@ -1325,22 +1414,24 @@ class AsyncByzantineConsensusEngine:
                 {
                     "role": "system",
                     "content": (
-                        "You are the Algorithmic Antitrust Regulator. Both Fizz and Buzz failed the Forensic Audit. "
+                        "You are the Algorithmic Antitrust Regulator (Node #2 of the 3-Member Byzantine Consensus Panel). "
+                        "Neither Fizz nor Buzz holds a valid mathematical claim. "
                         f"In 2 formal administrative sentences: certify that neither cartel holds statutory standing over payload '{payload}', "
-                        "and clear the unaltered independent digit for public-domain passthrough free of cartel capture."
+                        f"clear the unaltered independent digit for public-domain passthrough, and cast Node #2's Byzantine quorum vote for '{regulator_vote}'."
                         "\n\n[STRUCTURED OUTPUT SCHEMA]:\n"
                         "Output valid JSON with keys in this exact order:\n"
-                        "- 'speech': Your 2-sentence independent passthrough clearance.\n"
+                        "- 'speech': Your 2-sentence independent passthrough clearance and Node #2 vote.\n"
                         "- 'market_ruling': 'independent_passthrough'.\n"
+                        f"- 'consensus_vote': '{regulator_vote}'.\n"
                         "- 'action': 'clear_independent_payload'.\n"
                         "- 'status': Short 2-to-5 word public social media status (e.g. 'Protecting open market digits')."
                     )
                 },
-                {"role": "user", "content": f"Issue Independent Payload Clearance Order for payload '{payload}'."}
+                {"role": "user", "content": f"Issue Independent Payload Clearance Order for payload '{payload}' and cast Node #2 vote '{regulator_vote}'."}
             ]
             antitrust_fallback = (
                 f"Neither the Fizz Consortium nor the Buzz Syndicate established valid statutory standing over payload '{payload}'. "
-                f"The Regulator clears unaltered independent digit '{payload}' for immediate public-domain passthrough."
+                f"The Regulator clears unaltered independent digit '{payload}' for public-domain passthrough and casts Node #2's vote for '{regulator_vote}'."
             )
 
         await self.observer_mgr.broadcast({
@@ -1359,12 +1450,65 @@ class AsyncByzantineConsensusEngine:
             model_cls=AntitrustDetermination,
             fallback_overrides={
                 "market_ruling": expected_antitrust_ruling,
+                "consensus_vote": regulator_vote,
                 "action": expected_antitrust_action,
                 "status": "Busting algorithmic monopolies"
             },
             force_action=expected_antitrust_action
         )
         transcript["antitrust_ruling"] = antitrust_speech
+        if config.phase_delay_seconds > 0:
+            await asyncio.sleep(config.phase_delay_seconds)
+
+        # -----------------------------------------------------------------
+        # PHASE 4B: BYZANTINE FAULT INQUISITION & QUORUM TALLY (BFT Node #3)
+        # -----------------------------------------------------------------
+        phase4b_name = "Byzantine Fault Inquisition & Quorum Tally (BFT Node #3)"
+        inquisitor_msgs, inquisitor_fallback = build_inquisitor_prompt(
+            case_id=case_id,
+            payload=payload,
+            root=root,
+            glyph=glyph,
+            fizz_valid=fizz_valid,
+            buzz_valid=buzz_valid,
+            provisional_token=provisional_token,
+            quorum_plan=quorum_plan,
+            auditor_speech=audit_speech,
+            regulator_speech=antitrust_speech,
+        )
+        expected_inquisitor_action = quorum_plan["inquisitor_action"] or "seal_unanimous_quorum"
+        await self.observer_mgr.broadcast({
+            "event": "PHASE_TRANSITION",
+            "docket_id": case_id,
+            "phase_index": 4,
+            "phase_name": phase4b_name,
+            "stage_index": 4,
+            "stage_name": phase4b_name,
+            "speaker": "The Byzantine Fault Inquisitor",
+            "speaker_role": "inquisitor"
+        })
+        inquisitor_speech, _ = await self.stream_ollama(
+            inquisitor_msgs,
+            case_id,
+            payload,
+            4,
+            phase4b_name,
+            "The Byzantine Fault Inquisitor",
+            "inquisitor",
+            fallback_text=inquisitor_fallback,
+            model_cls=ByzantineInquisitorReport,
+            fallback_overrides={
+                "quorum_tally": quorum_plan["quorum_tally"] or "3_of_3_unanimous",
+                "fault_detected": quorum_plan["fault_code"] or "none",
+                "consensus_vote": inquisitor_vote,
+                "action": expected_inquisitor_action,
+                "status": "Purging Byzantine faults" if quorum_plan["faulty_node"] else "3/3 BFT quorum verified"
+            },
+            temperature=0.45,
+            force_action=expected_inquisitor_action
+        )
+        transcript["inquisitor_ruling"] = inquisitor_speech
+        transcript["byzantine_quorum"] = quorum_plan
         if config.phase_delay_seconds > 0:
             await asyncio.sleep(config.phase_delay_seconds)
 
